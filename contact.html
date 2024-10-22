@@ -1,0 +1,167 @@
+<!-- Declares the document type and version of HTML -->
+<!DOCTYPE html>
+<!-- Starts the HTML document and sets the language to English -->
+<html lang="en">
+
+<head> 
+    <meta charset="UTF-8"> <!-- Sets the character encoding for the document to UTF-8 -->
+    <!-- Ensures the website is responsive on different devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Sets the title of the webpage, displayed in the browser tab -->
+    <title>Contact Me</title>
+    <!-- Links to an external CSS file for styling the webpage -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Styles specific to the modal */
+        #userAgreementModal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: white;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            text-align: center;
+            border-radius: 10px;
+            max-height: 400px; /* Limit the height of the modal */
+            overflow-y: auto;  /* Enable vertical scrolling */
+        }
+
+        /* Buttons */
+        .modal-button {
+            padding: 10px 20px; /* Adds padding around the button text */
+            background-color: #ed7a92 ; /* Sets the background color of the button */
+            color: #3b3039; /* Sets the text color of the button */
+            border: none; /* Removes any default border */
+            border-radius: 5px; /* Rounds the corners of the button */
+            cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
+            margin: 10px; /* Adds margin around the button */
+            font-weight: bold; /* Makes the button text bold */
+        }
+
+        .modal-button:hover {
+            background-color: #c468c4; /* Changes the background color when the button is hovered */
+        }
+
+        .modal-button.cancel {
+            background-color: #fbc791; /* Sets a different background color for the cancel button */
+            font-weight: bold; /* Ensures the cancel button text is bold as well */
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #8e2565; /* Changes the background color for the cancel button when hovered */
+        }
+    </style>
+
+
+    <script>
+        // Executes the following code when the window finishes loading
+        window.onload = function() {
+            // Selects the modal element by its ID
+            var modal = document.getElementById("userAgreementModal");
+
+            // Show the modal when the page loads
+            modal.style.display = "block";
+
+            // Function to close the modal if the user agrees
+            document.getElementById("agreeButton").onclick = function() {
+                modal.style.display = "none";
+            };
+
+            // Function to redirect if the user cancels
+            document.getElementById("cancelButton").onclick = function() {
+                alert("You must agree to the terms to proceed.");
+                window.location.href = "index.html";
+            };
+        };
+    </script>
+</head>
+
+<body>
+    <header> <!-- Header section of the webpage -->
+        <nav> <!-- Navigation section -->
+            <ul> <!-- Unordered list for navigation links -->
+                <li><a href="index.html">Home</a></li> <!-- Navigation link to Home -->
+                <li><a href="settings.html">Settings</a></li> <!-- Navigation link to Settings -->
+                <li><a href="work.html">Work</a></li> <!-- Navigation link to Work -->
+                <li><a href="about.html">About</a></li> <!-- Navigation link to About -->
+                <li><a href="contact.html">Contact</a></li> <!-- Navigation link to Contact -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- User Agreement Modal -->
+    <div id="userAgreementModal">
+        <div class="modal-content"> <!-- Content area of the modal -->
+            <h2><strong>Innavator App User Agreement</strong></h2> <!-- Title of the modal -->
+            <p> <!-- Paragraph containing the introduction -->
+            Welcome to the Innavator app, a project developed by Students at the University of Advancing Technology Production class designed to help students like you build projects, teamwork skills, and individual profiles to achieve success in your career. 
+            </p>
+            <p> <!-- Paragraph explaining to read the terms -->
+            Before you proceed, please take a moment to read and agree to the following terms.
+            </p>
+            <p><strong>User Consent</strong></p>
+            <p>By clicking "<strong>I Agree</strong>" below, you agree to the following:</p>
+            <p><strong>1. Content and Project Sharing:</strong> By submitting any content, including but not limited to projects, assignments, and portfolios, you consent to having this information displayed within the Innavator app. This content may be viewed by other students, faculty, and potential employers as part of the app’s networking and project collaboration features.</p>
+            <p><strong>2. Social Media Information:</strong> If you choose to link your social media accounts or provide related information within the app, you consent to this information being accessible to other users of the platform. This may include but is not limited to LinkedIn, X (Formerly Twitter), and other professional or creative platforms you share.</p>
+            <p><strong>3. Ownership and Attribution:</strong> You retain ownership of your work submitted through Innavator. We respect your intellectual property and will ensure proper attribution of your content. By participating, you grant the app and its developers permission to display and share your contributions for the purposes of collaboration and inspiration within the UAT community.</p>
+            <p><strong>4. Consent to Participate:</strong> By using the Innavator app, you acknowledge that this platform is designed to facilitate learning, creativity, and professional development. You agree to engage respectfully and ethically with other students and their work.</p>
+            <p><strong>5. Data Usage:</strong> Any information provided in the app will be used solely for the purposes of project collaboration, skill development, and career advancement within the UAT community. Your data will not be shared outside of this scope without your explicit consent.</p>
+            <p><strong>6. Changes to Agreement:</strong> This agreement may be updated periodically to reflect changes in app functionality or user policies. You will be notified of any significant changes, and continued use of the app signifies your acceptance of those terms.</p>
+            <p>Do you agree to these terms?</p>
+            <p>If you do not agree, you will not be able to proceed with using the Innavator app.</p>
+            <p>Thank you for helping us make UAT’s learning experience more interactive and inspiring!</p>
+            <p>We’re excited to have you on board as part of the UAT community!</p>
+
+            <button class="modal-button" id="agreeButton"> I Agree</button> <!-- Button for agreeing to the terms -->
+            <button class="modal-button cancel" id="cancelButton">Cancel</button> <!-- Button for canceling the agreement -->
+        </div>
+    </div>
+
+    <section class="title"> <!-- Title section of the contact form -->
+        <h2>Contact Us</h2> <!-- Heading for the contact section -->
+    </section>
+
+    <section class="contact-form"> <!-- Section for the contact form -->
+        <h3>Get in Touch</h3> <!-- Subheading for the contact form -->
+        <form> <!-- Start of the contact form -->
+            <label for="name">Name</label> <!-- Label for the name input -->
+            <input type="text" id="name" placeholder="Your name"> <!-- Input field for the user's name -->
+            <label for="email">Email</label> <!-- Label for the email input -->
+            <input type="email" id="email" placeholder="Your email"> <!-- Input field for the user's email -->
+            <label for="message">Message</label>  <!-- Label for the message input -->
+            <textarea id="message" placeholder="Your message"></textarea>  <!-- Textarea for the user's message -->
+            <button type="submit">Send Message</button> <!-- Submit button for the form -->
+        </form> <!-- End of the contact form -->
+    </section>
+
+    <section class="email-contact"> <!-- Section for email contact information -->
+        <h3>Contact via Email</h3> <!-- Subheading for email contact -->
+        <p>If you prefer, you can also reach us via email at:  <!-- Paragraph introducing the email contact -->
+            <a href="mailto:neaharri@uat.edu">neaharri@uat.edu</a> <!-- Email link for contacting -->
+        </p>
+    </section>
+
+    <footer> <!-- Footer section of the webpage -->
+        <p>&copy; Copyright © 2024 Innavator - All Rights Reserved.</p> <!-- Copyright notice -->
+        <div class="social-icons"> <!-- Container for social media icons -->
+            <a href="https://www.uat.edu/" target="_blank">UAT</a>
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+        </div>
+    </footer>
+</body>
+
+</html>
