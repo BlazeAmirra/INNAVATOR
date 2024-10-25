@@ -1,0 +1,13 @@
+{
+  "projects": {},
+  "targets": {
+    "innavator": {
+      "hosting": {
+        "f0e9": [
+          "innavator-f0e9"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "target": "f0e9",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "server-f0e9",
+          "region": "us-central1"
+        }
+      }
+    ]
+  }
+}

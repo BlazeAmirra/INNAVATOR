@@ -1,0 +1,5 @@
+pytest
+google-cloud-run
+httpx
+google-cloud-secret-manager
+pytest-playwright
