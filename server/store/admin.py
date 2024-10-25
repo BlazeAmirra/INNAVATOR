@@ -81,5 +81,18 @@ class SiteConfigAdmin(admin.ModelAdmin):
     )
 
 # end Google code
-admin.register()
+from store.models import InnavatorUser, Palette
+
+@admin.register(InnavatorUser)
+class InnavatorUserAdmin(admin.ModelAdmin):
+    list_display = ("snowflake_id", "user__email", "full_name", "preferred_name")
+
+@admin.register(Palette)
+class PaletteAdmin(admin.ModelAdmin):
+    list_display = ("user__snowflake_id", "my_user_email", "user__full_name", "user__preferred_name")
+
+    # Display "User Email" for the column header instead of "User User Email"
+    @admin.display(description="User Email")
+    def my_user_email(self, obj):
+        return obj.user.user.email
 

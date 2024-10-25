@@ -122,7 +122,7 @@ single_color_regex = f'^{contains_color_regex}$'
 color_pair_regex = f'^{contains_color_regex} {contains_color_regex}$'
 
 class InnavatorUser(models.Model):
-    snowflake_id = models.BigIntegerField("Snowflake ID", default=innavator_slowflake_generator.__next__, primary_key=True, unique=True)
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     full_name = models.CharField("Full Name", max_length=300, blank=True)
@@ -130,9 +130,14 @@ class InnavatorUser(models.Model):
 
     major = models.CharField("Major", max_length=100, blank=True)
     website_url = models.URLField("Website URL", max_length=300, blank=True, validators=[URLValidator()])
+    profile_picture_url = models.URLField("Profile Picture URL", max_length=300, blank=True, validators=[URLValidator()])
+
+    def __str__(self):
+        return f"{self.full_name} ({self.snowflake_id})"
 
 class Palette(models.Model):
     user = models.OneToOneField(InnavatorUser, on_delete=models.CASCADE, primary_key=True)
+    # TODO: default palettes
     gradient1 = models.CharField("First Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
     gradient2 = models.CharField("Second Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
     gradient3 = models.CharField("Third Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
@@ -140,3 +145,5 @@ class Palette(models.Model):
     gradient5 = models.CharField("Fifth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
     gradient6 = models.CharField("Sixth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
 
+    def __str__(self):
+        return f"{self.user.__str__()}'s palette"
