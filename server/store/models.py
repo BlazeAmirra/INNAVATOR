@@ -115,6 +115,7 @@ class SiteConfig(models.Model):
 
 from django.core.validators import RegexValidator, URLValidator
 from django.conf import settings
+from django.utils import timezone
 from store.snowflake_gen import innavator_slowflake_generator
 
 contains_color_regex = '#[0-9a-fA-F]{6}'
@@ -132,11 +133,22 @@ class InnavatorUser(models.Model):
     website_url = models.URLField("Website URL", max_length=300, blank=True, validators=[URLValidator()])
     profile_picture_url = models.URLField("Profile Picture URL", max_length=300, blank=True, validators=[URLValidator()])
 
+    # "self" allows recursion
+    mentors = models.ManyToManyField("self", symmetrical=False, through="Mentorship")
+
     def __str__(self):
-        return f"{self.full_name} ({self.snowflake_id})"
+        return f'User "{self.full_name}" ({self.snowflake_id})'
+
+class Mentorship(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    mentor = models.ForeignKey(InnavatorUser, related_name='%(app_label)s_%(class)s_mentor', on_delete=models.CASCADE)
+    mentee = models.ForeignKey(InnavatorUser, related_name='%(app_label)s_%(class)s_mentee', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.mentor}'s mentorship of {self.mentee}"
 
 class Palette(models.Model):
-    user = models.OneToOneField(InnavatorUser, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(InnavatorUser, on_delete=models.CASCADE, primary_key=True, unique=True)
     # TODO: default palettes
     gradient1 = models.CharField("First Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
     gradient2 = models.CharField("Second Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
@@ -146,4 +158,107 @@ class Palette(models.Model):
     gradient6 = models.CharField("Sixth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
 
     def __str__(self):
-        return f"{self.user.__str__()}'s palette"
+        return f"{self.user}'s palette"
+
+class InnavatorGroup(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    members = models.ManyToManyField(InnavatorUser, related_name='%(app_label)s_%(class)s_members', through="GroupMembership")
+    owner = models.ForeignKey(InnavatorUser, related_name='%(app_label)s_%(class)s_owner', on_delete=models.CASCADE) # TODO: set on_delete to something more sane
+    name = models.CharField("Name", max_length=100)
+    is_club = models.BooleanField("Is Club", default=False)
+
+    def __str__(self):
+        return f'Group {self.name} ({self.snowflake_id})'
+
+class GroupMembership(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
+    group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    is_privileged = models.BooleanField("Is Privileged", default=False)
+
+    def __str__(self):
+        return f"{self.user}'s membership in {self.group}"
+
+class Channel(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    name = models.CharField("Name", max_length=100)
+
+    def __str__(self):
+        return f'Channel "{self.name}" in {self.group}'
+
+class Message(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    sender = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE) # TODO: set on_delete to something more sane
+    contents = models.CharField("Contents", max_length=2000)
+    is_edited = models.BooleanField("Is Edited", default=False)
+    last_revision = models.DateTimeField("Last Revision", default=timezone.now)
+
+    def __str__(self):
+        return f'Message {self.snowflake_id} from {self.sender} in {self.channel}'
+
+class Role(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    name = models.CharField("Role", max_length=100)
+
+    def __str__(self):
+        return f'"{self.name}" Role'
+
+class Project(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    name = models.CharField("Name", max_length=100)
+    description = models.CharField("Description", max_length=300, blank=True)
+    is_active = models.BooleanField("Is Active", default=True)
+    looking_for_roles = models.ManyToManyField(Role, through="ProjectRoleNeed")
+
+    def __str__(self):
+        return f'Project "{self.name}" ({self.snowflake_id}) by {self.group}'
+
+class ProjectRoleNeed(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.project}\'s need for {self.role}' 
+
+class ProjectRole(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    is_active = models.BooleanField("Is Active", default=True)
+
+    def __str__(self):
+        return f'{self.user}\'s {self.role} in {self.project}'
+
+class CommissionRequest(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    sender = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    name = models.CharField("Name", max_length=100)
+    description = models.CharField("Description", max_length=300, blank=True)
+
+    def __str__(self):
+        return f'{self.sender}\'s request ({self.snowflake_id}) for a {self.role}'
+
+class Event(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    name = models.CharField("Name", max_length=100)
+    description = models.CharField("Description", max_length=300, blank=True)
+    start_time = models.DateTimeField("Start Timestamp")
+
+    def __str__(self):
+        return f'Event "{self.name}" in {self.group}'
+
+class PortfolioEntry(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    user = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    name = models.CharField("Name", max_length=100)
+    description = models.CharField("Description", max_length=300, blank=True)
+
+    def __str__(self):
+        return f'"{self.name}" in {self.user}\'s portfolio'
