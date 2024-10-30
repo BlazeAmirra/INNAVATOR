@@ -8,4 +8,3 @@ cd client
 npm i
 npm run build
 firebase deploy --project $PROJECT_ID --only hosting
-

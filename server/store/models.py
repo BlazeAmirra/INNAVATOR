@@ -114,17 +114,39 @@ class SiteConfig(models.Model):
 # end Google code
 
 from django.core.validators import RegexValidator, URLValidator
-from django.conf import settings
-from django.utils import timezone
+from django.contrib.auth import get_user_model
 from store.snowflake_gen import innavator_slowflake_generator
 
 contains_color_regex = '#[0-9a-fA-F]{6}'
 single_color_regex = f'^{contains_color_regex}$'
 color_pair_regex = f'^{contains_color_regex} {contains_color_regex}$'
+color_triplet_regex = f'^{contains_color_regex} {contains_color_regex} {contains_color_regex}$'
+
+class InnavatorUserManager(models.Manager):
+    def create(self, username, email, password):
+        user = get_user_model()(
+            username = username,
+            email = email
+        )
+        user.set_password(password)
+        user.save()
+
+        innavator_user = InnavatorUser(
+            snowflake_id = innavator_slowflake_generator.__next__(),
+            user = user
+        )
+        innavator_user.save()
+
+        palette = Palette(
+            user = innavator_user
+        )
+        palette.save()
+
+        return user
 
 class InnavatorUser(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
     full_name = models.CharField("Full Name", max_length=300, blank=True)
     preferred_name = models.CharField("Preferred Name", max_length=150, blank=True)
@@ -135,6 +157,8 @@ class InnavatorUser(models.Model):
 
     # "self" allows recursion
     mentors = models.ManyToManyField("self", symmetrical=False, through="Mentorship")
+
+    objects = InnavatorUserManager()
 
     def __str__(self):
         return f'User "{self.full_name}" ({self.snowflake_id})'
@@ -149,13 +173,8 @@ class Mentorship(models.Model):
 
 class Palette(models.Model):
     user = models.OneToOneField(InnavatorUser, on_delete=models.CASCADE, primary_key=True, unique=True)
-    # TODO: default palettes
-    gradient1 = models.CharField("First Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
-    gradient2 = models.CharField("Second Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
-    gradient3 = models.CharField("Third Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
-    gradient4 = models.CharField("Fourth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
-    gradient5 = models.CharField("Fifth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
-    gradient6 = models.CharField("Sixth Gradient", max_length=15, default='#000000 #000000', validators=[RegexValidator(regex=color_pair_regex)])
+    main_background_gradient_triplet = models.CharField("Main Background Gradient", max_length=23, default='#FF9156 #92259A #BA2045', validators=[RegexValidator(regex=color_triplet_regex)])
+    ui_group_background_gradient_triplet = models.CharField("UI Group Background Gradient", max_length=23, default='#FDF6C4 #D98CE3 #D26E8C', validators=[RegexValidator(regex=color_triplet_regex)])
 
     def __str__(self):
         return f"{self.user}'s palette"
@@ -193,7 +212,7 @@ class Message(models.Model):
     sender = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE) # TODO: set on_delete to something more sane
     contents = models.CharField("Contents", max_length=2000)
     is_edited = models.BooleanField("Is Edited", default=False)
-    last_revision = models.DateTimeField("Last Revision", default=timezone.now)
+    last_revision = models.DateTimeField("Last Revision", auto_now_add=True)
 
     def __str__(self):
         return f'Message {self.snowflake_id} from {self.sender} in {self.channel}'

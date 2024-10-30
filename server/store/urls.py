@@ -38,6 +38,13 @@ router.register(
     r"active/site_config", views.ActiveSiteConfigViewSet, basename="active_siteconfig"
 )
 
+# end Google code
+
+router.register(r"users", views.InnavatorUserViewset, basename="user")
+router.register(r"palettes", views.PaletteViewset, basename="palette")
+
+# begin Google code
+
 urlpatterns = [
     path("", include(router.urls)),
     path("checkout", views.checkout, name="checkout"),

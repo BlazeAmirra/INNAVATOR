@@ -124,3 +124,67 @@ class CartSerializer(serializers.Serializer):
 class CheckoutSerializer(serializers.Serializer):
     items = CartItemSerializer(many=True)
     status = serializers.CharField()
+
+# end Google code
+
+from django.contrib.auth import get_user_model
+from store.models import InnavatorUser, Palette
+
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Django's internal user details.
+    DO NOT USE OUTSIDE OF `InnavatorUserSerializer`
+    """
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+class InnavatorUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = InnavatorUser
+        fields = ['snowflake_id', 'user', 'full_name', 'preferred_name',
+                  'major', 'website_url', 'profile_picture_url']
+        extra_kwargs = {'user': {'required': False, 'allow_null': True}}
+
+    def create(self, validated_data):
+        user = InnavatorUser.objects.create(
+            username = validated_data['user']['username'],
+            email = validated_data['user']['email'],
+            password = validated_data['user']['password']
+        )
+        if full_name := validated_data.get('full_name', None):
+            user.full_name = full_name
+        if preferred_name := validated_data.get('preferred_name', None):
+            user.preferred_name = preferred_name
+        if major := validated_data.get('major', None):
+            user.major = major
+        if website_url := validated_data.get('website_url', None):
+            user.website_url = website_url
+        if profile_picture_url := validated_data.get('profile_picture_url', None):
+            user.profile_picture_url = profile_picture_url
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        instance.full_name = validated_data.get('full_name', instance.full_name)
+        instance.preferred_name = validated_data.get('preferred_name', instance.preferred_name)
+        instance.major = validated_data.get('major', instance.major)
+        instance.website_url = validated_data.get('website_url', instance.website_url)
+        instance.profile_picture_url = validated_data.get('profile_picture_url', instance.profile_picture_url)
+        instance.save()
+        return instance
+
+class PaletteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Palette
+        fields = ['user', 'main_background_gradient_triplet', 'ui_group_background_gradient_triplet']
+
+    def to_representation(self, instance):
+        return {
+            'user': instance.user.snowflake_id,
+            'main_background_gradient_triplet': instance.main_background_gradient_triplet.split(),
+            'ui_group_background_gradient_triplet': instance.ui_group_background_gradient_triplet.split(),
+        }

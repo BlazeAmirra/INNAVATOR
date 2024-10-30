@@ -189,3 +189,58 @@ def checkout(request):
 
 def csrf_token(request):
     return JsonResponse({"csrfToken": get_token(request)})
+
+# end Google code
+
+from django.contrib.auth import get_user_model
+from rest_framework import status
+
+from store.models import InnavatorUser, Palette
+from store.permissions import UsersPermissions
+from store.serializers import InnavatorUserSerializer, PaletteSerializer
+
+class InnavatorUserViewset(viewsets.ModelViewSet):
+    queryset = InnavatorUser.objects.all()
+    serializer_class = InnavatorUserSerializer
+    permission_classes = (UsersPermissions,) # comma is necessary
+
+    def create(self, request):
+        serializer = InnavatorUserSerializer(data=request.data, partial=True)
+        errors = {}
+        if serializer.is_valid():
+            if user := serializer.validated_data.get('user', None):
+                if username := user.get('username', None):
+                    if get_user_model().objects.filter(username__exact=username).first():
+                        errors.update({'username': ['Username already taken.']})
+                else:
+                    errors.update({'username': ['Username required.']})
+
+                if email := user.get('email', None):
+                    if get_user_model().objects.filter(email__exact=email).first():
+                        errors.update({'email': ['Email address already used.']})
+                else:
+                    errors.update({'email': ['Email address required.']})
+
+                if not user.get('password', None):
+                    errors.update({'password': ['Password required.']})
+            else:
+                errors.update({'user': ['User object missing.']})
+
+            if errors:
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PaletteViewset(viewsets.ModelViewSet):
+    queryset = Palette.objects.all()
+    serializer_class = PaletteSerializer
+    permission_classes = (UsersPermissions,)
+
+    def create(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def destroy(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

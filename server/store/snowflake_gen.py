@@ -7,4 +7,3 @@ innavator_slowflake_generator = SnowflakeGenerator(instance=0, epoch=17296942520
     `epoch` must never change: It represents the base of the timestamp system.\n
     `instance` might need a migration once there's multiple concurrent servers.
 """
-

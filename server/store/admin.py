@@ -95,4 +95,3 @@ class PaletteAdmin(admin.ModelAdmin):
     @admin.display(description="User Email")
     def my_user_email(self, obj):
         return obj.user.user.email
-
