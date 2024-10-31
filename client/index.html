@@ -1,31 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥑</text></svg>"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-    <base href="/" />
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
+    <title>API Test</title>
+    <script>
+      const API_URL = 'http://localhost:8000/api';
+      const baseRequest = {
+        credentials: 'include',
+      };
+      const invalidTokens = {
+        "error": "Not logged in."
       }
-    </style>
-    <title>Avocano</title>
+
+      let access_token = '';
+      let refresh_token = '';
+
+      // modified from https://thewoods.blog/base64url/ since we already get a Uint8Array
+      function base64url_encode(buffer) {
+        return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''))
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_')
+          .replace(/=+$/, '');
+      }
+
+      // begin code extracted from Avocano
+      const _makeAPIrequest = async (uri, init) => {
+        let url = `${API_URL}/${uri}`;
+        let apiError = { url: url };
+        let response, data;
+
+        try {
+          response = await fetch(url, init);
+          data = await response.clone().json();
+        } catch (error) {
+          console.error(error);
+
+          apiError.error = error.toString();
+
+          // Based on common reasons for failure cases, make nicer messages
+
+          // Network Errors
+          if (error instanceof TypeError && error.message == 'Failed to fetch') {
+            apiError.message = `The API didn't respond. Is the API server up?`;
+
+            // Django Errors
+          } else if (
+            error instanceof SyntaxError &&
+            error.message.includes('is not valid JSON')
+          ) {
+            apiError.message = `The server returned invalid JSON. Is Django returning an error?`;
+            apiError.error = `Error: "${response.statusText}"`;
+            apiError.extra_error = getDjangoError(await response.text());
+
+            // Fallback Error
+          } else {
+            apiError.message = `Request encountered an error: ${error.name}`;
+          }
+          return { apiError };
+        }
+
+        // Capture not OK responses
+        if (!response?.ok) {
+          apiError.message = await response?.text();
+          apiError.error = `Server returned ${response?.status} - ${response?.statusText}`;
+          return { apiError };
+        }
+
+        return data;
+      };
+      // end code extracted from Avocano
+
+      const _apiGET = async (uri, headers) => {
+        return await _makeAPIrequest(uri, {
+          method: 'GET',
+          headers: headers,
+          ...baseRequest,
+        });
+      };
+      const anonGetAPI = async uri => {
+        return await _apiGET(uri, {
+          'Accept': 'application/json'
+        });
+      };
+
+      const _apiDELETE = async (uri, headers) => {
+        const token = await anonGetAPI('csrf_token');
+        headers['X-CSRFToken'] = token.csrfToken;
+        return await _makeAPIrequest(uri, {
+          method: 'DELETE',
+          headers: headers,
+          ...baseRequest,
+        });
+      };
+      const _apiMUT = async (uri, headers, json, method) => {
+        const token = await anonGetAPI('csrf_token');
+        headers['X-CSRFToken'] = token.csrfToken;
+        return await _makeAPIrequest(uri, {
+          method: method,
+          headers: headers,
+          body: JSON.stringify(json),
+          ...baseRequest,
+        });
+      };
+      const anonPostAPI = async (uri, json) => {
+        return await _apiMUT(uri, {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }, json, "POST");
+      };
+      // there will never be other anonymous mutable requests (fingers crossed)
+
+      const _checkToken = async () => {
+        if (access_token) {
+          let check_token = await anonPostAPI("jwt_token/verify", { "token": access_token });
+          if (Object.keys(check_token).length === 0) {
+            return true;
+          }
+          if (refresh_token) {
+            let try_refreshing_token = await anonPostAPI("jwt_token/refresh", { "refresh": refresh_token });
+            if (try_refreshing_token["access"]) {
+              access_token = try_refreshing_token["access"];
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
+      const getAPI = async uri => {
+        if (await _checkToken()) {
+          return await _apiGET(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+          });
+        }
+        return invalidTokens;
+      };
+      const deleteAPI = async uri => {
+        if (await _checkToken()) {
+          return await _apiDELETE(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+          });
+        }
+        return invalidTokens;
+      };
+      const postAPI = async (uri, json) => {
+        if (await _checkToken()) {
+          return await _apiPOST(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }, json);
+        }
+        return invalidTokens;
+      };
+      const putAPI = async (uri, json) => {
+        if (await _checkToken()) {
+          return await _apiPUT(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }, json);
+        }
+        return invalidTokens;
+      };
+      const patchAPI = async (uri, json) => {
+        if (await _checkToken()) {
+          return await _apiPATCH(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }, json);
+        }
+        return invalidTokens;
+      };
+
+      const register = async (username, email, password) => {
+        return await anonPostAPI('users/',
+          {
+            "user": {
+              "username": username,
+              "email": email,
+              "password": password
+            }
+          }
+        );
+      };
+      const login = async (email, password) => {
+        let response = await anonPostAPI('jwt_token/',
+          {
+            "username": email, // sic: auth system has no convenient way to rename this field
+            "password": password
+          }
+        );
+        if (response["apiError"]) {
+          return response;
+        }
+        else {
+          access_token = response["access"];
+          refresh_token = response["refresh"];
+          console.log(base64url_encode(new TextEncoder().encode(email)));
+          return await anonGetAPI(`email_to_user/${base64url_encode(new TextEncoder().encode(email))}`);
+        }
+      };
+      const fetchUser = async (snowflake) => {
+        return await anonGetAPI(`users/${snowflake}`);
+      };
+      const fetchPalette = async (snowflake) => {
+        return await anonGetAPI(`palettes/${snowflake}`);
+      };
+
+      const register_button = async () => {
+        document.getElementById("register_result").innerHTML = JSON.stringify(
+          await register(
+            document.getElementById("register_username").value,
+            document.getElementById("register_email").value,
+            document.getElementById("register_password").value
+          )
+        );
+      }
+      const login_button = async () => {
+        document.getElementById("login_result").innerHTML = JSON.stringify(
+          await login(
+            document.getElementById("login_email").value,
+            document.getElementById("login_password").value
+          )
+        );
+      }
+      const fetchUser_button = async () => {
+        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchUser(document.getElementById("user_snowflake").value));
+      };
+      const fetchPalette_button = async () => {
+        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchPalette(document.getElementById("user_snowflake").value));
+      };
+    </script>
   </head>
   <body>
-    <avocano-shell></avocano-shell>
-    <script type="module" src="./src/avocano-shell.js"></script>
-    <script type="module" src="./src/pages/loading.js"></script>
+    <h3>Register</h3>
+    Username: <input id="register_username"/><br/>
+    Email: <input id="register_email"/><br/>
+    Password: <input type="password" id="register_password"/><br/>
+    <button onclick="register_button()">Register</button><br/>
+    <span id="register_result"></span><br/>
+    <br/>
+    <h3>Login</h3>
+    Email: <input id="login_email"/><br/>
+    Password: <input type="password" id="login_password"/><br/>
+    <button onclick="login_button()">Login</button><br/>
+    <span id="login_result"></span><br/>
+    <br/>
+    <h3>User Lookup</h3>
+    User Snowflake: <input id="user_snowflake"/></br>
+    <button onclick="fetchUser_button()">Fetch User</button><br/>
+    <button onclick="fetchPalette_button()">Fetch Palette</button><br/>
+    <span id="user_result"></span><br/>
   </body>
 </html>

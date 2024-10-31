@@ -41,3 +41,5 @@ opentelemetry-instrumentation-django==0.48b0
 # user id generation
 snowflake-id==1.0.2
 
+# authentication
+djangorestframework-simplejwt==5.3.1

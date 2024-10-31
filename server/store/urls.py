@@ -16,7 +16,6 @@
 
 
 from django.urls import include, path
-from . import views
 from rest_framework.routers import DefaultRouter
 
 from store import views
@@ -43,6 +42,8 @@ router.register(
 router.register(r"users", views.InnavatorUserViewset, basename="user")
 router.register(r"palettes", views.PaletteViewset, basename="palette")
 
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+
 # begin Google code
 
 urlpatterns = [
@@ -50,4 +51,10 @@ urlpatterns = [
     path("checkout", views.checkout, name="checkout"),
     path("csrf_token", views.csrf_token, name="csrf_token"),
     path("api-auth/", include("rest_framework.urls")),
+    # end Google code
+    path("email_to_user/<b64>", views.email_to_user, name='email_to_user'),
+    path("jwt_token/", views.EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path("jwt_token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
+    path("jwt_token/verify/", TokenVerifyView.as_view(), name='token_verify'),
+    # begin Google code
 ]

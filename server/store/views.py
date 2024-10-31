@@ -191,13 +191,24 @@ def csrf_token(request):
     return JsonResponse({"csrfToken": get_token(request)})
 
 # end Google code
-
 from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from store.models import InnavatorUser, Palette
-from store.permissions import UsersPermissions
-from store.serializers import InnavatorUserSerializer, PaletteSerializer
+from store.permissions import PalettesPermissions, UsersPermissions
+from store.serializers import EmailTokenObtainPairSerializer, InnavatorUserSerializer, PaletteSerializer
+
+class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = EmailTokenObtainPairSerializer
+
+@api_view(('GET',))
+def email_to_user(request, b64):
+    if user := InnavatorUser.objects.filter(user__email__exact=bytes.decode(urlsafe_base64_decode(b64))).first():
+        return Response({'snowflake_id': user.snowflake_id}, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_404_NOT_FOUND)
 
 class InnavatorUserViewset(viewsets.ModelViewSet):
     queryset = InnavatorUser.objects.all()
@@ -237,7 +248,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
 class PaletteViewset(viewsets.ModelViewSet):
     queryset = Palette.objects.all()
     serializer_class = PaletteSerializer
-    permission_classes = (UsersPermissions,)
+    permission_classes = (PalettesPermissions,)
 
     def create(self, request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

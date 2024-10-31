@@ -142,7 +142,7 @@ class InnavatorUserManager(models.Manager):
         )
         palette.save()
 
-        return user
+        return innavator_user
 
 class InnavatorUser(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)

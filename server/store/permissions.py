@@ -34,4 +34,6 @@ class PalettesPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
         elif view.action in ['update', 'partial_update', 'destroy']:
-            return obj.user == request.user or request.user.is_staff
+            return obj.user.user == request.user or request.user.is_staff
+        else:
+            return False

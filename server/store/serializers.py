@@ -128,7 +128,24 @@ class CheckoutSerializer(serializers.Serializer):
 # end Google code
 
 from django.contrib.auth import get_user_model
+from django.utils.html import escape
+from rest_framework import exceptions
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from store.models import InnavatorUser, Palette
+
+# https://stackoverflow.com/a/75452395
+class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        users = get_user_model().objects.filter(email=attrs["username"])
+        if (users.exists()):
+            attrs["username"] = users.first().username
+        else:
+            raise exceptions.AuthenticationFailed(
+                self.error_messages["no_active_account"],
+                "no_active_account",
+            )
+        return super().validate(attrs)
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -148,6 +165,25 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
         fields = ['snowflake_id', 'user', 'full_name', 'preferred_name',
                   'major', 'website_url', 'profile_picture_url']
         extra_kwargs = {'user': {'required': False, 'allow_null': True}}
+
+    def validate_user(self, value):
+        value['email'] = escape(value['email'])
+        return value
+
+    def validate_full_name(self, value):
+        return escape(value)
+
+    def validate_preferred_name(self, value):
+        return escape(value)
+
+    def validate_major(self, value):
+        return escape(value)
+
+    def validate_website_url(self, value):
+        return escape(value)
+
+    def validate_profile_picture_url(self, value):
+        return escape(value)
 
     def create(self, validated_data):
         user = InnavatorUser.objects.create(
@@ -181,10 +217,3 @@ class PaletteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Palette
         fields = ['user', 'main_background_gradient_triplet', 'ui_group_background_gradient_triplet']
-
-    def to_representation(self, instance):
-        return {
-            'user': instance.user.snowflake_id,
-            'main_background_gradient_triplet': instance.main_background_gradient_triplet.split(),
-            'ui_group_background_gradient_triplet': instance.ui_group_background_gradient_triplet.split(),
-        }
