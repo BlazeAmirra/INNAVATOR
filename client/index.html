@@ -12,15 +12,19 @@
       }
 
       let access_token = '';
-      let refresh_token = '';
+      let logged_in = false;
+      let this_user = 0;
 
       // modified from https://thewoods.blog/base64url/ since we already get a Uint8Array
-      function base64url_encode(buffer) {
+      const base64url_encode = buffer => {
         return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''))
           .replace(/\+/g, '-')
           .replace(/\//g, '_')
           .replace(/=+$/, '');
       }
+
+      // https://stackoverflow.com/a/69058154
+      const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000;
 
       // begin code extracted from Avocano
       const _makeAPIrequest = async (uri, init) => {
@@ -76,14 +80,14 @@
           ...baseRequest,
         });
       };
-      const anonGetAPI = async uri => {
+      const _anonGetAPI = async uri => {
         return await _apiGET(uri, {
           'Accept': 'application/json'
         });
       };
 
       const _apiDELETE = async (uri, headers) => {
-        const token = await anonGetAPI('csrf_token');
+        const token = await _anonGetAPI('csrf_token');
         headers['X-CSRFToken'] = token.csrfToken;
         return await _makeAPIrequest(uri, {
           method: 'DELETE',
@@ -92,7 +96,7 @@
         });
       };
       const _apiMUT = async (uri, headers, json, method) => {
-        const token = await anonGetAPI('csrf_token');
+        const token = await _anonGetAPI('csrf_token');
         headers['X-CSRFToken'] = token.csrfToken;
         return await _makeAPIrequest(uri, {
           method: method,
@@ -101,7 +105,7 @@
           ...baseRequest,
         });
       };
-      const anonPostAPI = async (uri, json) => {
+      const _anonPostAPI = async (uri, json) => {
         return await _apiMUT(uri, {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -111,16 +115,13 @@
 
       const _checkToken = async () => {
         if (access_token) {
-          let check_token = await anonPostAPI("jwt_token/verify", { "token": access_token });
-          if (Object.keys(check_token).length === 0) {
+          if (!_isTokenExpired(access_token)) return true;
+        }
+        if (refresh_token = localStorage.getItem("refresh_token")) {
+          let try_refreshing_token = await _anonPostAPI("jwt_token/refresh/", { "refresh": refresh_token });
+          if (try_refreshing_token["access"]) {
+            access_token = try_refreshing_token["access"];
             return true;
-          }
-          if (refresh_token) {
-            let try_refreshing_token = await anonPostAPI("jwt_token/refresh", { "refresh": refresh_token });
-            if (try_refreshing_token["access"]) {
-              access_token = try_refreshing_token["access"];
-              return true;
-            }
           }
         }
         return false;
@@ -133,24 +134,25 @@
             'Authorization': `Bearer ${access_token}`
           });
         }
-        return invalidTokens;
+        return _anonGetAPI(uri);
       };
+      const postAPI = async (uri, json) => {
+        if (await _checkToken()) {
+          return await _apiMUT(uri, {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+          }, json, "POST");
+        }
+        return _anonPostAPI(uri, json);
+      };
+      // there is no reason to ever do these other methods anonymously
       const deleteAPI = async uri => {
         if (await _checkToken()) {
           return await _apiDELETE(uri, {
             'Accept': 'application/json',
             'Authorization': `Bearer ${access_token}`
           });
-        }
-        return invalidTokens;
-      };
-      const postAPI = async (uri, json) => {
-        if (await _checkToken()) {
-          return await _apiPOST(uri, {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'application/json'
-          }, json);
         }
         return invalidTokens;
       };
@@ -176,7 +178,7 @@
       };
 
       const register = async (username, email, password) => {
-        return await anonPostAPI('users/',
+        return await postAPI('users/',
           {
             "user": {
               "username": username,
@@ -186,28 +188,41 @@
           }
         );
       };
+      const who_am_i = async () => {
+        let who_am_i_response = await getAPI("who_am_i/");
+        logged_in = who_am_i_response["logged_in"] ? true : false;
+        this_user = who_am_i_response["snowflake_id"] ? who_am_i_response["snowflake_id"] : 0;
+        return who_am_i_response;
+      };
       const login = async (email, password) => {
-        let response = await anonPostAPI('jwt_token/',
+        let token_response = await postAPI('jwt_token/',
           {
             "username": email, // sic: auth system has no convenient way to rename this field
             "password": password
           }
         );
-        if (response["apiError"]) {
-          return response;
+        if (token_response["apiError"]) {
+          return token_response;
         }
-        else {
-          access_token = response["access"];
-          refresh_token = response["refresh"];
-          console.log(base64url_encode(new TextEncoder().encode(email)));
-          return await anonGetAPI(`email_to_user/${base64url_encode(new TextEncoder().encode(email))}`);
-        }
+        access_token = token_response["access"];
+        localStorage.setItem("refresh_token", token_response["refresh"]);
+
+        //return await anonGetAPI(`email_to_user/${base64url_encode(new TextEncoder().encode(email))}`);
+        return await who_am_i();
       };
-      const fetchUser = async (snowflake) => {
-        return await anonGetAPI(`users/${snowflake}`);
+      const logout = async () => {
+        access_token = '';
+        logged_in = false;
+        this_user = 0;
+        localStorage.removeItem("refresh_token");
+
+        return await who_am_i();
       };
-      const fetchPalette = async (snowflake) => {
-        return await anonGetAPI(`palettes/${snowflake}`);
+      const fetchUser = async snowflake => {
+        return await getAPI(`users/${snowflake}/`);
+      };
+      const fetchPalette = async snowflake => {
+        return await getAPI(`palettes/${snowflake}/`);
       };
 
       const register_button = async () => {
@@ -226,6 +241,12 @@
             document.getElementById("login_password").value
           )
         );
+      }
+      const logout_button = async () => {
+        document.getElementById("logout_result").innerHTML = JSON.stringify(await logout());
+      }
+      const who_am_i_button = async () => {
+        document.getElementById("who_am_i_result").innerHTML = JSON.stringify(await who_am_i());
       }
       const fetchUser_button = async () => {
         document.getElementById("user_result").innerHTML = JSON.stringify(await fetchUser(document.getElementById("user_snowflake").value));
@@ -249,8 +270,16 @@
     <button onclick="login_button()">Login</button><br/>
     <span id="login_result"></span><br/>
     <br/>
+    <h3>Logout</h3>
+    <button onclick="logout_button()">Logout</button><br/>
+    <span id="logout_result"></span><br/>
+    <br/>
+    <h3>Who am I?</h3>
+    <button onclick="who_am_i_button()">Lookup</button><br/>
+    <span id="who_am_i_result"></span><br/>
+    <br/>
     <h3>User Lookup</h3>
-    User Snowflake: <input id="user_snowflake"/></br>
+    User Snowflake: <input id="user_snowflake"/><br/>
     <button onclick="fetchUser_button()">Fetch User</button><br/>
     <button onclick="fetchPalette_button()">Fetch Palette</button><br/>
     <span id="user_result"></span><br/>

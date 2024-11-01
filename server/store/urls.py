@@ -52,7 +52,8 @@ urlpatterns = [
     path("csrf_token", views.csrf_token, name="csrf_token"),
     path("api-auth/", include("rest_framework.urls")),
     # end Google code
-    path("email_to_user/<b64>", views.email_to_user, name='email_to_user'),
+    #path("email_to_user/<b64>", views.email_to_user, name='email_to_user'),
+    path("who_am_i/", views.who_am_i, name='who_am_i'),
     path("jwt_token/", views.EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("jwt_token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
     path("jwt_token/verify/", TokenVerifyView.as_view(), name='token_verify'),

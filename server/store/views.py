@@ -192,9 +192,9 @@ def csrf_token(request):
 
 # end Google code
 from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_decode
+#from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from store.models import InnavatorUser, Palette
@@ -204,11 +204,19 @@ from store.serializers import EmailTokenObtainPairSerializer, InnavatorUserSeria
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
 
+#@api_view(('GET',))
+#def email_to_user(request, b64):
+#    if user := InnavatorUser.objects.filter(user__email__exact=bytes.decode(urlsafe_base64_decode(b64))).first():
+#        return Response({'snowflake_id': user.snowflake_id}, status=status.HTTP_200_OK)
+#    return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(('GET',))
-def email_to_user(request, b64):
-    if user := InnavatorUser.objects.filter(user__email__exact=bytes.decode(urlsafe_base64_decode(b64))).first():
-        return Response({'snowflake_id': user.snowflake_id}, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_404_NOT_FOUND)
+def who_am_i(request):
+    if request.user.is_authenticated:
+        if user := InnavatorUser.objects.filter(user__id=request.user.id).first():
+            return Response({'logged_in': True, 'snowflake_id': user.snowflake_id}, status=status.HTTP_200_OK)
+        return Response({'logged_in': False, 'snowflake_id': 0}, status=status.HTTP_404_NOT_FOUND) # should never happen
+    return Response({'logged_in': False, 'snowflake_id': 0}, status=status.HTTP_200_OK)
 
 class InnavatorUserViewset(viewsets.ModelViewSet):
     queryset = InnavatorUser.objects.all()
