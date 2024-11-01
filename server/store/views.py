@@ -201,6 +201,12 @@ from store.models import InnavatorUser, Palette
 from store.permissions import PalettesPermissions, UsersPermissions
 from store.serializers import EmailTokenObtainPairSerializer, InnavatorUserSerializer, PaletteSerializer
 
+def stripped_if_not_blank(object):
+    if object:
+        if (stripped_object := object.strip()) != '':
+            return stripped_object
+    return None
+
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
 
@@ -228,15 +234,19 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         errors = {}
         if serializer.is_valid():
             if user := serializer.validated_data.get('user', None):
-                if username := user.get('username', None):
+                if username := stripped_if_not_blank(user.get('username', None)):
                     if get_user_model().objects.filter(username__exact=username).first():
                         errors.update({'username': ['Username already taken.']})
+                    else:
+                        serializer.validated_data['user']['username'] = username
                 else:
                     errors.update({'username': ['Username required.']})
 
-                if email := user.get('email', None):
+                if email := stripped_if_not_blank(user.get('email', None)):
                     if get_user_model().objects.filter(email__exact=email).first():
                         errors.update({'email': ['Email address already used.']})
+                    else:
+                        serializer.validated_data['user']['email'] = email
                 else:
                     errors.update({'email': ['Email address required.']})
 
@@ -244,6 +254,24 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
                     errors.update({'password': ['Password required.']})
             else:
                 errors.update({'user': ['User object missing.']})
+
+            missing_full_name = False
+            missing_preferred_name = False
+            if full_name := stripped_if_not_blank(serializer.validated_data.get('full_name', None)):
+                serializer.validated_data['full_name'] = full_name
+            else:
+                missing_full_name = True
+            if preferred_name := stripped_if_not_blank(serializer.validated_data.get('preferred_name', None)):
+                serializer.validated_data['preferred_name'] = preferred_name
+            else:
+                missing_preferred_name = True
+            if missing_full_name and missing_preferred_name:
+                errors.update({'full_name': ['Full Name and/or Preferred Name required.'], 'preferred_name': ['Full Name and/or Preferred Name required.']})
+
+            if major := stripped_if_not_blank(serializer.validated_data.get('major', None)):
+                serializer.validated_data['major'] = major
+            else:
+                errors.update({'major': ['Major required.']})
 
             if errors:
                 return Response(errors, status=status.HTTP_400_BAD_REQUEST)

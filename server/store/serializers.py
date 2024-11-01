@@ -191,12 +191,11 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
             email = validated_data['user']['email'],
             password = validated_data['user']['password']
         )
+        user.major = validated_data['major']
         if full_name := validated_data.get('full_name', None):
             user.full_name = full_name
         if preferred_name := validated_data.get('preferred_name', None):
             user.preferred_name = preferred_name
-        if major := validated_data.get('major', None):
-            user.major = major
         if website_url := validated_data.get('website_url', None):
             user.website_url = website_url
         if profile_picture_url := validated_data.get('profile_picture_url', None):

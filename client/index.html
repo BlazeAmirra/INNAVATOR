@@ -177,14 +177,17 @@
         return invalidTokens;
       };
 
-      const register = async (username, email, password) => {
+      const register = async (username, full_name, preferred_name, major, email, password) => {
         return await postAPI('users/',
           {
             "user": {
               "username": username,
               "email": email,
               "password": password
-            }
+            },
+            "full_name": full_name,
+            "preferred_name": preferred_name,
+            "major": major
           }
         );
       };
@@ -229,6 +232,9 @@
         document.getElementById("register_result").innerHTML = JSON.stringify(
           await register(
             document.getElementById("register_username").value,
+            document.getElementById("register_full_name").value,
+            document.getElementById("register_preferred_name").value,
+            document.getElementById("register_major").value,
             document.getElementById("register_email").value,
             document.getElementById("register_password").value
           )
@@ -259,6 +265,9 @@
   <body>
     <h3>Register</h3>
     Username: <input id="register_username"/><br/>
+    Full Name: <input id="register_full_name"/><br/>
+    Preferred Name: <input id="register_preferred_name"/><br/>
+    Major: <input id="register_major"/><br/>
     Email: <input id="register_email"/><br/>
     Password: <input type="password" id="register_password"/><br/>
     <button onclick="register_button()">Register</button><br/>
