@@ -132,7 +132,7 @@ from django.utils.html import escape
 from rest_framework import exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from store.models import InnavatorUser, Palette
+from store.models import InnavatorUser, Mentorship, Palette
 
 # https://stackoverflow.com/a/75452395
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -215,4 +215,9 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 class PaletteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Palette
-        fields = ['user', 'main_background_gradient_triplet', 'ui_group_background_gradient_triplet']
+        fields = '__all__'
+
+class MentorshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mentorship
+        fields = '__all__'

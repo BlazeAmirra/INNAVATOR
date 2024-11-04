@@ -16,7 +16,7 @@ class UsersPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
         elif view.action in ['update', 'partial_update', 'destroy']:
-            return obj.user == request.user or request.user.is_staff
+            return request.user.is_staff or obj.user == request.user
         else:
             return False
 
@@ -34,6 +34,6 @@ class PalettesPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
         elif view.action in ['update', 'partial_update', 'destroy']:
-            return obj.user.user == request.user or request.user.is_staff
+            return request.user.is_staff or obj.user.user == request.user
         else:
             return False

@@ -3,8 +3,8 @@
   <head>
     <title>API Test</title>
     <script>
-      //const API_URL = 'http://localhost:8000/api';
-      const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
+      const API_URL = 'http://localhost:8000/api';
+      //const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
       const baseRequest = {
         credentials: 'include',
       };
@@ -17,12 +17,14 @@
       let this_user = 0;
 
       // modified from https://thewoods.blog/base64url/ since we already get a Uint8Array
+      /*
       const base64url_encode = buffer => {
         return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''))
           .replace(/\+/g, '-')
           .replace(/\//g, '_')
           .replace(/=+$/, '');
-      }
+      };
+      */
 
       // https://stackoverflow.com/a/69058154
       const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000;
@@ -159,21 +161,21 @@
       };
       const putAPI = async (uri, json) => {
         if (await _checkToken()) {
-          return await _apiPUT(uri, {
+          return await _apiMUT(uri, {
             'Accept': 'application/json',
             'Authorization': `Bearer ${access_token}`,
             'Content-Type': 'application/json'
-          }, json);
+          }, json, "PUT");
         }
         return invalidTokens;
       };
       const patchAPI = async (uri, json) => {
         if (await _checkToken()) {
-          return await _apiPATCH(uri, {
+          return await _apiMUT(uri, {
             'Accept': 'application/json',
             'Authorization': `Bearer ${access_token}`,
             'Content-Type': 'application/json'
-          }, json);
+          }, json, "PATCH");
         }
         return invalidTokens;
       };
@@ -228,6 +230,38 @@
       const fetchPalette = async snowflake => {
         return await getAPI(`palettes/${snowflake}/`);
       };
+      const fetchMentors = async snowflake => {
+        return await getAPI(`mentors/${snowflake}/`);
+      };
+      const fetchMentees = async snowflake => {
+        return await getAPI(`mentees/${snowflake}/`);
+      };
+      const patchUser = async diff => {
+        return await patchAPI(`users/${this_user}/`, diff);
+      };
+      // there can't be a putUser because the validator requires submitting the credentials
+      const requestMentor = async snowflake => {
+        return await postAPI(`mentors/${snowflake}/`, {});
+      };
+      const requestMentee = async snowflake => {
+        return await postAPI(`mentees/${snowflake}/`, {});
+      };
+      const removeMentor = async snowflake => {
+        return await deleteAPI(`mentors/${snowflake}/`);
+      };
+      const removeMentee = async snowflake => {
+        return await deleteAPI(`mentees/${snowflake}/`);
+      };
+
+      const collect_optionals = (...pairs) => {
+        retVal = {};
+        pairs.forEach(pair => {
+          if (pair[1] = pair[1].trim()) {
+            retVal[pair[0]] = pair[1];
+          }
+        });
+        return retVal;
+      };
 
       const register_button = async () => {
         document.getElementById("register_result").innerHTML = JSON.stringify(
@@ -240,7 +274,7 @@
             document.getElementById("register_password").value
           )
         );
-      }
+      };
       const login_button = async () => {
         document.getElementById("login_result").innerHTML = JSON.stringify(
           await login(
@@ -248,50 +282,124 @@
             document.getElementById("login_password").value
           )
         );
-      }
+      };
       const logout_button = async () => {
         document.getElementById("logout_result").innerHTML = JSON.stringify(await logout());
-      }
+      };
       const who_am_i_button = async () => {
         document.getElementById("who_am_i_result").innerHTML = JSON.stringify(await who_am_i());
-      }
+      };
       const fetchUser_button = async () => {
         document.getElementById("user_result").innerHTML = JSON.stringify(await fetchUser(document.getElementById("user_snowflake").value));
       };
       const fetchPalette_button = async () => {
         document.getElementById("user_result").innerHTML = JSON.stringify(await fetchPalette(document.getElementById("user_snowflake").value));
       };
+      const fetchMentors_button = async () => {
+        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchMentors(document.getElementById("user_snowflake").value));
+      };
+      const fetchMentees_button = async () => {
+        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchMentees(document.getElementById("user_snowflake").value));
+      };
+      const patchUser_button = async () => {
+        if (logged_in) {
+          document.getElementById("patch_user_result").innerHTML = JSON.stringify(await patchUser(collect_optionals(
+            ["full_name", document.getElementById("patch_user_full_name").value],
+            ["preferred_name", document.getElementById("patch_user_preferred_name").value],
+            ["major", document.getElementById("patch_user_major").value],
+            ["website_url", document.getElementById("patch_user_website").value],
+            ["profile_picture_url", document.getElementById("patch_user_pfp").value],
+          )));
+        }
+        else {
+          document.getElementById("patch_user_result").innerHTML = "Not logged in.";
+        }
+      };
+      const requestMentor_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await requestMentor(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+      const requestMentee_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await requestMentee(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+      const removeMentor_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await removeMentor(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+      const removeMentee_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await removeMentee(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+
+      who_am_i();
     </script>
   </head>
   <body>
     <h3>Register</h3>
     Username: <input id="register_username"/><br/>
+    Email: <input id="register_email"/><br/>
+    Password: <input type="password" id="register_password"/><br/>
+    <br/>
     Full Name: <input id="register_full_name"/><br/>
     Preferred Name: <input id="register_preferred_name"/><br/>
     Major: <input id="register_major"/><br/>
-    Email: <input id="register_email"/><br/>
-    Password: <input type="password" id="register_password"/><br/>
     <button onclick="register_button()">Register</button><br/>
     <span id="register_result"></span><br/>
-    <br/>
+
     <h3>Login</h3>
     Email: <input id="login_email"/><br/>
     Password: <input type="password" id="login_password"/><br/>
     <button onclick="login_button()">Login</button><br/>
     <span id="login_result"></span><br/>
-    <br/>
+
     <h3>Logout</h3>
     <button onclick="logout_button()">Logout</button><br/>
     <span id="logout_result"></span><br/>
-    <br/>
+
     <h3>Who am I?</h3>
     <button onclick="who_am_i_button()">Lookup</button><br/>
     <span id="who_am_i_result"></span><br/>
-    <br/>
+
     <h3>User Lookup</h3>
     User Snowflake: <input id="user_snowflake"/><br/>
-    <button onclick="fetchUser_button()">Fetch User</button><br/>
-    <button onclick="fetchPalette_button()">Fetch Palette</button><br/>
+    <button onclick="fetchUser_button()">Fetch User</button>
+    <button onclick="fetchPalette_button()">Fetch Palette</button>
+    <button onclick="fetchMentors_button()">Fetch Mentors</button>
+    <button onclick="fetchMentees_button()">Fetch Mentees</button><br/>
     <span id="user_result"></span><br/>
+
+    <h3>User Patch</h3>
+    Full Name: <input id="patch_user_full_name"/><br/>
+    Preferred Name: <input id="patch_user_preferred_name"/><br/>
+    Major: <input id="patch_user_major"/><br/>
+    Website URL: <input id="patch_user_website"/><br/>
+    Profile Picture URL: <input id="patch_user_pfp"/><br/>
+    <button onclick="patchUser_button()">Patch User</button><br/>
+    <span id="patch_user_result"></span><br/>
+
+    <h3>Mentorship Request</h3>
+    User Snowflake: <input id="mentorship_user_snowflake"/><br/>
+    <button onclick="requestMentor_button()">Request Mentor</button>
+    <button onclick="requestMentee_button()">Request Mentee</button>
+    <button onclick="removeMentor_button()">Remove Mentor</button>
+    <button onclick="removeMentee_button()">Remove Mentee</button>
+    <span id="mentorship_result"></span><br/>
   </body>
 </html>

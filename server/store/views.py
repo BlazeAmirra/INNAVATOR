@@ -192,14 +192,17 @@ def csrf_token(request):
 
 # end Google code
 from django.contrib.auth import get_user_model
+from django.http import Http404
 #from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.views import APIView
 
-from store.models import InnavatorUser, Palette
+from store.models import InnavatorUser, Mentorship, Palette
 from store.permissions import PalettesPermissions, UsersPermissions
-from store.serializers import EmailTokenObtainPairSerializer, InnavatorUserSerializer, PaletteSerializer
+from store.serializers import EmailTokenObtainPairSerializer, InnavatorUserSerializer, MentorshipSerializer, PaletteSerializer
+from store.snowflake_gen import innavator_slowflake_generator
 
 def stripped_if_not_blank(object):
     if object:
@@ -230,7 +233,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
     permission_classes = (UsersPermissions,) # comma is necessary
 
     def create(self, request):
-        serializer = InnavatorUserSerializer(data=request.data, partial=True)
+        serializer = self.get_serializer(data=request.data, partial=True)
         errors = {}
         if serializer.is_valid():
             if user := serializer.validated_data.get('user', None):
@@ -276,8 +279,46 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if errors:
                 return Response(errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=self.get_success_headers(serializer.data))
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        errors = {}
+
+        if serializer.is_valid():
+            missing_full_name = False
+            missing_preferred_name = False
+            if full_name := stripped_if_not_blank(serializer.validated_data.get('full_name', None)):
+                serializer.validated_data['full_name'] = full_name
+            else:
+                missing_full_name = True
+            if preferred_name := stripped_if_not_blank(serializer.validated_data.get('preferred_name', None)):
+                serializer.validated_data['preferred_name'] = preferred_name
+            else:
+                missing_preferred_name = True
+            if missing_full_name and missing_preferred_name and not partial:
+                errors.update({'full_name': ['Full Name and/or Preferred Name required.'], 'preferred_name': ['Full Name and/or Preferred Name required.']})
+
+            if major := stripped_if_not_blank(serializer.validated_data.get('major', None)):
+                serializer.validated_data['major'] = major
+            elif not partial:
+                errors.update({'major': ['Major required.']})
+
+            if errors:
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                self.perform_update(serializer)
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                # If 'prefetch_related' has been applied to a queryset, we need to
+                # forcibly invalidate the prefetch cache on the instance.
+                instance._prefetched_objects_cache = {}
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -291,3 +332,85 @@ class PaletteViewset(viewsets.ModelViewSet):
 
     def destroy(self, request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class MentorListView(APIView):
+    def get_innavator_user(self, pk):
+        try:
+            return InnavatorUser.objects.get(pk=pk)
+        except InnavatorUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        user = self.get_innavator_user(pk)
+        serializer = MentorshipSerializer(Mentorship.objects.filter(mentee=user.pk), many=True)
+        return Response(serializer.data)
+
+    # adds the PK as a mentor of the sender
+    # TODO: turn into a request system which can be refused
+    def post(self, request, pk, format=None):
+        if request.user.is_authenticated:
+            if sender := InnavatorUser.objects.filter(user__id=request.user.id).first():
+                if sender.snowflake_id == pk:
+                    # don't accept self-mentorship
+                    return Response(status=status.HTTP_403_FORBIDDEN)
+                receiver = self.get_innavator_user(pk)
+                new_mentorship_snowflake = innavator_slowflake_generator.__next__()
+                receiver.mentors.add(sender, through_defaults={'snowflake_id': new_mentorship_snowflake})
+                return Response(MentorshipSerializer(Mentorship.objects.get(pk=new_mentorship_snowflake)).data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_404_NOT_FOUND) # should never happen
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def delete(self, request, pk, format=None):
+        if request.user.is_authenticated:
+            if sender := InnavatorUser.objects.filter(user__id=request.user.id).first():
+                receiver = self.get_innavator_user(pk)
+                if receiver.mentors.contains(sender):
+                    mentorship = Mentorship.objects.get(mentor=receiver, mentee=sender)
+                    data = MentorshipSerializer(mentorship).data
+                    receiver.mentors.remove(sender)
+                    mentorship.delete()
+                    return Response(data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            return Response(status=status.HTTP_404_NOT_FOUND) # should never happen
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+class MenteeListView(APIView):
+    def get_innavator_user(self, pk):
+        try:
+            return InnavatorUser.objects.get(pk=pk)
+        except InnavatorUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        user = self.get_innavator_user(pk)
+        serializer = MentorshipSerializer(Mentorship.objects.filter(mentor=user.pk), many=True)
+        return Response(serializer.data)
+
+    # adds the sender as a mentor of the PK
+    # TODO: turn into a request system which can be refused
+    def post(self, request, pk, format=None):
+        if request.user.is_authenticated:
+            if sender := InnavatorUser.objects.filter(user__id=request.user.id).first():
+                if sender.snowflake_id == pk:
+                    # don't accept self-mentorship
+                    return Response(status=status.HTTP_403_FORBIDDEN)
+                receiver = self.get_innavator_user(pk)
+                new_mentorship_snowflake = innavator_slowflake_generator.__next__()
+                sender.mentors.add(receiver, through_defaults={'snowflake_id': new_mentorship_snowflake})
+                return Response(MentorshipSerializer(Mentorship.objects.get(pk=new_mentorship_snowflake)).data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_404_NOT_FOUND) # should never happen
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def delete(self, request, pk, format=None):
+        if request.user.is_authenticated:
+            if sender := InnavatorUser.objects.filter(user__id=request.user.id).first():
+                receiver = self.get_innavator_user(pk)
+                if sender.mentors.contains(receiver):
+                    mentorship = Mentorship.objects.get(mentor=sender, mentee=receiver)
+                    data = MentorshipSerializer(mentorship).data
+                    sender.mentors.remove(receiver)
+                    mentorship.delete()
+                    return Response(data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            return Response(status=status.HTTP_404_NOT_FOUND) # should never happen
+        return Response(status=status.HTTP_401_UNAUTHORIZED)

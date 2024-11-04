@@ -151,7 +151,7 @@ class InnavatorUser(models.Model):
     full_name = models.CharField("Full Name", max_length=300, blank=True)
     preferred_name = models.CharField("Preferred Name", max_length=150, blank=True)
 
-    major = models.CharField("Major", max_length=100, blank=True)
+    major = models.CharField("Major", max_length=100, default="Computer Science")
     website_url = models.URLField("Website URL", max_length=300, blank=True, validators=[URLValidator()])
     profile_picture_url = models.URLField("Profile Picture URL", max_length=300, blank=True, validators=[URLValidator()])
 
