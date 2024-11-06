@@ -156,17 +156,20 @@ class InnavatorUser(models.Model):
     profile_picture_url = models.URLField("Profile Picture URL", max_length=300, blank=True, validators=[URLValidator()])
 
     # "self" allows recursion
-    mentors = models.ManyToManyField("self", symmetrical=False, through="Mentorship")
+    mentees = models.ManyToManyField("self", symmetrical=False, through="Mentorship")
 
     objects = InnavatorUserManager()
 
     def __str__(self):
-        return f'User "{self.full_name}" ({self.snowflake_id})'
+        return f'User "{self.user.username}" ({self.snowflake_id})'
 
 class Mentorship(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
     mentor = models.ForeignKey(InnavatorUser, related_name='%(app_label)s_%(class)s_mentor', on_delete=models.CASCADE)
     mentee = models.ForeignKey(InnavatorUser, related_name='%(app_label)s_%(class)s_mentee', on_delete=models.CASCADE)
+    mentor_accepted = models.BooleanField("Mentor Accepted", default=False)
+    mentee_accepted = models.BooleanField("Mentee Accepted", default=False)
+    request_message = models.CharField("Request Message", max_length=2000, blank=True)
 
     def __str__(self):
         return f"{self.mentor}'s mentorship of {self.mentee}"
@@ -194,6 +197,9 @@ class GroupMembership(models.Model):
     user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
     group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
     is_privileged = models.BooleanField("Is Privileged", default=False)
+    user_accepted = models.BooleanField("User Accepted", default=False)
+    group_accepted = models.BooleanField("Group Accepted", default=False)
+    request_message = models.CharField("Request Message", max_length=2000, blank=True)
 
     def __str__(self):
         return f"{self.user}'s membership in {self.group}"

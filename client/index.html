@@ -252,6 +252,30 @@
       const removeMentee = async snowflake => {
         return await deleteAPI(`mentees/${snowflake}/`);
       };
+      const acceptMentor = async snowflake => {
+        return await patchAPI(`mentors/${snowflake}/`, {});
+      };
+      const acceptMentee = async snowflake => {
+        return await patchAPI(`mentees/${snowflake}/`, {});
+      };
+      const listClubs = async () => {
+        return await getAPI(`clubs/`);
+      };
+      const createGroup = async name => {
+        return await postAPI(`groups/`, {'name': name});
+      };
+      const listGroups = async () => {
+        return await getAPI(`groups/`);
+      };
+      const listMembers = async snowflake => {
+        return await getAPI(`groups/${snowflake}/members/`);
+      };
+      const deleteGroup = async snowflake => {
+        return await deleteAPI(`groups/${snowflake}/`);
+      };
+      const patchGroup = async (snowflake, name) => {
+        return await patchAPI(`groups/${snowflake}/`, {'name': name});
+      };
 
       const collect_optionals = (...pairs) => {
         retVal = {};
@@ -347,6 +371,68 @@
           document.getElementById("mentorship_result").innerHTML = "Not logged in.";
         }
       };
+      const acceptMentor_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await acceptMentor(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+      const acceptMentee_button = async () => {
+        if (logged_in) {
+          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await acceptMentee(document.getElementById("mentorship_user_snowflake").value));
+        }
+        else {
+          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
+        }
+      };
+      const listClubs_button = async () => {
+        document.getElementById("club_list_result").innerHTML = JSON.stringify(await listClubs());
+      };
+      const createGroup_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_create_result").innerHTML = JSON.stringify(await createGroup(document.getElementById("group_create_name").value));
+        }
+        else {
+          document.getElementById("group_create_result").innerHTML = "Not logged in.";
+        }
+      };
+      const listGroups_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_create_result").innerHTML = JSON.stringify(await listGroups(document.getElementById("group_create_name").value));
+        }
+        else {
+          document.getElementById("group_create_result").innerHTML = "Not logged in.";
+        }
+      };
+      const listMembers_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_delete_result").innerHTML = JSON.stringify(await listMembers(document.getElementById("group_delete_snowflake").value));
+        }
+        else {
+          document.getElementById("group_delete_result").innerHTML = "Not logged in.";
+        }
+      };
+      const deleteGroup_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_delete_result").innerHTML = JSON.stringify(await deleteGroup(document.getElementById("group_delete_snowflake").value));
+        }
+        else {
+          document.getElementById("group_delete_result").innerHTML = "Not logged in.";
+        }
+      };
+      const patchGroup_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_patch_result").innerHTML = JSON.stringify(await patchGroup(
+            document.getElementById("group_patch_snowflake").value,
+            document.getElementById("group_patch_name").value
+          ));
+        }
+        else {
+          document.getElementById("group_patch_result").innerHTML = "Not logged in.";
+        }
+      };
 
       who_am_i();
     </script>
@@ -400,6 +486,30 @@
     <button onclick="requestMentee_button()">Request Mentee</button>
     <button onclick="removeMentor_button()">Remove Mentor</button>
     <button onclick="removeMentee_button()">Remove Mentee</button>
+    <button onclick="acceptMentor_button()">Accept Mentor</button>
+    <button onclick="acceptMentee_button()">Accept Mentee</button><br/>
     <span id="mentorship_result"></span><br/>
+
+    <h3>Club List</h3>
+    <button onclick="listClubs_button()">List Clubs</button><br/>
+    <span id="club_list_result"></span><br/>
+
+    <h3>Create Group</h3>
+    Group Name: <input id="group_create_name"/><br/>
+    <button onclick="createGroup_button()">Create Group</button>
+    <button onclick="listGroups_button()">List Groups</button><br/>
+    <span id="group_create_result"></span><br/>
+
+    <h3>Delete Group</h3>
+    Group Snowflake: <input id="group_delete_snowflake"/><br/>
+    <button onclick="listMembers_button()">List Members</button>
+    <button onclick="deleteGroup_button()">Delete Group</button><br/>
+    <span id="group_delete_result"></span><br/>
+
+    <h3>Patch Group</h3>
+    Group Snowflake: <input id="group_patch_snowflake"/><br/>
+    Name: <input id="group_patch_name"/><br/>
+    <button onclick="patchGroup_button()">Patch Group</button><br/>
+    <span id="group_patch_result"></span><br/>
   </body>
 </html>

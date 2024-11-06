@@ -132,7 +132,7 @@ from django.utils.html import escape
 from rest_framework import exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from store.models import InnavatorUser, Mentorship, Palette
+from store import models as innavator_models
 
 # https://stackoverflow.com/a/75452395
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -147,7 +147,7 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
             )
         return super().validate(attrs)
 
-class UserSerializer(serializers.ModelSerializer):
+class _DjangoUserSerializer(serializers.ModelSerializer):
     """
     Serializer for Django's internal user details.
     DO NOT USE OUTSIDE OF `InnavatorUserSerializer`
@@ -158,12 +158,11 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 class InnavatorUserSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = _DjangoUserSerializer()
 
     class Meta:
-        model = InnavatorUser
-        fields = ['snowflake_id', 'user', 'full_name', 'preferred_name',
-                  'major', 'website_url', 'profile_picture_url']
+        model = innavator_models.InnavatorUser
+        exclude = ['mentees']
         extra_kwargs = {'user': {'required': False, 'allow_null': True}}
 
     def validate_user(self, value):
@@ -186,7 +185,7 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
         return escape(value)
 
     def create(self, validated_data):
-        user = InnavatorUser.objects.create(
+        user = innavator_models.InnavatorUser.objects.create(
             username = validated_data['user']['username'],
             email = validated_data['user']['email'],
             password = validated_data['user']['password']
@@ -214,10 +213,42 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 
 class PaletteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Palette
+        model = innavator_models.Palette
         fields = '__all__'
 
 class MentorshipSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Mentorship
+        model = innavator_models.Mentorship
         fields = '__all__'
+
+    def validate_request_message(self, value):
+        return escape(value)
+
+class InnavatorGroupPreviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.InnavatorGroup
+        fields = ['snowflake_id', 'name']
+
+    def validate_name(self, value):
+        return escape(value)
+
+class InnavatorGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.InnavatorGroup
+        exclude = ['members']
+
+    def validate_name(self, value):
+        return escape(value)
+
+class GroupMembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.GroupMembership
+        fields = ['user', 'group', 'is_privileged']
+
+class GroupMembershipDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.GroupMembership
+        fields = '__all__'
+
+    def validate_request_message(self, value):
+        return escape(value)

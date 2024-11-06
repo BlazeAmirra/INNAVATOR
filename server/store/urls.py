@@ -41,6 +41,7 @@ router.register(
 
 router.register(r"users", views.InnavatorUserViewset, basename="user")
 router.register(r"palettes", views.PaletteViewset, basename="palette")
+router.register(r"groups", views.InnavatorGroupViewset, basename="group")
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
@@ -55,6 +56,8 @@ urlpatterns = [
     path("who_am_i/", views.who_am_i, name='who_am_i'),
     path("mentors/<int:pk>/", views.MentorListView.as_view(), name='mentors'),
     path("mentees/<int:pk>/", views.MenteeListView.as_view(), name='mentees'),
+
+    path("clubs/", views.club_list, name='clubs'),
 
     path("jwt_token/", views.EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("jwt_token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
