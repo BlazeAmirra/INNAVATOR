@@ -228,53 +228,83 @@
         return await getAPI(`users/${snowflake}/`);
       };
       const fetchPalette = async snowflake => {
-        return await getAPI(`palettes/${snowflake}/`);
+        return await getAPI(`users/${snowflake}/get_palette/`);
       };
       const fetchMentors = async snowflake => {
-        return await getAPI(`mentors/${snowflake}/`);
+        return await getAPI(`users/${snowflake}/mentors/`);
       };
       const fetchMentees = async snowflake => {
-        return await getAPI(`mentees/${snowflake}/`);
+        return await getAPI(`users/${snowflake}/mentees/`);
+      };
+      const fetchRequestsAsMentorFromMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/requests_as_mentor_from_me/`);
+      };
+      const fetchRequestsAsMentorToMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/requests_as_mentor_to_me/`);
+      };
+      const fetchRequestsAsMenteeFromMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/requests_as_mentee_from_me/`);
+      };
+      const fetchRequestsAsMenteeToMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/requests_as_mentee_to_me/`);
+      };
+      const fetchGroupRequestsFromMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/group_requests_from_me/`);
+      };
+      const fetchGroupRequestsToMe = async snowflake => {
+        return await getAPI(`users/${snowflake}/group_requests_to_me/`);
+      };
+      const listGroups = async () => {
+        return await getAPI(`groups/`);
+      };
+      const listClubs = async () => {
+        return await getAPI(`groups/clubs/`);
+      };
+      const listMembers = async snowflake => {
+        return await getAPI(`groups/${snowflake}/members/`);
+      };
+      const requestsFromGroup = async snowflake => {
+        return await getAPI(`groups/${snowflake}/requests_from_group/`);
+      };
+      const requestsToGroup = async snowflake => {
+        return await getAPI(`groups/${snowflake}/requests_to_group/`);
       };
       const patchUser = async diff => {
         return await patchAPI(`users/${this_user}/`, diff);
       };
       // there can't be a putUser because the validator requires submitting the credentials
       const requestMentor = async snowflake => {
-        return await postAPI(`mentors/${snowflake}/`, {});
+        return await postAPI(`users/${snowflake}/request_as_mentor/`, {});
       };
       const requestMentee = async snowflake => {
-        return await postAPI(`mentees/${snowflake}/`, {});
+        return await postAPI(`users/${snowflake}/request_as_mentee/`, {});
       };
       const removeMentor = async snowflake => {
-        return await deleteAPI(`mentors/${snowflake}/`);
+        return await deleteAPI(`users/${snowflake}/remove_mentor/`);
       };
       const removeMentee = async snowflake => {
-        return await deleteAPI(`mentees/${snowflake}/`);
+        return await deleteAPI(`users/${snowflake}/remove_mentee/`);
       };
       const acceptMentor = async snowflake => {
-        return await patchAPI(`mentors/${snowflake}/`, {});
+        return await patchAPI(`users/${snowflake}/accept_mentor_request/`, {});
       };
       const acceptMentee = async snowflake => {
-        return await patchAPI(`mentees/${snowflake}/`, {});
-      };
-      const listClubs = async () => {
-        return await getAPI(`clubs/`);
+        return await patchAPI(`users/${snowflake}/accept_mentee_request/`, {});
       };
       const createGroup = async name => {
         return await postAPI(`groups/`, {'name': name});
-      };
-      const listGroups = async () => {
-        return await getAPI(`groups/`);
-      };
-      const listMembers = async snowflake => {
-        return await getAPI(`groups/${snowflake}/members/`);
       };
       const deleteGroup = async snowflake => {
         return await deleteAPI(`groups/${snowflake}/`);
       };
       const patchGroup = async (snowflake, name) => {
         return await patchAPI(`groups/${snowflake}/`, {'name': name});
+      };
+      const inviteUser = async (group, user) => {
+        return await postAPI(`users/${user}/invite_to_group/`, {'group': group});
+      };
+      const acceptInvite = async (group, user) => {
+        return await patchAPI(`groups/${group}/accept_invite/`);
       };
 
       const collect_optionals = (...pairs) => {
@@ -320,10 +350,42 @@
         document.getElementById("user_result").innerHTML = JSON.stringify(await fetchPalette(document.getElementById("user_snowflake").value));
       };
       const fetchMentors_button = async () => {
-        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchMentors(document.getElementById("user_snowflake").value));
+        document.getElementById("self_result").innerHTML = JSON.stringify(await fetchMentors(this_user));
       };
       const fetchMentees_button = async () => {
-        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchMentees(document.getElementById("user_snowflake").value));
+        document.getElementById("self_result").innerHTML = JSON.stringify(await fetchMentees(this_user));
+      };
+      const fetchRequestsAsMentorFromMe_button = async () => {
+        if (logged_in) {
+          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMentorFromMe(this_user));
+        }
+        else {
+          document.getElementById("self_result").innerHTML = "Not logged in.";
+        }
+      };
+      const fetchRequestsAsMentorToMe_button = async () => {
+        if (logged_in) {
+          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMentorToMe(this_user));
+        }
+        else {
+          document.getElementById("self_result").innerHTML = "Not logged in.";
+        }
+      };
+      const fetchRequestsAsMenteeFromMe_button = async () => {
+        if (logged_in) {
+          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMenteeFromMe(this_user));
+        }
+        else {
+          document.getElementById("self_result").innerHTML = "Not logged in.";
+        }
+      };
+      const fetchRequestsAsMenteeToMe_button = async () => {
+        if (logged_in) {
+          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMenteeToMe(this_user));
+        }
+        else {
+          document.getElementById("self_result").innerHTML = "Not logged in.";
+        }
       };
       const patchUser_button = async () => {
         if (logged_in) {
@@ -388,7 +450,7 @@
         }
       };
       const listClubs_button = async () => {
-        document.getElementById("club_list_result").innerHTML = JSON.stringify(await listClubs());
+        document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listClubs());
       };
       const createGroup_button = async () => {
         if (logged_in) {
@@ -400,18 +462,34 @@
       };
       const listGroups_button = async () => {
         if (logged_in) {
-          document.getElementById("group_create_result").innerHTML = JSON.stringify(await listGroups(document.getElementById("group_create_name").value));
+          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listGroups());
         }
         else {
-          document.getElementById("group_create_result").innerHTML = "Not logged in.";
+          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
         }
       };
       const listMembers_button = async () => {
         if (logged_in) {
-          document.getElementById("group_delete_result").innerHTML = JSON.stringify(await listMembers(document.getElementById("group_delete_snowflake").value));
+          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listMembers(document.getElementById("group_lookup_snowflake").value));
         }
         else {
-          document.getElementById("group_delete_result").innerHTML = "Not logged in.";
+          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
+        }
+      };
+      const requestsFromGroup_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await requestsFromGroup(document.getElementById("group_lookup_snowflake").value));
+        }
+        else {
+          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
+        }
+      };
+      const requestsToGroup_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await requestsToGroup(document.getElementById("group_lookup_snowflake").value));
+        }
+        else {
+          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
         }
       };
       const deleteGroup_button = async () => {
@@ -431,6 +509,33 @@
         }
         else {
           document.getElementById("group_patch_result").innerHTML = "Not logged in.";
+        }
+      };
+      const inviteUser_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_invite_result").innerHTML = JSON.stringify(await inviteUser(
+            document.getElementById("group_invite_snowflake").value,
+            document.getElementById("group_invite_user").value
+          ));
+        }
+        else {
+          document.getElementById("group_invite_result").innerHTML = "Not logged in.";
+        }
+      };
+      const fetchInvites_button = async () => {
+        if (logged_in) {
+          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchGroupRequestsToMe(this_user));
+        }
+        else {
+          document.getElementById("self_result").innerHTML = "Not logged in.";
+        }
+      };
+      const acceptInvite_button = async () => {
+        if (logged_in) {
+          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await acceptInvite(document.getElementById("group_lookup_snowflake").value));
+        }
+        else {
+          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
         }
       };
 
@@ -466,10 +571,18 @@
     <h3>User Lookup</h3>
     User Snowflake: <input id="user_snowflake"/><br/>
     <button onclick="fetchUser_button()">Fetch User</button>
-    <button onclick="fetchPalette_button()">Fetch Palette</button>
-    <button onclick="fetchMentors_button()">Fetch Mentors</button>
-    <button onclick="fetchMentees_button()">Fetch Mentees</button><br/>
+    <button onclick="fetchPalette_button()">Fetch Palette</button><br/>
     <span id="user_result"></span><br/>
+
+    <h3>Self Lookup</h3>
+    <button onclick="fetchMentors_button()">Fetch Mentors</button>
+    <button onclick="fetchMentees_button()">Fetch Mentees</button>
+    <button onclick="fetchRequestsAsMentorFromMe_button()">Fetch my requests for a mentor</button>
+    <button onclick="fetchRequestsAsMentorToMe_button()">Fetch requests for my being a mentor</button>
+    <button onclick="fetchRequestsAsMenteeFromMe_button()">Fetch my requests for a mentee</button>
+    <button onclick="fetchRequestsAsMenteeToMe_button()">Fetch requests for my being a mentee</button>
+    <button onclick="fetchInvites_button()">List Group Invites</button><br/>
+    <span id="self_result"></span><br/>
 
     <h3>User Patch</h3>
     Full Name: <input id="patch_user_full_name"/><br/>
@@ -490,19 +603,13 @@
     <button onclick="acceptMentee_button()">Accept Mentee</button><br/>
     <span id="mentorship_result"></span><br/>
 
-    <h3>Club List</h3>
-    <button onclick="listClubs_button()">List Clubs</button><br/>
-    <span id="club_list_result"></span><br/>
-
     <h3>Create Group</h3>
     Group Name: <input id="group_create_name"/><br/>
-    <button onclick="createGroup_button()">Create Group</button>
-    <button onclick="listGroups_button()">List Groups</button><br/>
+    <button onclick="createGroup_button()">Create Group</button><br/>
     <span id="group_create_result"></span><br/>
 
     <h3>Delete Group</h3>
     Group Snowflake: <input id="group_delete_snowflake"/><br/>
-    <button onclick="listMembers_button()">List Members</button>
     <button onclick="deleteGroup_button()">Delete Group</button><br/>
     <span id="group_delete_result"></span><br/>
 
@@ -511,5 +618,21 @@
     Name: <input id="group_patch_name"/><br/>
     <button onclick="patchGroup_button()">Patch Group</button><br/>
     <span id="group_patch_result"></span><br/>
+
+    <h3>Group Lookup</h3>
+    Group Snowflake: <input id="group_lookup_snowflake"/><br/>
+    <button onclick="listClubs_button()">List Clubs</button>
+    <button onclick="listGroups_button()">List Groups</button>
+    <button onclick="listMembers_button()">List Members</button>
+    <button onclick="requestsFromGroup_button()">List Invited Users</button>
+    <button onclick="requestsToGroup_button()">List User Join Requests</button>
+    <button onclick="acceptInvite_button()">Accept Invite</button><br/>
+    <span id="group_lookup_result"></span><br/>
+
+    <h3>Invite to Group</h3>
+    Group Snowflake: <input id="group_invite_snowflake"/><br/>
+    User Snowflake: <input id="group_invite_user"/><br/>
+    <button onclick="inviteUser_button()">Send Invite</button><br/>
+    <span id="group_invite_result"></span><br/>
   </body>
 </html>
