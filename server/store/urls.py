@@ -41,6 +41,8 @@ router.register(
 
 router.register(r"users", views.InnavatorUserViewset, basename="user")
 router.register(r"groups", views.InnavatorGroupViewset, basename="group")
+router.register(r"channels", views.ChannelViewset, basename="channel")
+router.register(r"messages", views.MessageViewset, basename="message")
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
@@ -56,6 +58,6 @@ urlpatterns = [
 
     path("jwt_token/", views.EmailTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("jwt_token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
-    path("jwt_token/verify/", TokenVerifyView.as_view(), name='token_verify'),
+    # path("jwt_token/verify/", TokenVerifyView.as_view(), name='token_verify'),
     # begin Google code
 ]

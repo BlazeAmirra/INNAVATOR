@@ -16,16 +16,6 @@
       let logged_in = false;
       let this_user = 0;
 
-      // modified from https://thewoods.blog/base64url/ since we already get a Uint8Array
-      /*
-      const base64url_encode = buffer => {
-        return btoa(Array.from(buffer, b => String.fromCharCode(b)).join(''))
-          .replace(/\+/g, '-')
-          .replace(/\//g, '_')
-          .replace(/=+$/, '');
-      };
-      */
-
       // https://stackoverflow.com/a/69058154
       const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000;
 
@@ -224,91 +214,117 @@
 
         return await who_am_i();
       };
-      const fetchUser = async snowflake => {
-        return await getAPI(`users/${snowflake}/`);
+      const fetchUser = async user => {
+        return await getAPI(`users/${user}/`);
       };
-      const fetchPalette = async snowflake => {
-        return await getAPI(`users/${snowflake}/get_palette/`);
+      const fetchPalette = async user => {
+        return await getAPI(`users/${user}/get_palette/`);
       };
-      const fetchMentors = async snowflake => {
-        return await getAPI(`users/${snowflake}/mentors/`);
+      const fetchMentors = async () => {
+        return await getAPI(`users/${this_user}/mentors/`);
       };
-      const fetchMentees = async snowflake => {
-        return await getAPI(`users/${snowflake}/mentees/`);
+      const fetchMentees = async () => {
+        return await getAPI(`users/${this_user}/mentees/`);
       };
-      const fetchRequestsAsMentorFromMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/requests_as_mentor_from_me/`);
+      const fetchRequestsAsMentorFromMe = async () => {
+        return await getAPI(`users/${this_user}/requests_as_mentor_from_me/`);
       };
-      const fetchRequestsAsMentorToMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/requests_as_mentor_to_me/`);
+      const fetchRequestsAsMentorToMe = async () => {
+        return await getAPI(`users/${this_user}/requests_as_mentor_to_me/`);
       };
-      const fetchRequestsAsMenteeFromMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/requests_as_mentee_from_me/`);
+      const fetchRequestsAsMenteeFromMe = async () => {
+        return await getAPI(`users/${this_user}/requests_as_mentee_from_me/`);
       };
-      const fetchRequestsAsMenteeToMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/requests_as_mentee_to_me/`);
+      const fetchRequestsAsMenteeToMe = async () => {
+        return await getAPI(`users/${this_user}/requests_as_mentee_to_me/`);
       };
-      const fetchGroupRequestsFromMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/group_requests_from_me/`);
+      const fetchGroupRequestsFromMe = async () => {
+        return await getAPI(`users/${this_user}/group_requests_from_me/`);
       };
-      const fetchGroupRequestsToMe = async snowflake => {
-        return await getAPI(`users/${snowflake}/group_requests_to_me/`);
-      };
-      const listGroups = async () => {
-        return await getAPI(`groups/`);
-      };
-      const listClubs = async () => {
-        return await getAPI(`groups/clubs/`);
-      };
-      const listMembers = async snowflake => {
-        return await getAPI(`groups/${snowflake}/members/`);
-      };
-      const requestsFromGroup = async snowflake => {
-        return await getAPI(`groups/${snowflake}/requests_from_group/`);
-      };
-      const requestsToGroup = async snowflake => {
-        return await getAPI(`groups/${snowflake}/requests_to_group/`);
+      const fetchGroupRequestsToMe = async () => {
+        return await getAPI(`users/${this_user}/group_requests_to_me/`);
       };
       const patchUser = async diff => {
         return await patchAPI(`users/${this_user}/`, diff);
       };
-      // there can't be a putUser because the validator requires submitting the credentials
-      const requestMentor = async snowflake => {
-        return await postAPI(`users/${snowflake}/request_as_mentor/`, {});
+      const requestMentor = async user => {
+        return await postAPI(`users/${user}/request_as_mentor/`, {});
       };
-      const requestMentee = async snowflake => {
-        return await postAPI(`users/${snowflake}/request_as_mentee/`, {});
+      const requestMentee = async user => {
+        return await postAPI(`users/${user}/request_as_mentee/`, {});
       };
-      const removeMentor = async snowflake => {
-        return await deleteAPI(`users/${snowflake}/remove_mentor/`);
+      const removeMentor = async user => {
+        return await deleteAPI(`users/${user}/remove_mentor/`);
       };
-      const removeMentee = async snowflake => {
-        return await deleteAPI(`users/${snowflake}/remove_mentee/`);
+      const removeMentee = async user => {
+        return await deleteAPI(`users/${user}/remove_mentee/`);
       };
-      const acceptMentor = async snowflake => {
-        return await patchAPI(`users/${snowflake}/accept_mentor_request/`, {});
+      const acceptMentor = async user => {
+        return await patchAPI(`users/${user}/accept_mentor_request/`, {});
       };
-      const acceptMentee = async snowflake => {
-        return await patchAPI(`users/${snowflake}/accept_mentee_request/`, {});
+      const acceptMentee = async user => {
+        return await patchAPI(`users/${user}/accept_mentee_request/`, {});
+      };
+      const listGroups = async () => {
+        return await getAPI(`groups/`);
+      };
+      const listAllGroups = async () => {
+        return await getAPI(`groups/list_all/`);
+      };
+      const listClubs = async () => {
+        return await getAPI(`groups/clubs/`);
+      };
+      const listMembers = async group => {
+        return await getAPI(`groups/${group}/members/`);
+      };
+      const requestsFromGroup = async group => {
+        return await getAPI(`groups/${group}/requests_from_group/`);
+      };
+      const requestsToGroup = async group => {
+        return await getAPI(`groups/${group}/requests_to_group/`);
+      };
+      const listChannels = async group => {
+        return await getAPI(`groups/${group}/channels/`);
+      };
+      const listMessages = async channel => {
+        return await getAPI(`channels/${channel}/messages/`);
+      };
+      const unreadMessageCount = async channel => {
+        return await getAPI(`channels/${channel}/unread_message_count/`);
       };
       const createGroup = async name => {
         return await postAPI(`groups/`, {'name': name});
       };
-      const deleteGroup = async snowflake => {
-        return await deleteAPI(`groups/${snowflake}/`);
+      const deleteGroup = async group => {
+        return await deleteAPI(`groups/${group}/`);
       };
-      const patchGroup = async (snowflake, name) => {
-        return await patchAPI(`groups/${snowflake}/`, {'name': name});
+      const patchGroup = async (group, name) => {
+        return await patchAPI(`groups/${group}/`, {'name': name});
       };
       const inviteUser = async (group, user) => {
-        return await postAPI(`users/${user}/invite_to_group/`, {'group': group});
+        return await postAPI(`groups/${group}/invite_to_group/`, {'user': user});
       };
-      const acceptInvite = async (group, user) => {
+      const acceptInvite = async group => {
         return await patchAPI(`groups/${group}/accept_invite/`);
+      };
+      const createChannel = async (group, name) => {
+        return await postAPI(`groups/${group}/create_channel/`, {'name': name});
+      };
+      const patchChannel = async (channel, name) => {
+        return await patchAPI(`channels/${channel}/`, {'name': name});
+      };
+      const sendMessage = async (channel, contents) => {
+        return await postAPI(`channels/${channel}/create_message/`, {'contents': contents});
+      };
+      const patchMessage = async (message, contents) => {
+        return await patchAPI(`messages/${message}/`, {'contents': contents});
+      };
+      const deleteMessage = async message => {
+        return await deleteAPI(`messages/${message}/`);
       };
 
       const collect_optionals = (...pairs) => {
-        retVal = {};
+        let retVal = {};
         pairs.forEach(pair => {
           if (pair[1] = pair[1].trim()) {
             retVal[pair[0]] = pair[1];
@@ -317,227 +333,17 @@
         return retVal;
       };
 
-      const register_button = async () => {
-        document.getElementById("register_result").innerHTML = JSON.stringify(
-          await register(
-            document.getElementById("register_username").value,
-            document.getElementById("register_full_name").value,
-            document.getElementById("register_preferred_name").value,
-            document.getElementById("register_major").value,
-            document.getElementById("register_email").value,
-            document.getElementById("register_password").value
-          )
-        );
-      };
-      const login_button = async () => {
-        document.getElementById("login_result").innerHTML = JSON.stringify(
-          await login(
-            document.getElementById("login_email").value,
-            document.getElementById("login_password").value
-          )
-        );
-      };
-      const logout_button = async () => {
-        document.getElementById("logout_result").innerHTML = JSON.stringify(await logout());
-      };
-      const who_am_i_button = async () => {
-        document.getElementById("who_am_i_result").innerHTML = JSON.stringify(await who_am_i());
-      };
-      const fetchUser_button = async () => {
-        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchUser(document.getElementById("user_snowflake").value));
-      };
-      const fetchPalette_button = async () => {
-        document.getElementById("user_result").innerHTML = JSON.stringify(await fetchPalette(document.getElementById("user_snowflake").value));
-      };
-      const fetchMentors_button = async () => {
-        document.getElementById("self_result").innerHTML = JSON.stringify(await fetchMentors(this_user));
-      };
-      const fetchMentees_button = async () => {
-        document.getElementById("self_result").innerHTML = JSON.stringify(await fetchMentees(this_user));
-      };
-      const fetchRequestsAsMentorFromMe_button = async () => {
-        if (logged_in) {
-          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMentorFromMe(this_user));
+      // if has_optionals, input_elements is list of pairs of [string, element]
+      const test_button = async (has_optionals, result_element, api_function, ...input_elements) => {
+        let retVal = "";
+        if (has_optionals) {
+          retVal = JSON.stringify(await api_function(collect_optionals(...input_elements.map(element => {element[1] = element[1].value; return element;}))));
         }
         else {
-          document.getElementById("self_result").innerHTML = "Not logged in.";
+          retVal = JSON.stringify(await api_function(...input_elements.map(element => element.value)));
         }
-      };
-      const fetchRequestsAsMentorToMe_button = async () => {
-        if (logged_in) {
-          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMentorToMe(this_user));
-        }
-        else {
-          document.getElementById("self_result").innerHTML = "Not logged in.";
-        }
-      };
-      const fetchRequestsAsMenteeFromMe_button = async () => {
-        if (logged_in) {
-          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMenteeFromMe(this_user));
-        }
-        else {
-          document.getElementById("self_result").innerHTML = "Not logged in.";
-        }
-      };
-      const fetchRequestsAsMenteeToMe_button = async () => {
-        if (logged_in) {
-          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchRequestsAsMenteeToMe(this_user));
-        }
-        else {
-          document.getElementById("self_result").innerHTML = "Not logged in.";
-        }
-      };
-      const patchUser_button = async () => {
-        if (logged_in) {
-          document.getElementById("patch_user_result").innerHTML = JSON.stringify(await patchUser(collect_optionals(
-            ["full_name", document.getElementById("patch_user_full_name").value],
-            ["preferred_name", document.getElementById("patch_user_preferred_name").value],
-            ["major", document.getElementById("patch_user_major").value],
-            ["website_url", document.getElementById("patch_user_website").value],
-            ["profile_picture_url", document.getElementById("patch_user_pfp").value],
-          )));
-        }
-        else {
-          document.getElementById("patch_user_result").innerHTML = "Not logged in.";
-        }
-      };
-      const requestMentor_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await requestMentor(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const requestMentee_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await requestMentee(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const removeMentor_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await removeMentor(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const removeMentee_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await removeMentee(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const acceptMentor_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await acceptMentor(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const acceptMentee_button = async () => {
-        if (logged_in) {
-          document.getElementById("mentorship_result").innerHTML = JSON.stringify(await acceptMentee(document.getElementById("mentorship_user_snowflake").value));
-        }
-        else {
-          document.getElementById("mentorship_result").innerHTML = "Not logged in.";
-        }
-      };
-      const listClubs_button = async () => {
-        document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listClubs());
-      };
-      const createGroup_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_create_result").innerHTML = JSON.stringify(await createGroup(document.getElementById("group_create_name").value));
-        }
-        else {
-          document.getElementById("group_create_result").innerHTML = "Not logged in.";
-        }
-      };
-      const listGroups_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listGroups());
-        }
-        else {
-          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
-        }
-      };
-      const listMembers_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await listMembers(document.getElementById("group_lookup_snowflake").value));
-        }
-        else {
-          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
-        }
-      };
-      const requestsFromGroup_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await requestsFromGroup(document.getElementById("group_lookup_snowflake").value));
-        }
-        else {
-          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
-        }
-      };
-      const requestsToGroup_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await requestsToGroup(document.getElementById("group_lookup_snowflake").value));
-        }
-        else {
-          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
-        }
-      };
-      const deleteGroup_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_delete_result").innerHTML = JSON.stringify(await deleteGroup(document.getElementById("group_delete_snowflake").value));
-        }
-        else {
-          document.getElementById("group_delete_result").innerHTML = "Not logged in.";
-        }
-      };
-      const patchGroup_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_patch_result").innerHTML = JSON.stringify(await patchGroup(
-            document.getElementById("group_patch_snowflake").value,
-            document.getElementById("group_patch_name").value
-          ));
-        }
-        else {
-          document.getElementById("group_patch_result").innerHTML = "Not logged in.";
-        }
-      };
-      const inviteUser_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_invite_result").innerHTML = JSON.stringify(await inviteUser(
-            document.getElementById("group_invite_snowflake").value,
-            document.getElementById("group_invite_user").value
-          ));
-        }
-        else {
-          document.getElementById("group_invite_result").innerHTML = "Not logged in.";
-        }
-      };
-      const fetchInvites_button = async () => {
-        if (logged_in) {
-          document.getElementById("self_result").innerHTML = JSON.stringify(await fetchGroupRequestsToMe(this_user));
-        }
-        else {
-          document.getElementById("self_result").innerHTML = "Not logged in.";
-        }
-      };
-      const acceptInvite_button = async () => {
-        if (logged_in) {
-          document.getElementById("group_lookup_result").innerHTML = JSON.stringify(await acceptInvite(document.getElementById("group_lookup_snowflake").value));
-        }
-        else {
-          document.getElementById("group_lookup_result").innerHTML = "Not logged in.";
-        }
-      };
+        result_element.innerHTML = retVal;
+      }
 
       who_am_i();
     </script>
@@ -551,37 +357,44 @@
     Full Name: <input id="register_full_name"/><br/>
     Preferred Name: <input id="register_preferred_name"/><br/>
     Major: <input id="register_major"/><br/>
-    <button onclick="register_button()">Register</button><br/>
+    <button onclick="test_button(false, document.getElementById('register_result'), register,
+      document.getElementById('register_username'), document.getElementById('register_full_name'),
+      document.getElementById('register_preferred_name'), document.getElementById('register_major'),
+      document.getElementById('register_email'), document.getElementById('register_password')
+    )">Register</button><br/>
     <span id="register_result"></span><br/>
 
     <h3>Login</h3>
     Email: <input id="login_email"/><br/>
     Password: <input type="password" id="login_password"/><br/>
-    <button onclick="login_button()">Login</button><br/>
+    <button onclick="test_button(false, document.getElementById('login_result'), login,
+      document.getElementById('login_email'),
+      document.getElementById('login_password')
+    )">Login</button><br/>
     <span id="login_result"></span><br/>
 
     <h3>Logout</h3>
-    <button onclick="logout_button()">Logout</button><br/>
+    <button onclick="test_button(false, document.getElementById('logout_result'), logout)">Logout</button><br/>
     <span id="logout_result"></span><br/>
 
     <h3>Who am I?</h3>
-    <button onclick="who_am_i_button()">Lookup</button><br/>
+    <button onclick="test_button(false, document.getElementById('who_am_i_result'), who_am_i)">Lookup</button><br/>
     <span id="who_am_i_result"></span><br/>
 
     <h3>User Lookup</h3>
     User Snowflake: <input id="user_snowflake"/><br/>
-    <button onclick="fetchUser_button()">Fetch User</button>
-    <button onclick="fetchPalette_button()">Fetch Palette</button><br/>
+    <button onclick="test_button(false, document.getElementById('user_result'), fetchUser, document.getElementById('user_snowflake'))">Fetch User</button>
+    <button onclick="test_button(false, document.getElementById('user_result'), fetchPalette, document.getElementById('user_snowflake'))">Fetch Palette</button><br/>
     <span id="user_result"></span><br/>
 
     <h3>Self Lookup</h3>
-    <button onclick="fetchMentors_button()">Fetch Mentors</button>
-    <button onclick="fetchMentees_button()">Fetch Mentees</button>
-    <button onclick="fetchRequestsAsMentorFromMe_button()">Fetch my requests for a mentor</button>
-    <button onclick="fetchRequestsAsMentorToMe_button()">Fetch requests for my being a mentor</button>
-    <button onclick="fetchRequestsAsMenteeFromMe_button()">Fetch my requests for a mentee</button>
-    <button onclick="fetchRequestsAsMenteeToMe_button()">Fetch requests for my being a mentee</button>
-    <button onclick="fetchInvites_button()">List Group Invites</button><br/>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchMentors)">Fetch Mentors</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchMentees)">Fetch Mentees</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchRequestsAsMentorFromMe)">Fetch my requests for a mentor</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchRequestsAsMentorToMe)">Fetch requests for my being a mentor</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchRequestsAsMenteeFromMe)">Fetch my requests for a mentee</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchRequestsAsMentorToMe)">Fetch requests for my being a mentee</button>
+    <button onclick="test_button(false, document.getElementById('self_result'), fetchGroupRequestsToMe)">List Group Invites</button><br/>
     <span id="self_result"></span><br/>
 
     <h3>User Patch</h3>
@@ -590,49 +403,113 @@
     Major: <input id="patch_user_major"/><br/>
     Website URL: <input id="patch_user_website"/><br/>
     Profile Picture URL: <input id="patch_user_pfp"/><br/>
-    <button onclick="patchUser_button()">Patch User</button><br/>
+    <button onclick="test_button(true, document.getElementById('patch_user_result'), patchUser,
+      ['full_name', document.getElementById('patch_user_full_name')],
+      ['preferred_name', document.getElementById('patch_user_preferred_name')],
+      ['major', document.getElementById('patch_user_major')],
+      ['website_url', document.getElementById('patch_user_website')],
+      ['profile_picture_url', document.getElementById('patch_user_pfp')]
+    )">Patch User</button><br/>
     <span id="patch_user_result"></span><br/>
 
     <h3>Mentorship Request</h3>
     User Snowflake: <input id="mentorship_user_snowflake"/><br/>
-    <button onclick="requestMentor_button()">Request Mentor</button>
-    <button onclick="requestMentee_button()">Request Mentee</button>
-    <button onclick="removeMentor_button()">Remove Mentor</button>
-    <button onclick="removeMentee_button()">Remove Mentee</button>
-    <button onclick="acceptMentor_button()">Accept Mentor</button>
-    <button onclick="acceptMentee_button()">Accept Mentee</button><br/>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), requestMentor, document.getElementById('mentorship_user_snowflake'))">Request Mentor</button>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), requestMentee, document.getElementById('mentorship_user_snowflake'))">Request Mentee</button>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), removeMentor, document.getElementById('mentorship_user_snowflake'))">Remove Mentor</button>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), removeMentee, document.getElementById('mentorship_user_snowflake'))">Remove Mentee</button>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), acceptMentor, document.getElementById('mentorship_user_snowflake'))">Accept Mentor</button>
+    <button onclick="test_button(false, document.getElementById('mentorship_result'), acceptMentee, document.getElementById('mentorship_user_snowflake'))">Accept Mentee</button><br/>
     <span id="mentorship_result"></span><br/>
 
     <h3>Create Group</h3>
     Group Name: <input id="group_create_name"/><br/>
-    <button onclick="createGroup_button()">Create Group</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_create_result'), createGroup, document.getElementById('group_create_name'))">Create Group</button><br/>
     <span id="group_create_result"></span><br/>
 
     <h3>Delete Group</h3>
     Group Snowflake: <input id="group_delete_snowflake"/><br/>
-    <button onclick="deleteGroup_button()">Delete Group</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_delete_result'), deleteGroup, document.getElementById('group_delete_snowflake'))">Delete Group</button><br/>
     <span id="group_delete_result"></span><br/>
 
     <h3>Patch Group</h3>
     Group Snowflake: <input id="group_patch_snowflake"/><br/>
     Name: <input id="group_patch_name"/><br/>
-    <button onclick="patchGroup_button()">Patch Group</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_patch_result'), patchGroup,
+      document.getElementById('group_patch_snowflake'),
+      document.getElementById('group_patch_name')
+    )">Patch Group</button><br/>
     <span id="group_patch_result"></span><br/>
+
+    <h3>Group List</h3>
+    <button onclick="test_button(false, document.getElementById('group_list_result'), listClubs)">List Clubs</button>
+    <button onclick="test_button(false, document.getElementById('group_list_result'), listGroups)">List Groups I am In</button>
+    <button onclick="test_button(false, document.getElementById('group_list_result'), listAllGroups)">List All Groups</button><br/>
+    <span id="group_list_result"></span><br/>
 
     <h3>Group Lookup</h3>
     Group Snowflake: <input id="group_lookup_snowflake"/><br/>
-    <button onclick="listClubs_button()">List Clubs</button>
-    <button onclick="listGroups_button()">List Groups</button>
-    <button onclick="listMembers_button()">List Members</button>
-    <button onclick="requestsFromGroup_button()">List Invited Users</button>
-    <button onclick="requestsToGroup_button()">List User Join Requests</button>
-    <button onclick="acceptInvite_button()">Accept Invite</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), listMembers, document.getElementById('group_lookup_snowflake'))">List Members</button>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), listChannels, document.getElementById('group_lookup_snowflake'))">List Channels</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), requestsFromGroup, document.getElementById('group_lookup_snowflake'))">List Invited Users</button>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), requestsToGroup, document.getElementById('group_lookup_snowflake'))">List User Join Requests</button>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), acceptInvite, document.getElementById('group_lookup_snowflake'))">Accept Invite</button><br/>
     <span id="group_lookup_result"></span><br/>
 
     <h3>Invite to Group</h3>
     Group Snowflake: <input id="group_invite_snowflake"/><br/>
     User Snowflake: <input id="group_invite_user"/><br/>
-    <button onclick="inviteUser_button()">Send Invite</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_invite_result'), inviteUser,
+      document.getElementById('group_invite_snowflake'),
+      document.getElementById('group_invite_user')
+    )">Send Invite</button><br/>
     <span id="group_invite_result"></span><br/>
+
+    <h3>Create Channel</h3>
+    Group Snowflake: <input id="group_channel_create_snowflake"/><br/>
+    Channel Name: <input id="group_channel_create_name"/><br/>
+    <button onclick="test_button(false, document.getElementById('group_channel_create_result'), createChannel,
+      document.getElementById('group_channel_create_snowflake'),
+      document.getElementById('group_channel_create_name')
+    )">Create Channel</button><br/>
+    <span id="group_channel_create_result"></span><br/>
+
+    <h3>Edit Channel</h3>
+    Channel Snowflake: <input id="channel_edit_snowflake"/><br/>
+    Channel Name: <input id="channel_edit_name"/><br/>
+    <button onclick="test_button(false, document.getElementById('channel_edit_result'), patchChannel,
+      document.getElementById('channel_edit_snowflake'),
+      document.getElementById('channel_edit_name')
+    )">Patch Channel</button><br/>
+    <span id="channel_edit_result"></span><br/>
+
+    <h3>List Messages</h3>
+    Channel Snowflake: <input id="message_list_channel_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('message_list_result'), listMessages, document.getElementById('message_list_channel_snowflake'))">List Messages</button>
+    <button onclick="test_button(false, document.getElementById('message_list_result'), unreadMessageCount, document.getElementById('message_list_channel_snowflake'))">Unread Message Count</button><br/>
+    <span id="message_list_result"></span><br/>
+
+    <h3>Create Message</h3>
+    Channel Snowflake: <input id="message_create_snowflake"/><br/>
+    Contents: <input id="message_create_contents"/><br/>
+    <button onclick="test_button(false, document.getElementById('message_create_result'), sendMessage,
+      document.getElementById('message_create_snowflake'),
+      document.getElementById('message_create_contents')
+    )">Create Message</button><br/>
+    <span id="message_create_result"></span><br/>
+
+    <h3>Edit Message</h3>
+    Message Snowflake: <input id="message_edit_snowflake"/><br/>
+    Contents: <input id="message_edit_contents"/><br/>
+    <button onclick="test_button(false, document.getElementById('message_edit_result'), patchMessage,
+      document.getElementById('message_edit_snowflake'),
+      document.getElementById('message_edit_contents')
+    )">Edit Message</button><br/>
+    <span id="message_edit_result"></span><br/>
+
+    <h3>Delete Message</h3>
+    Message Snowflake: <input id="message_delete_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('message_delete_result'), deleteMessage, document.getElementById('message_delete_snowflake'))">Delete Message</button><br/>
+    <span id="message_delete_result"></span><br/>
   </body>
 </html>

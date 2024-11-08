@@ -128,6 +128,7 @@ class CheckoutSerializer(serializers.Serializer):
 # end Google code
 
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.html import escape
 from rest_framework import exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -252,3 +253,28 @@ class GroupMembershipDetailSerializer(serializers.ModelSerializer):
 
     def validate_request_message(self, value):
         return escape(value)
+
+class ChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Channel
+        exclude = ['last_read_list']
+        extra_kwargs = {'group': {'read_only': True}}
+
+    def validate_name(self, value):
+        return escape(value)
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Message
+        fields = '__all__'
+        extra_kwargs = {'channel': {'read_only': True}, 'sender': {'read_only': True}}
+
+    def validate_contents(self, value):
+        return escape(value)
+
+    def update(self, instance, validated_data):
+        instance.contents = validated_data.get('contents', instance.contents)
+        instance.is_edited = True
+        instance.last_revision = timezone.now()
+        instance.save()
+        return instance

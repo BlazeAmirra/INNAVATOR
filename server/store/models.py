@@ -113,6 +113,7 @@ class SiteConfig(models.Model):
 
 # end Google code
 
+from django.apps import apps
 from django.core.validators import RegexValidator, URLValidator
 from django.contrib.auth import get_user_model
 from store.snowflake_gen import innavator_slowflake_generator
@@ -208,6 +209,12 @@ class Channel(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
     group = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
     name = models.CharField("Name", max_length=100)
+    read_restricted = models.BooleanField("Read Restricted", default=False)
+    write_restricted = models.BooleanField("Write Restricted", default=False)
+    last_read_list = models.ManyToManyField(InnavatorUser, through="LastRead")
+
+    def get_latest_message(self):
+        return apps.get_model('store', 'Message').objects.filter(channel=self).order_by('-snowflake_id').first()
 
     def __str__(self):
         return f'Channel "{self.name}" in {self.group}'
@@ -222,6 +229,22 @@ class Message(models.Model):
 
     def __str__(self):
         return f'Message {self.snowflake_id} from {self.sender} in {self.channel}'
+
+class LastRead(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
+    last_read = models.BigIntegerField("Last Read Message", default=0) # not an FK so it can be zeroed or refer to a deleted message
+
+    def update_last(self):
+        self.last_read = self.channel.get_latest_message().snowflake_id
+        self.save()
+
+    def __str__(self):
+        if self.last_read != 0:
+            return f'{self.user} last read message "{self.last_read}" in {self.channel}'
+        else:
+            return f'{self.user} has not read any message in {self.channel}'
 
 class Role(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)

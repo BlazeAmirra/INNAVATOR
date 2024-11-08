@@ -192,7 +192,7 @@ def csrf_token(request):
 
 # end Google code
 from django.contrib.auth import get_user_model
-from rest_framework import status
+from rest_framework import mixins, status
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
@@ -385,23 +385,6 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         ), many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['patch'])
-    def accept_group_join_request(self, request, pk):
-        sender = innavator_utils.get_innavator_user_from_user(request.user)
-        serializer = innavator_serializers.GroupMembershipDetailSerializer(data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if group := serializer.validated_data.get('group', None):
-            if sender_membership := innavator_models.GroupMembership.objects.filter(user=sender, group=group).first():
-                if sender_membership.is_privileged:
-                    receiver = self.get_object()
-                    if group.members.contains(receiver):
-                        membership = innavator_models.GroupMembership.objects.get(user=receiver, group=group)
-                        if membership.user_accepted and not membership.group_accepted:
-                            membership.group_accepted = True
-                            membership.save()
-                            return Response(innavator_serializers.GroupMembershipDetailSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_403_FORBIDDEN)
-
     def create(self, request):
         serializer = self.get_serializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -451,7 +434,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=self.get_success_headers(serializer.data))
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -500,6 +483,11 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
+    def list_all(self, request):
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
     def clubs(self, request):
         serializer = innavator_serializers.InnavatorGroupPreviewSerializer(innavator_models.InnavatorGroup.objects.filter(is_club=True), many=True)
         return Response(serializer.data)
@@ -531,6 +519,30 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         ), many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def channels(self, request, pk):
+        serializer = innavator_serializers.ChannelSerializer(innavator_models.Channel.objects.filter(group=self.get_object()), many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def create_channel(self, request, pk):
+        group = self.get_object()
+        serializer = innavator_serializers.ChannelSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if name := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('name', None)):
+            if not innavator_models.Channel.objects.filter(name=name, group=group).first():
+                channel = innavator_models.Channel(
+                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    group=group,
+                    name=name
+                )
+                channel.save()
+                return_serializer = innavator_serializers.ChannelSerializer(channel)
+                return Response(data=return_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=True, methods=['post'])
     def invite_to_group(self, request, pk):
         group = self.get_object()
@@ -549,7 +561,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     'group_accepted': True
                 })
                 return_serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.get(pk=new_mentorship_snowflake))
-                return Response(return_serializer.data, status=status.HTTP_201_CREATED, headers=self.get_success_headers(return_serializer.data))
+                return Response(return_serializer.data, status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -569,7 +581,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 'user_accepted': True
             })
             return_serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.get(pk=new_mentorship_snowflake))
-            return Response(return_serializer.data, status=status.HTTP_201_CREATED, headers=self.get_success_headers(return_serializer.data))
+            return Response(return_serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['patch'])
@@ -583,6 +595,21 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 membership.user_accepted = True
                 membership.save()
                 return Response(innavator_serializers.GroupMembershipDetailSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['patch'])
+    def accept_group_join_request(self, request, pk):
+        serializer = innavator_serializers.GroupMembershipDetailSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if receiver := serializer.validated_data.get('user', None):
+            group = self.get_object()
+            if group.members.contains(receiver):
+                membership = innavator_models.GroupMembership.objects.get(user=receiver, group=group)
+                if membership.user_accepted and not membership.group_accepted:
+                    membership.group_accepted = True
+                    membership.save()
+                    return Response(innavator_serializers.GroupMembershipDetailSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects a request to join
@@ -632,11 +659,60 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
             return Response({'name': ['Name required.']}, status=status.HTTP_400_BAD_REQUEST)
         group = serializer.save(snowflake_id=innavator_slowflake_generator.__next__(), owner=innavator_utils.get_innavator_user_from_user(request.user))
         innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
-        new_mentorship_snowflake = innavator_slowflake_generator.__next__()
+        new_group_membership_snowflake = innavator_slowflake_generator.__next__()
         group.members.add(innavator_user, through_defaults={
-            'snowflake_id': new_mentorship_snowflake,
+            'snowflake_id': new_group_membership_snowflake,
             'is_privileged': True,
             'user_accepted': True,
             'group_accepted': True
         })
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=self.get_success_headers(serializer.data))
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = innavator_models.Channel.objects.all()
+    serializer_class = innavator_serializers.ChannelSerializer
+    permission_classes = (innavator_permissions.ChannelsPermissions,) # comma is necessary
+
+    @action(detail=True, methods=['get'])
+    def messages(self, request, pk):
+        channel = self.get_object()
+        sender = innavator_utils.get_innavator_user_from_user(request.user)
+        innavator_utils.update_last_read_message(channel, sender)
+
+        serializer = innavator_serializers.MessageSerializer(innavator_models.Message.objects.filter(channel=channel).order_by('-snowflake_id'), many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def unread_message_count(self, request, pk):
+        channel = self.get_object()
+        sender = innavator_utils.get_innavator_user_from_user(request.user)
+        count = 0
+        if channel.last_read_list.contains(sender):
+            count = innavator_models.Message.objects.filter(channel=channel, snowflake_id__gt=innavator_models.LastRead.objects.get(channel=channel, user=sender).last_read).count()
+        else:
+            count = innavator_models.Message.objects.filter(channel=channel).count()
+        return Response({'count': count})
+
+    @action(detail=True, methods=['post'])
+    def create_message(self, request, pk):
+        channel = self.get_object()
+        sender = innavator_utils.get_innavator_user_from_user(request.user)
+        serializer = innavator_serializers.MessageSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if contents := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('contents', None)):
+            message = innavator_models.Message(
+                snowflake_id=innavator_slowflake_generator.__next__(),
+                channel=channel,
+                sender=sender,
+                contents=contents
+            )
+            message.save()
+            return_serializer = innavator_serializers.MessageSerializer(message)
+            innavator_utils.update_last_read_message(channel, sender)
+            return Response(data=return_serializer.data, status=status.HTTP_201_CREATED)
+
+class MessageViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = innavator_models.Message.objects.all()
+    serializer_class = innavator_serializers.MessageSerializer
+    permission_classes = (innavator_permissions.MessagesPermissions,) # comma is necessary
