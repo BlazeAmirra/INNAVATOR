@@ -568,7 +568,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         serializer = innavator_serializers.GroupMembershipDetailSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
-        if receiver := serializer.validated_data.get('receiver', None):
+        if receiver := serializer.validated_data.get('user', None):
             if not innavator_models.GroupMembership.objects.filter(user=receiver, group=group).first():
                 request_message = serializer.validated_data.get('request_message', "")
                 is_privileged = serializer.validated_data.get('is_privileged', False)

@@ -237,7 +237,10 @@ class LastRead(models.Model):
     last_read = models.BigIntegerField("Last Read Message", default=0) # not an FK so it can be zeroed or refer to a deleted message
 
     def update_last(self):
-        self.last_read = self.channel.get_latest_message().snowflake_id
+        if latest_message := self.channel.get_latest_message():
+            self.last_read = latest_message.snowflake_id
+        else:
+            self.last_read = 0
         self.save()
 
     def __str__(self):
