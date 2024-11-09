@@ -544,6 +544,25 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
+    def create_project(self, request, pk):
+        group = self.get_object()
+        serializer = innavator_serializers.ProjectSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if name := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('name', None)):
+            if not innavator_models.Project.objects.filter(name=name, group=group).first():
+                project = innavator_models.Project(
+                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    group=group,
+                    name=name
+                )
+                project.save()
+                return_serializer = innavator_serializers.ProjectSerializer(project)
+                return Response(data=return_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
     def invite_to_group(self, request, pk):
         group = self.get_object()
         serializer = innavator_serializers.GroupMembershipDetailSerializer(data=request.data, partial=True)
@@ -716,3 +735,13 @@ class MessageViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets
     queryset = innavator_models.Message.objects.all()
     serializer_class = innavator_serializers.MessageSerializer
     permission_classes = (innavator_permissions.MessagesPermissions,) # comma is necessary
+
+class RoleViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = innavator_models.Role.objects.all()
+    serializer_class = innavator_serializers.RoleSerializer
+    permission_classes = (innavator_permissions.RolesPermissions,) # comma is necessary
+
+class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = innavator_models.Project.objects.all()
+    serializer_class = innavator_serializers.ProjectSerializer
+    permission_classes = (innavator_permissions.ProjectsPermissions,) # comma is necessary

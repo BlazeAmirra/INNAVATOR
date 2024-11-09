@@ -22,7 +22,7 @@ from store import views
 
 router = DefaultRouter()
 
-router.get_api_root_view().cls.__name__ = "Avocano Server"
+router.get_api_root_view().cls.__name__ = "Innavator Server"
 router.get_api_root_view().cls.__doc__ = (
     "This is the Django REST Framework API, serving all endpoints."
 )
@@ -43,6 +43,8 @@ router.register(r"users", views.InnavatorUserViewset, basename="user")
 router.register(r"groups", views.InnavatorGroupViewset, basename="group")
 router.register(r"channels", views.ChannelViewset, basename="channel")
 router.register(r"messages", views.MessageViewset, basename="message")
+router.register(r"roles", views.RoleViewset, basename="role")
+router.register(r"projects", views.ProjectViewset, basename="project")
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 

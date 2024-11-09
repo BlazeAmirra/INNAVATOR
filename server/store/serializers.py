@@ -172,16 +172,12 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 
     def validate_full_name(self, value):
         return escape(value)
-
     def validate_preferred_name(self, value):
         return escape(value)
-
     def validate_major(self, value):
         return escape(value)
-
     def validate_website_url(self, value):
         return escape(value)
-
     def validate_profile_picture_url(self, value):
         return escape(value)
 
@@ -278,3 +274,22 @@ class MessageSerializer(serializers.ModelSerializer):
         instance.last_revision = timezone.now()
         instance.save()
         return instance
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Role
+        fields = '__all__'
+
+    # this is rather paranoid given that these are only admin-set
+    def validate_name(self, value):
+        return escape(value)
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Project
+        exclude = ['group']
+
+    def validate_name(self, value):
+        return escape(value)
+    def validate_description(self, value):
+        return escape(value)

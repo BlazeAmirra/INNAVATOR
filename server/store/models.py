@@ -191,7 +191,7 @@ class InnavatorGroup(models.Model):
     is_club = models.BooleanField("Is Club", default=False)
 
     def __str__(self):
-        return f'Group {self.name} ({self.snowflake_id})'
+        return f'Group "{self.name}" ({self.snowflake_id})'
 
 class GroupMembership(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
@@ -270,7 +270,7 @@ class ProjectRoleNeed(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.project}\'s need for {self.role}' 
+        return f'{self.project}\'s need for {self.role}'
 
 class ProjectRole(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
@@ -300,13 +300,16 @@ class Event(models.Model):
     start_time = models.DateTimeField("Start Timestamp")
 
     def __str__(self):
-        return f'Event "{self.name}" in {self.group}'
+        return f'Event "{self.name}" ({self.snowflake_id}) in {self.group}'
 
 class PortfolioEntry(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
-    user = models.ForeignKey(InnavatorGroup, on_delete=models.CASCADE)
+    user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
     name = models.CharField("Name", max_length=100)
     description = models.CharField("Description", max_length=300, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Portfolio entries"
 
     def __str__(self):
         return f'"{self.name}" in {self.user}\'s portfolio'

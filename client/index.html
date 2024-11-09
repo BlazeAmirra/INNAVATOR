@@ -3,8 +3,8 @@
   <head>
     <title>API Test</title>
     <script>
-      const API_URL = 'http://localhost:8000/api';
-      //const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
+      //const API_URL = 'http://localhost:8000/api';
+      const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
       const baseRequest = {
         credentials: 'include',
       };
@@ -27,7 +27,13 @@
 
         try {
           response = await fetch(url, init);
-          data = await response.clone().json();
+          // CHANGED: don't assume that we get a response body even for successful queries
+          if ((await response.clone().arrayBuffer()).byteLength > 0) {
+            data = await response.clone().json();
+          }
+          else {
+            data = {"success" : true};
+          }
         } catch (error) {
           console.error(error);
 
@@ -292,6 +298,15 @@
       const unreadMessageCount = async channel => {
         return await getAPI(`channels/${channel}/unread_message_count/`);
       };
+      const listRoles = async () => {
+        return await getAPI(`roles/`);
+      };
+      const listProjects = async () => {
+        return await getAPI(`projects/`);
+      };
+      const getProject = async project => {
+        return await getAPI(`projects/${project}/`);
+      };
       const createGroup = async name => {
         return await postAPI(`groups/`, {'name': name});
       };
@@ -321,6 +336,13 @@
       };
       const deleteMessage = async message => {
         return await deleteAPI(`messages/${message}/`);
+      };
+      const createProject = async (group, name) => {
+        return await postAPI(`groups/${group}/create_project/`, {'name': name});
+      };
+      const patchProject = async snowflake_and_diff => {
+        let {project, ...diff} = snowflake_and_diff;
+        return await patchAPI(`projects/${project}/`, diff);
       };
 
       const collect_optionals = (...pairs) => {
@@ -511,5 +533,29 @@
     Message Snowflake: <input id="message_delete_snowflake"/><br/>
     <button onclick="test_button(false, document.getElementById('message_delete_result'), deleteMessage, document.getElementById('message_delete_snowflake'))">Delete Message</button><br/>
     <span id="message_delete_result"></span><br/>
+
+    <h3>Create Project</h3>
+    Group Snowflake: <input id="group_project_create_snowflake"/><br/>
+    Project Name: <input id="group_project_create_name"/><br/>
+    <button onclick="test_button(false, document.getElementById('group_project_create_result'), createProject,
+      document.getElementById('group_project_create_snowflake'),
+      document.getElementById('group_project_create_name')
+    )">Create Project</button><br/>
+    <span id="group_project_create_result"></span><br/>
+
+    <h3>Project List</h3>
+    <button onclick="test_button(false, document.getElementById('project_list_result'), listProjects)">List Projects</button><br/>
+    <span id="project_list_result"></span><br/>
+
+    <h3>Edit Project</h3>
+    Project Snowflake: <input id="project_patch_snowflake"/><br/>
+    Name: <input id="project_patch_name"/><br/>
+    Description: <input id="project_patch_description"/><br/>
+    <button onclick="test_button(true, document.getElementById('project_patch_result'), patchProject,
+      ['project', document.getElementById('project_patch_snowflake')],
+      ['name', document.getElementById('project_patch_name')],
+      ['description', document.getElementById('project_patch_description')]
+    )">Patch Project</button><br/>
+    <span id="project_patch_result"></span><br/>
   </body>
 </html>
