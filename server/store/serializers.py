@@ -306,12 +306,27 @@ class CommissionRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'sender': {'read_only': True}}
 
+    def validate_name(self, value):
+        return escape(value)
+    def validate_description(self, value):
+        return escape(value)
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Event
         fields = '__all__'
 
+    def validate_name(self, value):
+        return escape(value)
+    def validate_description(self, value):
+        return escape(value)
+
 class PortfolioEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.PortfolioEntry
         fields = '__all__'
+
+    def validate_name(self, value):
+        return escape(value)
+    def validate_description(self, value):
+        return escape(value)
