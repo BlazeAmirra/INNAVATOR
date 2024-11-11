@@ -263,6 +263,7 @@ class Project(models.Model):
     description = models.CharField("Description", max_length=300, blank=True)
     is_active = models.BooleanField("Is Active", default=True)
     looking_for_roles = models.ManyToManyField(Role, through="ProjectRoleNeed")
+    members = models.ManyToManyField(InnavatorUser, through="ProjectRole")
 
     def __str__(self):
         return f'Project "{self.name}" ({self.snowflake_id}) by {self.group}'
@@ -280,7 +281,10 @@ class ProjectRole(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    is_active = models.BooleanField("Is Active", default=True)
+    is_active = models.BooleanField("Is Active", default=False)
+    user_accepted = models.BooleanField("User Accepted", default=False)
+    project_accepted = models.BooleanField("Group Accepted", default=False)
+    request_message = models.CharField("Request Message", max_length=2000, blank=True)
 
     def __str__(self):
         return f'{self.user}\'s {self.role} in {self.project}'

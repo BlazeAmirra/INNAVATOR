@@ -45,6 +45,9 @@ router.register(r"channels", views.ChannelViewset, basename="channel")
 router.register(r"messages", views.MessageViewset, basename="message")
 router.register(r"roles", views.RoleViewset, basename="role")
 router.register(r"projects", views.ProjectViewset, basename="project")
+router.register(r"commissions", views.CommissionRequestViewset, basename="commission")
+router.register(r"events", views.EventViewset, basename="event")
+router.register(r"portfolio_entries", views.EventViewset, basename="portfolio")
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 

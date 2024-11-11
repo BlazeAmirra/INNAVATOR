@@ -134,6 +134,7 @@ from rest_framework import exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from store import models as innavator_models
+from store.snowflake_gen import innavator_slowflake_generator
 
 # https://stackoverflow.com/a/75452395
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -287,9 +288,30 @@ class RoleSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Project
-        exclude = ['group']
+        exclude = ['group', 'members']
 
     def validate_name(self, value):
         return escape(value)
     def validate_description(self, value):
         return escape(value)
+
+class ProjectRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.ProjectRole
+        fields = '__all__'
+
+class CommissionRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.CommissionRequest
+        fields = '__all__'
+        extra_kwargs = {'sender': {'read_only': True}}
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Event
+        fields = '__all__'
+
+class PortfolioEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.PortfolioEntry
+        fields = '__all__'

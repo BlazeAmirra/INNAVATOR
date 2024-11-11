@@ -275,7 +275,7 @@
         return await getAPI(`groups/`);
       };
       const listAllGroups = async () => {
-        return await getAPI(`groups/list_all/`);
+        return await getAPI(`groups/all/`);
       };
       const listClubs = async () => {
         return await getAPI(`groups/clubs/`);
@@ -293,7 +293,7 @@
         return await getAPI(`groups/${group}/channels/`);
       };
       const listMessages = async channel => {
-        return await getAPI(`channels/${channel}/messages/`);
+        return await postAPI(`channels/${channel}/messages/`, {});
       };
       const unreadMessageCount = async channel => {
         return await getAPI(`channels/${channel}/unread_message_count/`);
@@ -306,6 +306,18 @@
       };
       const getProject = async project => {
         return await getAPI(`projects/${project}/`);
+      };
+      const listProjectMembers = async project => {
+        return await getAPI(`projects/${project}/members/`);
+      };
+      const listCommissionRequests = async () => {
+        return await getAPI(`commissions/`);
+      };
+      const listCommissionRequestsForRole = async role => {
+        return await getAPI(`commissions/?role=${role}`);
+      };
+      const listEvents = async group => {
+        return await getAPI(`groups/${group}/events/`);
       };
       const createGroup = async name => {
         return await postAPI(`groups/`, {'name': name});
@@ -343,6 +355,12 @@
       const patchProject = async snowflake_and_diff => {
         let {project, ...diff} = snowflake_and_diff;
         return await patchAPI(`projects/${project}/`, diff);
+      };
+      const createCommissionRequest = async (role, name, description) => {
+        return await postAPI(`commissions/`, {'role': role, 'name': name, 'description': description});
+      };
+      const eventCreate = async (group, name, description, start) => {
+        return await postAPI(`groups/${group}/create_event/`, {'name': name, 'description': description, 'start_time': start})
       };
 
       const collect_optionals = (...pairs) => {
@@ -534,6 +552,10 @@
     <button onclick="test_button(false, document.getElementById('message_delete_result'), deleteMessage, document.getElementById('message_delete_snowflake'))">Delete Message</button><br/>
     <span id="message_delete_result"></span><br/>
 
+    <h3>Roles</h3>
+    <button onclick="test_button(false, document.getElementById('role_list_result'), listRoles)">List Roles</button><br/>
+    <span id="role_list_result"></span><br/>
+
     <h3>Create Project</h3>
     Group Snowflake: <input id="group_project_create_snowflake"/><br/>
     Project Name: <input id="group_project_create_name"/><br/>
@@ -557,5 +579,34 @@
       ['description', document.getElementById('project_patch_description')]
     )">Patch Project</button><br/>
     <span id="project_patch_result"></span><br/>
+
+    <h3>Project Details</h3>
+    Project Snowflake: <input id="project_patch_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('project_details_result'), listProjectMembers, document.getElementById('project_patch_snowflake'))">List Members</button><br/>
+    <span id="project_details_result"></span><br/>
+
+    <h3>Commission Request List</h3>
+    Role Snowflake: <input id="commission_list_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('commission_list_result'), listCommissionRequests)">List Commissions</button>
+    <button onclick="test_button(false, document.getElementById('commission_list_result'), listCommissionRequestsForRole, document.getElementById('commission_list_snowflake'))">List Commissions for Role</button><br/>
+    <span id="commission_list_result"></span><br/>
+
+    <h3>Create Event</h3>
+    Group Snowflake: <input id="event_create_group_snowflake"/><br/>
+    Name: <input id="event_create_name"/><br/>
+    Description: <input id="event_create_description"/><br/>
+    Start timestamp: <input type="datetime-local" id="event_create_start"/><br/>
+    <button onclick="test_button(false, document.getElementById('event_create_result'), eventCreate,
+      document.getElementById('event_create_group_snowflake'),
+      document.getElementById('event_create_name'),
+      document.getElementById('event_create_description'),
+      document.getElementById('event_create_start')
+    )">Create Event</button><br/>
+    <span id="event_create_result"></span><br/>
+
+    <h3>List Events</h3>
+    Group Snowflake: <input id="event_list_group_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('event_list_result'), listEvents, document.getElementById('event_list_group_snowflake'))">List Events</button><br/>
+    <span id="event_list_result"></span><br/>
   </body>
 </html>

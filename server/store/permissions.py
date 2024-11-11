@@ -40,7 +40,7 @@ class GroupsPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        if view.action in ['list_all']:
+        if view.action in ['all']:
             return request.user.is_staff
 
         return True
@@ -51,7 +51,7 @@ class GroupsPermissions(permissions.BasePermission):
         if request.user.is_staff:
             return True
 
-        if view.action in ['request_to_join_group']:
+        if view.action in ['request_to_join']:
             return obj.is_club
         if view.action in ['update', 'partial_update', 'destroy']:
             return obj.owner.user == request.user
@@ -63,12 +63,10 @@ class GroupsPermissions(permissions.BasePermission):
                 return membership.group_accepted and not membership.user_accepted
             if not membership.user_accepted or not membership.group_accepted:
                 return False
-            if view.action in ['retrieve', 'members', 'leave', 'channels']:
+            if view.action in ['retrieve', 'members', 'leave', 'channels', 'groups', 'projects', 'events']:
                 return True
-            if view.action in ['requests_from_group', 'requests_to_group', 'invite_to_group', 'accept_group_join_request', 'remove_user',
-                               'create_channel', 'create_project'
-            ]:
-                return membership.is_privileged
+            if membership.is_privileged:
+                return True
 
         return False
 
@@ -90,6 +88,8 @@ class ChannelsPermissions(permissions.BasePermission):
             membership = innavator_models.GroupMembership.objects.get(group=obj.group, user=innavator_user)
             if not membership.user_accepted or not membership.group_accepted:
                 return False
+            if view.action in ['retrieve']:
+                return True
             if membership.is_privileged:
                 return True
             if view.action in ['messages', 'unread_message_count']:
@@ -117,6 +117,8 @@ class MessagesPermissions(permissions.BasePermission):
             membership = innavator_models.GroupMembership.objects.get(group=obj.channel.group, user=innavator_user)
             if not membership.user_accepted or not membership.group_accepted:
                 return False
+            if view.action in ['retrieve']:
+                return True
             if membership.is_privileged:
                 return True
 
@@ -135,18 +137,22 @@ class RolesPermissions(permissions.BasePermission):
 
 class ProjectsPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action in ['list', 'retrieve']:
+        if view.action in ['list', 'retrieve', 'members']:
             return True
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
+        if view.action in ['retrieve', 'members']:
+            return True
+
         if not request.user.is_authenticated:
             return False
         if request.user.is_staff:
             return True
 
-        if view.action in ['retrieve']:
+        if view.action in ['request_to_join']:
             return True
+
         if view.action in ['destroy']:
             return obj.group.owner.user == request.user
 
@@ -155,5 +161,70 @@ class ProjectsPermissions(permissions.BasePermission):
             membership = innavator_models.GroupMembership.objects.get(group=obj.group, user=innavator_user)
             if not membership.user_accepted or not membership.group_accepted:
                 return False
+            if view.action in ['leave']:
+                return True
             if membership.is_privileged:
                 return True
+
+        return False
+
+class CommissionRequestsPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if view.action in ['list', 'retrieve']:
+            return True
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['retrieve']:
+            return True
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        return obj.sender.user == request.user
+
+class EventsPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if view.action in ['retrieve']:
+            return True
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if obj.group.is_club and view.action in ['retrieve']:
+            return True
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
+        if obj.group.members.contains(innavator_user):
+            membership = innavator_models.GroupMembership.objects.get(group=obj.group, user=innavator_user)
+            if not membership.user_accepted or not membership.group_accepted:
+                return False
+            if view.action in ['retrieve']:
+                return True
+            if membership.is_privileged:
+                return True
+
+        return False
+
+class PortfolioEntriesPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if view.action in ['list', 'retrieve']:
+            return True
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['retrieve']:
+            return True
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        return obj.user.user == request.user
