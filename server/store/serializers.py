@@ -238,10 +238,14 @@ class InnavatorGroupSerializer(serializers.ModelSerializer):
     def validate_name(self, value):
         return escape(value)
 
+    def update(self, instance, validated_data):
+        validated_data.pop("is_club", False)
+        return super().update(instance, validated_data)
+
 class GroupMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.GroupMembership
-        fields = ['user', 'group', 'is_privileged']
+        fields = ['user', 'is_privileged']
 
 class GroupMembershipDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -289,6 +293,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Project
         exclude = ['group', 'members']
+        extra_kwargs = {'looking_for_roles': {'read_only': True}}
 
     def validate_name(self, value):
         return escape(value)
@@ -298,6 +303,11 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ProjectRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.ProjectRole
+        fields = '__all__'
+
+class ProjectRoleNeedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.ProjectRoleNeed
         fields = '__all__'
 
 class CommissionRequestSerializer(serializers.ModelSerializer):
@@ -315,6 +325,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Event
         fields = '__all__'
+        extra_kwargs = {'group': {'read_only': True}}
 
     def validate_name(self, value):
         return escape(value)
@@ -325,6 +336,7 @@ class PortfolioEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.PortfolioEntry
         fields = '__all__'
+        extra_kwargs = {'user': {'read_only': True}}
 
     def validate_name(self, value):
         return escape(value)

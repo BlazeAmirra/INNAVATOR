@@ -56,7 +56,7 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 urlpatterns = [
     path("", include(router.urls)),
     path("checkout", views.checkout, name="checkout"),
-    path("csrf_token", views.csrf_token, name="csrf_token"),
+    path("csrf_token/", views.csrf_token, name="csrf_token"),
     path("api-auth/", include("rest_framework.urls")),
     # end Google code
     path("who_am_i/", views.who_am_i, name='who_am_i'),

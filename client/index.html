@@ -86,8 +86,8 @@
       };
 
       const _apiDELETE = async (uri, headers) => {
-        const token = await _anonGetAPI('csrf_token');
-        headers['X-CSRFToken'] = token.csrfToken;
+        const token = await _anonGetAPI('csrf_token/');
+        headers['X-CSRFToken'] = token.csrf_token;
         return await _makeAPIrequest(uri, {
           method: 'DELETE',
           headers: headers,
@@ -95,8 +95,8 @@
         });
       };
       const _apiMUT = async (uri, headers, json, method) => {
-        const token = await _anonGetAPI('csrf_token');
-        headers['X-CSRFToken'] = token.csrfToken;
+        const token = await _anonGetAPI('csrf_token/');
+        headers['X-CSRFToken'] = token.csrf_token;
         return await _makeAPIrequest(uri, {
           method: method,
           headers: headers,
@@ -176,6 +176,10 @@
         return invalidTokens;
       };
 
+      // begin actual API
+
+      // special
+
       const register = async (username, full_name, preferred_name, major, email, password) => {
         return await postAPI('users/',
           {
@@ -220,11 +224,20 @@
 
         return await who_am_i();
       };
+
+      // GET: `csrf_token/` and `who_am_i/` are specially handled above
+
+      const listUsers = async () => {
+        return await getAPI(`users/`);
+      };
       const fetchUser = async user => {
         return await getAPI(`users/${user}/`);
       };
       const fetchPalette = async user => {
         return await getAPI(`users/${user}/get_palette/`);
+      };
+      const fetchPortfolio = async user => {
+        return await getAPI(`users/${user}/portfolio/`);
       };
       const fetchMentors = async () => {
         return await getAPI(`users/${this_user}/mentors/`);
@@ -250,27 +263,7 @@
       const fetchGroupRequestsToMe = async () => {
         return await getAPI(`users/${this_user}/group_requests_to_me/`);
       };
-      const patchUser = async diff => {
-        return await patchAPI(`users/${this_user}/`, diff);
-      };
-      const requestMentor = async user => {
-        return await postAPI(`users/${user}/request_as_mentor/`, {});
-      };
-      const requestMentee = async user => {
-        return await postAPI(`users/${user}/request_as_mentee/`, {});
-      };
-      const removeMentor = async user => {
-        return await deleteAPI(`users/${user}/remove_mentor/`);
-      };
-      const removeMentee = async user => {
-        return await deleteAPI(`users/${user}/remove_mentee/`);
-      };
-      const acceptMentor = async user => {
-        return await patchAPI(`users/${user}/accept_mentor_request/`, {});
-      };
-      const acceptMentee = async user => {
-        return await patchAPI(`users/${user}/accept_mentee_request/`, {});
-      };
+
       const listGroups = async () => {
         return await getAPI(`groups/`);
       };
@@ -279,6 +272,9 @@
       };
       const listClubs = async () => {
         return await getAPI(`groups/clubs/`);
+      };
+      const fetchGroup = async group => {
+        return await getAPI(`groups/${group}/`);
       };
       const listMembers = async group => {
         return await getAPI(`groups/${group}/members/`);
@@ -292,15 +288,34 @@
       const listChannels = async group => {
         return await getAPI(`groups/${group}/channels/`);
       };
-      const listMessages = async channel => {
-        return await postAPI(`channels/${channel}/messages/`, {});
+      const listGroupProjects = async () => {
+        return await getAPI(`groups/${group}/projects/`);
       };
+      const listEvents = async group => {
+        return await getAPI(`groups/${group}/events/`);
+      };
+
       const unreadMessageCount = async channel => {
         return await getAPI(`channels/${channel}/unread_message_count/`);
       };
+
+      const fetchMessage = async message => {
+        return await getAPI(`messages/${message}/`);
+      };
+
       const listRoles = async () => {
         return await getAPI(`roles/`);
       };
+      const fetchRole = async role => {
+        return await getAPI(`roles/${role}/`);
+      };
+      const listCommissionRequestsForRole = async role => {
+        return await getAPI(`roles/${role}/get_commission_requests/`);
+      };
+      const listProjectsNeedingRole = async role => {
+        return await getAPI(`roles/${role}/get_projects/`);
+      };
+
       const listProjects = async () => {
         return await getAPI(`projects/`);
       };
@@ -310,57 +325,196 @@
       const listProjectMembers = async project => {
         return await getAPI(`projects/${project}/members/`);
       };
+      const listActiveProjectMembers = async project => {
+        return await getAPI(`projects/${project}/active_members/`);
+      };
+
       const listCommissionRequests = async () => {
         return await getAPI(`commissions/`);
       };
-      const listCommissionRequestsForRole = async role => {
-        return await getAPI(`commissions/?role=${role}`);
+      const fetchCommissionRequest = async commission_request => {
+        return await getAPI(`commissions/${commission_request}/`);
       };
-      const listEvents = async group => {
-        return await getAPI(`groups/${group}/events/`);
+
+      const fetchEvent = async event_snowflake => {
+        return await getAPI(`events/${event_snowflake}/`);
       };
-      const createGroup = async name => {
-        return await postAPI(`groups/`, {'name': name});
+
+      const listPortfolioEntries = async () => {
+        return await getAPI(`portfolio_entries/`);
       };
+      const fetchPortfolioEntry = async portfolio_entry => {
+        return await getAPI(`portfolio_entries/${portfolio_entry}/`);
+      };
+
+      // DELETE
+
+      const removeMentor = async user => {
+        return await deleteAPI(`users/${user}/remove_mentor/`);
+      };
+      const removeMentee = async user => {
+        return await deleteAPI(`users/${user}/remove_mentee/`);
+      };
+
       const deleteGroup = async group => {
         return await deleteAPI(`groups/${group}/`);
       };
-      const patchGroup = async (group, name) => {
-        return await patchAPI(`groups/${group}/`, {'name': name});
+      const leaveGroup = async group => {
+        return await deleteAPI(`groups/${group}/leave/`);
       };
-      const inviteUser = async (group, user) => {
-        return await postAPI(`groups/${group}/invite_to_group/`, {'user': user});
+
+      const deleteChannel = async channel => {
+        return await deleteAPI(`channels/${channel}/`);
       };
-      const acceptInvite = async group => {
-        return await patchAPI(`groups/${group}/accept_invite/`);
+
+      const deleteMessage = async message => {
+        return await deleteAPI(`messages/${message}/`);
+      };
+
+      const deleteProject = async project => {
+        return await deleteAPI(`projects/${project}/`);
+      };
+      const leaveProject = async project => {
+        return await deleteAPI(`projects/${project}/leave/`);
+      };
+
+      const deleteEvent = async event => {
+        return await deleteAPI(`events/${event}/`);
+      };
+
+      const deletePortfolioEntry = async portfolio_entry => {
+        return await deleteAPI(`portfolio_entries/${portfolio_entry}/`);
+      };
+
+      // POST: `jwt_token/`, `jwt_token/refresh/` and `users/` are handled specially above
+
+      const requestMentor = async user => {
+        return await postAPI(`users/${user}/request_as_mentor/`, {});
+      };
+      const requestMentee = async user => {
+        return await postAPI(`users/${user}/request_as_mentee/`, {});
+      };
+      const createPortfolioEntry = async (user, name) => {
+        return await postAPI(`users/${user}/create_portfolio_entry/`, {'name': name});
+      };
+
+      const createGroup = async name => {
+        return await postAPI(`groups/`, {'name': name});
       };
       const createChannel = async (group, name) => {
         return await postAPI(`groups/${group}/create_channel/`, {'name': name});
       };
-      const patchChannel = async (channel, name) => {
-        return await patchAPI(`channels/${channel}/`, {'name': name});
+      const createProject = async (group, name) => {
+        return await postAPI(`groups/${group}/create_project/`, {'name': name});
+      };
+      // awkwardly named because `createEvent` is reserved JavaScript
+      const eventCreate = async (group, name, description, start) => {
+        return await postAPI(`groups/${group}/create_event/`, {'name': name, 'description': description, 'start_time': start})
+      };
+      const inviteUserToGroup = async (group, user) => {
+        return await postAPI(`groups/${group}/invite/`, {'user': user});
+      };
+      const requestToJoinGroup = async group => {
+        return await postAPI(`groups/${group}/request_to_join/`, {});
+      };
+      const removeUserFromGroup = async (group, user) => {
+        return await postAPI(`groups/${group}/remove_user/`, {'user': user});
+      };
+
+      const listMessages = async channel => {
+        return await postAPI(`channels/${channel}/messages/`, {});
       };
       const sendMessage = async (channel, contents) => {
         return await postAPI(`channels/${channel}/create_message/`, {'contents': contents});
       };
-      const patchMessage = async (message, contents) => {
-        return await patchAPI(`messages/${message}/`, {'contents': contents});
+
+      const inviteUserToProject = async (project, user, role) => {
+        return await postAPI(`projects/${project}/invite/`, {'user': user, 'role': role});
       };
-      const deleteMessage = async message => {
-        return await deleteAPI(`messages/${message}/`);
+      const requestToJoinProject = async (project, role) => {
+        return await postAPI(`projects/${project}/request_to_join/`, {'role': role});
       };
-      const createProject = async (group, name) => {
-        return await postAPI(`groups/${group}/create_project/`, {'name': name});
+      const removeUserFromProject = async (project, user) => {
+        return await postAPI(`projects/${project}/remove_user/`, {'user': user});
       };
+      const alterRole = async (project, user, role) => {
+        return await postAPI(`projects/${project}/alter_role/`, {'user': user, 'role': role});
+      };
+      const addNeededRole = async (project, role) => {
+        return await postAPI(`projects/${project}/add_needed_role/`, {'role': role});
+      };
+      const removeNeededRole = async (project, role) => {
+        return await postAPI(`projects/${project}/remove_needed_role/`, {'role': role});
+      };
+
+      const createRole = async (name) => {
+        return await postAPI(`roles/`, {'name': name});
+      };
+
+      const createCommissionRequest = async (role, name, description) => {
+        return await postAPI(`commissions/`, {'role': role, 'name': name, 'description': description});
+      };
+
+      // PATCH
+
+      const patchUser = async diff => {
+        return await patchAPI(`users/${this_user}/`, diff);
+      };
+      const patchPalette = async diff => {
+        return await patchAPI(`users/${this_user}/patch_palette/`, diff);
+      };
+      const acceptMentor = async user => {
+        return await patchAPI(`users/${user}/accept_mentor_request/`, {});
+      };
+      const acceptMentee = async user => {
+        return await patchAPI(`users/${user}/accept_mentee_request/`, {});
+      };
+
+      const patchGroup = async snowflake_and_diff => {
+        let {group, ...diff} = snowflake_and_diff;
+        return await patchAPI(`groups/${group}/`, diff);
+      };
+      const acceptInviteToGroup = async group => {
+        return await patchAPI(`groups/${group}/accept_invite/`);
+      };
+      const acceptJoinRequestToGroup = async (group, user) => {
+        return await patchAPI(`groups/${group}/accept_join_request/`, {'user': user});
+      };
+
+      const patchChannel = async snowflake_and_diff => {
+        let {channel, ...diff} = snowflake_and_diff;
+        return await patchAPI(`channels/${channel}/`, diff);
+      };
+
+      const patchMessage = async snowflake_and_diff => {
+        let {message, ...diff} = snowflake_and_diff;
+        return await patchAPI(`messages/${message}/`, diff);
+      };
+
       const patchProject = async snowflake_and_diff => {
         let {project, ...diff} = snowflake_and_diff;
         return await patchAPI(`projects/${project}/`, diff);
       };
-      const createCommissionRequest = async (role, name, description) => {
-        return await postAPI(`commissions/`, {'role': role, 'name': name, 'description': description});
+      const acceptInviteToProject = async project => {
+        return await patchAPI(`projects/${project}/accept_invite/`);
       };
-      const eventCreate = async (group, name, description, start) => {
-        return await postAPI(`groups/${group}/create_event/`, {'name': name, 'description': description, 'start_time': start})
+      const acceptJoinRequestToProject = async (project, user) => {
+        return await patchAPI(`projects/${project}/accept_join_request/`, {'user': user});
+      };
+
+      const patchCommissionRequest = async snowflake_and_diff => {
+        let {commission_request, ...diff} = snowflake_and_diff;
+        return await patchAPI(`commissions/${commission_request}/`, diff);
+      };
+
+      const patchEvent = async snowflake_and_diff => {
+        let {event, ...diff} = snowflake_and_diff;
+        return await patchAPI(`events/${event}/`, diff);
+      };
+
+      const patchPortfolioEntry = async snowflake_and_diff => {
+        let {portfolio_entry, ...diff} = snowflake_and_diff;
+        return await patchAPI(`portfolio_entries/${portfolio_entry}/`, diff);
       };
 
       const collect_optionals = (...pairs) => {
@@ -475,9 +629,9 @@
     <h3>Patch Group</h3>
     Group Snowflake: <input id="group_patch_snowflake"/><br/>
     Name: <input id="group_patch_name"/><br/>
-    <button onclick="test_button(false, document.getElementById('group_patch_result'), patchGroup,
-      document.getElementById('group_patch_snowflake'),
-      document.getElementById('group_patch_name')
+    <button onclick="test_button(true, document.getElementById('group_patch_result'), patchGroup,
+      ['group', document.getElementById('group_patch_snowflake')],
+      ['name', document.getElementById('group_patch_name')]
     )">Patch Group</button><br/>
     <span id="group_patch_result"></span><br/>
 
@@ -493,13 +647,13 @@
     <button onclick="test_button(false, document.getElementById('group_lookup_result'), listChannels, document.getElementById('group_lookup_snowflake'))">List Channels</button><br/>
     <button onclick="test_button(false, document.getElementById('group_lookup_result'), requestsFromGroup, document.getElementById('group_lookup_snowflake'))">List Invited Users</button>
     <button onclick="test_button(false, document.getElementById('group_lookup_result'), requestsToGroup, document.getElementById('group_lookup_snowflake'))">List User Join Requests</button>
-    <button onclick="test_button(false, document.getElementById('group_lookup_result'), acceptInvite, document.getElementById('group_lookup_snowflake'))">Accept Invite</button><br/>
+    <button onclick="test_button(false, document.getElementById('group_lookup_result'), acceptInviteToGroup, document.getElementById('group_lookup_snowflake'))">Accept Invite</button><br/>
     <span id="group_lookup_result"></span><br/>
 
     <h3>Invite to Group</h3>
     Group Snowflake: <input id="group_invite_snowflake"/><br/>
     User Snowflake: <input id="group_invite_user"/><br/>
-    <button onclick="test_button(false, document.getElementById('group_invite_result'), inviteUser,
+    <button onclick="test_button(false, document.getElementById('group_invite_result'), inviteUserToGroup,
       document.getElementById('group_invite_snowflake'),
       document.getElementById('group_invite_user')
     )">Send Invite</button><br/>
@@ -508,9 +662,9 @@
     <h3>Create Channel</h3>
     Group Snowflake: <input id="group_channel_create_snowflake"/><br/>
     Channel Name: <input id="group_channel_create_name"/><br/>
-    <button onclick="test_button(false, document.getElementById('group_channel_create_result'), createChannel,
-      document.getElementById('group_channel_create_snowflake'),
-      document.getElementById('group_channel_create_name')
+    <button onclick="test_button(true, document.getElementById('group_channel_create_result'), createChannel,
+      ['channel', document.getElementById('group_channel_create_snowflake')],
+      ['name', document.getElementById('group_channel_create_name')]
     )">Create Channel</button><br/>
     <span id="group_channel_create_result"></span><br/>
 
@@ -541,9 +695,9 @@
     <h3>Edit Message</h3>
     Message Snowflake: <input id="message_edit_snowflake"/><br/>
     Contents: <input id="message_edit_contents"/><br/>
-    <button onclick="test_button(false, document.getElementById('message_edit_result'), patchMessage,
-      document.getElementById('message_edit_snowflake'),
-      document.getElementById('message_edit_contents')
+    <button onclick="test_button(true, document.getElementById('message_edit_result'), patchMessage,
+      ['message', document.getElementById('message_edit_snowflake')],
+      ['contents', document.getElementById('message_edit_contents')]
     )">Edit Message</button><br/>
     <span id="message_edit_result"></span><br/>
 
@@ -581,8 +735,8 @@
     <span id="project_patch_result"></span><br/>
 
     <h3>Project Details</h3>
-    Project Snowflake: <input id="project_patch_snowflake"/><br/>
-    <button onclick="test_button(false, document.getElementById('project_details_result'), listProjectMembers, document.getElementById('project_patch_snowflake'))">List Members</button><br/>
+    Project Snowflake: <input id="project_default_snowflake"/><br/>
+    <button onclick="test_button(false, document.getElementById('project_details_result'), listProjectMembers, document.getElementById('project_default_snowflake'))">List Members</button><br/>
     <span id="project_details_result"></span><br/>
 
     <h3>Commission Request List</h3>

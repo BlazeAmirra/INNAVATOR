@@ -12,7 +12,7 @@ class UsersPermissions(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['retrieve', 'get_palette']:
+        if view.action in ['retrieve', 'get_palette', 'portfolio']:
             return True
 
         if not request.user.is_authenticated:
@@ -46,6 +46,10 @@ class GroupsPermissions(permissions.BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
+        if obj.is_club:
+            if view.action in ['projects', 'events']:
+                return True
+
         if not request.user.is_authenticated:
             return False
         if request.user.is_staff:
@@ -109,8 +113,10 @@ class MessagesPermissions(permissions.BasePermission):
         if request.user.is_staff:
             return True
 
-        if view.action in ['update', 'partial_update']:
-            return obj.sender.user == request.user
+        if obj.sender.user == request.user:
+            return True
+        elif view.action in ['update', 'partial_update']:
+            return False
 
         innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
         if obj.channel.group.members.contains(innavator_user):
@@ -142,7 +148,7 @@ class ProjectsPermissions(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['retrieve', 'members']:
+        if view.action in ['retrieve', 'active_members', 'members']:
             return True
 
         if not request.user.is_authenticated:

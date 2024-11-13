@@ -186,10 +186,6 @@ def checkout(request):
     response.is_valid()
     return JsonResponse(response.data)
 
-
-def csrf_token(request):
-    return JsonResponse({"csrfToken": get_token(request)})
-
 # end Google code
 from django.contrib.auth import get_user_model
 from rest_framework import mixins, status
@@ -202,6 +198,10 @@ from store import permissions as innavator_permissions
 from store import serializers as innavator_serializers
 from store.snowflake_gen import innavator_slowflake_generator
 from store import utils as innavator_utils
+
+@api_view(('GET',))
+def csrf_token(request):
+    return Response({"csrf_token": get_token(request)})
 
 @api_view(('GET',))
 def who_am_i(request):
@@ -235,7 +235,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
 
-        return Response(serializer.data)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
     @action(detail=True, methods=['get'])
     def mentors(self, request, pk):
@@ -303,10 +303,10 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             # don't accept self-mentorship
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        request_message = serializer.validated_data.get('description', "")
+        request_message = serializer.validated_data.get('request_message', "")
         new_mentorship_snowflake = innavator_slowflake_generator.__next__()
         receiver.mentees.add(sender, through_defaults={'snowflake_id': new_mentorship_snowflake, 'request_message': request_message, 'mentee_accepted': True})
-        return Response(innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.get(pk=new_mentorship_snowflake)).data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_201_CREATED)
 
     # creates a request to add the PK as a mentee of the sender
     @action(detail=True, methods=['post'])
@@ -320,10 +320,10 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             # don't accept self-mentorship
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        request_message = serializer.validated_data.get('description', "")
+        request_message = serializer.validated_data.get('request_message', "")
         new_mentorship_snowflake = innavator_slowflake_generator.__next__()
         sender.mentees.add(receiver, through_defaults={'snowflake_id': new_mentorship_snowflake, 'request_message': request_message, 'mentor_accepted': True})
-        return Response(innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.get(pk=new_mentorship_snowflake)).data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_201_CREATED)
 
     # accepts the PK's request to be a mentor of the sender
     @action(detail=True, methods=['patch'])
@@ -335,7 +335,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if mentorship.mentor_accepted and not mentorship.mentee_accepted:
                 mentorship.mentee_accepted = True
                 mentorship.save()
-                return Response(innavator_serializers.MentorshipSerializer(mentorship).data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # accepts the PK's request to be a mentee of the sender
@@ -348,7 +348,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if mentorship.mentee_accepted and not mentorship.mentor_accepted:
                 mentorship.mentor_accepted = True
                 mentorship.save()
-                return Response(innavator_serializers.MentorshipSerializer(mentorship).data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # removes the PK as a mentor of the sender
@@ -358,10 +358,9 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         receiver = self.get_object()
         if receiver.mentees.contains(sender):
             mentorship = innavator_models.Mentorship.objects.get(mentor=receiver, mentee=sender)
-            data = innavator_serializers.MentorshipSerializer(mentorship).data
             receiver.mentees.remove(sender)
             mentorship.delete()
-            return Response(data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # removes the PK as a mentee of the sender
@@ -374,7 +373,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             data = innavator_serializers.MentorshipSerializer(mentorship).data
             sender.mentees.remove(receiver)
             mentorship.delete()
-            return Response(data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['get'])
@@ -418,7 +417,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
                     description=description
                 )
                 entry.save()
-                return Response(data=innavator_serializers.PortfolioEntrySerializer(entry).data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -471,7 +470,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -508,7 +507,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
                 # forcibly invalidate the prefetch cache on the instance.
                 instance._prefetched_objects_cache = {}
 
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_202_ACCEPTED)
 
 class InnavatorGroupViewset(viewsets.ModelViewSet):
     queryset = innavator_models.InnavatorGroup.objects.all()
@@ -516,12 +515,12 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
     permission_classes = (innavator_permissions.GroupsPermissions,) # comma is necessary
 
     def list(self, request):
-        serializer = self.get_serializer(innavator_models.InnavatorGroup.objects.filter(members=innavator_utils.get_innavator_user_from_user(request.user)), many=True)
+        serializer = innavator_serializers.InnavatorGroupPreviewSerializer(innavator_models.InnavatorGroup.objects.filter(members=innavator_utils.get_innavator_user_from_user(request.user)), many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def all(self, request):
-        serializer = self.get_serializer(self.queryset, many=True)
+        serializer = innavator_serializers.InnavatorGroupPreviewSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
@@ -585,8 +584,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     name=name
                 )
                 channel.save()
-                return_serializer = innavator_serializers.ChannelSerializer(channel)
-                return Response(data=return_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -614,7 +612,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     'project_accepted': True,
                     'request_message': ""
                 })
-                return Response(data=innavator_serializers.ProjectSerializer(project).data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -635,11 +633,11 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     start_time=start_time
                 )
                 event.save()
-                return Response(data=innavator_serializers.EventSerializer(event).data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
-    def invite_to_group(self, request, pk):
+    def invite(self, request, pk):
         group = self.get_object()
         serializer = innavator_serializers.GroupMembershipDetailSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -655,8 +653,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     'is_privileged': is_privileged,
                     'group_accepted': True
                 })
-                return_serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.get(pk=new_membership_snowflake))
-                return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -675,8 +672,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 'request_message': request_message,
                 'user_accepted': True
             })
-            return_serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.get(pk=new_membership_snowflake))
-            return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['patch'])
@@ -689,7 +685,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
             if membership.group_accepted and not membership.user_accepted:
                 membership.user_accepted = True
                 membership.save()
-                return Response(innavator_serializers.GroupMembershipDetailSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['patch'])
@@ -704,7 +700,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 if membership.user_accepted and not membership.group_accepted:
                     membership.group_accepted = True
                     membership.save()
-                    return Response(innavator_serializers.GroupMembershipDetailSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
+                    return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects a request to join
@@ -722,10 +718,9 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     membership = innavator_models.GroupMembership.objects.get(user=user, group=group)
                     # privileged non-owner users may not cat-fight
                     if group.owner == sender or not membership.is_privileged:
-                        data = innavator_serializers.GroupMembershipDetailSerializer(membership).data
                         group.members.remove(user)
                         membership.delete()
-                        return Response(data, status=status.HTTP_202_ACCEPTED)
+                        return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects an invite
@@ -738,10 +733,9 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         if group.owner != user:
             if group.members.contains(user):
                 membership = innavator_models.GroupMembership.objects.get(user=user, group=group)
-                data = innavator_serializers.GroupMembershipDetailSerializer(membership).data
                 group.members.remove(user)
                 membership.delete()
-                return Response(data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     def create(self, request):
@@ -758,7 +752,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 'user_accepted': True,
                 'group_accepted': True
             })
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         return Response({'name': ['Name required.']}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
@@ -802,12 +796,11 @@ class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets
                 contents=contents
             )
             message.save()
-            return_serializer = innavator_serializers.MessageSerializer(message)
             innavator_utils.update_last_read_message(channel, sender)
-            return Response(data=return_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class MessageViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class MessageViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.Message.objects.all()
     serializer_class = innavator_serializers.MessageSerializer
     permission_classes = (innavator_permissions.MessagesPermissions,) # comma is necessary
@@ -816,6 +809,20 @@ class RoleViewset(viewsets.ReadOnlyModelViewSet):
     queryset = innavator_models.Role.objects.all()
     serializer_class = innavator_serializers.RoleSerializer
     permission_classes = (innavator_permissions.RolesPermissions,) # comma is necessary
+
+    @action(detail=True, methods=['get'])
+    def get_commission_requests(self, request, pk):
+        serializer = innavator_serializers.CommissionRequestSerializer(innavator_models.CommissionRequest.objects.filter(
+            role=self.get_object()
+        ), many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def get_projects(self, request, pk):
+        serializer = innavator_serializers.ProjectSerializer(innavator_models.Project.objects.filter(
+            looking_for_roles=self.get_object()
+        ), many=True)
+        return Response(serializer.data)
 
 class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.Project.objects.all()
@@ -840,7 +847,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
-    def invite_to_project(self, request, pk):
+    def invite(self, request, pk):
         project = self.get_object()
         serializer = innavator_serializers.ProjectRoleSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -856,8 +863,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                         'request_message': request_message,
                         'project_accepted': True
                     })
-                    return_serializer = innavator_serializers.ProjectRoleSerializer(innavator_models.ProjectRole.objects.get(pk=new_project_role_snowflake))
-                    return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+                    return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -878,8 +884,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                     'request_message': request_message,
                     'user_accepted': True
                 })
-                return_serializer = innavator_serializers.ProjectRoleSerializer(innavator_models.ProjectRole.objects.get(pk=new_project_role_snowflake))
-                return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['patch'])
@@ -893,7 +898,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                 membership.user_accepted = True
                 membership.is_active = True
                 membership.save()
-                return Response(innavator_serializers.ProjectRoleSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
+                return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['patch'])
@@ -909,7 +914,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                     membership.project_accepted = True
                     membership.is_active = True
                     membership.save()
-                    return Response(innavator_serializers.ProjectRoleSerializer(membership).data, status=status.HTTP_202_ACCEPTED)
+                    return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects a request to join
@@ -928,14 +933,13 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                     project_membership = innavator_models.ProjectRole.objects.get(user=user, project=project)
                     # privileged non-owner users may not cat-fight
                     if project.group.owner == sender or not group_membership.is_privileged:
-                        data = innavator_serializers.ProjectRoleSerializer(project_membership).data
                         if project_membership.is_active:
                             project_membership.is_active = False
                             project_membership.save()
                         else:
                             project.members.remove(user)
                             project_membership.delete()
-                        return Response(data, status=status.HTTP_202_ACCEPTED)
+                        return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects an invite
@@ -946,14 +950,13 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
         if project.members.contains(user):
             membership = innavator_models.ProjectRole.objects.get(user=user, project=project)
-            data = innavator_serializers.ProjectRoleSerializer(membership).data
             if membership.is_active:
                 membership.is_active = False
                 membership.save()
             else:
                 project.members.remove(user)
                 membership.delete()
-            return Response(data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(detail=True, methods=['post'])
@@ -975,19 +978,37 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                             if project_membership.is_active:
                                 project_membership.role = role
                                 project_membership.save()
-                                data = innavator_serializers.ProjectRoleSerializer(project_membership).data
-                                return Response(data, status=status.HTTP_202_ACCEPTED)
+                                return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['post'])
+    def add_needed_role(self, request, pk):
+        project = self.get_object()
+        serializer = innavator_serializers.ProjectRoleNeedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if role := serializer.validated_data.get('role', None):
+            if not project.looking_for_roles.contains(role):
+                project.looking_for_roles.add(role, through_defaults={'snowflake_id': innavator_slowflake_generator.__next__()})
+                return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['post'])
+    def remove_needed_role(self, request, pk):
+        project = self.get_object()
+        serializer = innavator_serializers.ProjectRoleNeedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if role := serializer.validated_data.get('role', None):
+            if project.looking_for_roles.contains(role):
+                project.looking_for_roles.remove(role)
+                return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 class CommissionRequestViewset(viewsets.ModelViewSet):
     queryset = innavator_models.CommissionRequest.objects.all()
     serializer_class = innavator_serializers.CommissionRequestSerializer
     permission_classes = (innavator_permissions.CommissionRequestsPermissions,) # comma is necessary
-
-    def get_queryset(self):
-        if role := self.request.query_params.get('role'):
-            return self.queryset.filter(role=role)
-        return self.queryset
 
     def perform_create(self, serializer):
         serializer.validated_data["name"] = innavator_utils.stripped_if_not_blank(serializer.validated_data["name"])

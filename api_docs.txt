@@ -1,0 +1,525 @@
+Notation:
+- "a: b": field of name "a" with value b
+- "a": field of name "a" with value a
+- field: field snowflake if model, otherwise the data
+- {Model}: inline of all non-PK fields of the model
+- [thing]: array of thing
+- Model: related snowflake
+
+Notes:
+- default pagination is 10 long; as applicable, get the next with ?page= (NOT IMPLEMENTED YET)
+- PATCH inputs are all optional
+
+- every request requires the following header:
+	Accept: application/json
+- every mutation request requires the following header:
+	X-CSRFToken: <csrf_token>
+- every non-DELETE mutation request requires the following header:
+	Content-Type: application/json
+- every request that requires auth requires the following header:
+	Authorization: Bearer <access_token>
+
+==================================================================
+
+GET `csrf_token/`
+	{ csrf_token: csrf_token }
+	no auth needed
+	added
+
+GET `who_am_i/`
+	{ logged_in: boolean, snowflake_id: InnavatorUser if logged_in else 0 }
+	no auth needed
+	added
+
+---------------
+
+GET `users/`
+	{ [{InnavatorUser}] }
+	no auth needed
+	added
+
+GET `users/<InnavatorUser>/`
+	{ {InnavatorUser} }
+	no auth needed
+	added
+
+GET `users/<InnavatorUser>/get_palette/`
+	{ user: InnavatorUser, main_background_gradient_triplet, ui_group_background_gradient_triplet }
+	no auth needed
+	added
+
+GET `users/<InnavatorUser>/portfolio/`
+	{ [{PortfolioEntry} where user=pk] }
+	no auth needed
+	added
+
+GET `users/<InnavatorUser>/mentors/`
+	{ [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=true] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/mentees/`
+	{ [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=true] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/requests_as_mentor_from_me/`
+	{ [{Mentorship} where mentee=pk and mentor_accepted=false and mentee_accepted=true] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/requests_as_mentor_to_me/`
+	{ [{Mentorship} where mentor=pk and mentor_accepted=false and mentee_accepted=true] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/requests_as_mentee_from_me/`
+	{ [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=false] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/requests_as_mentee_to_me/`
+	{ [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=false] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/group_requests_from_me/`
+	{ [{GroupMembership} where user=pk and user_accepted=true and group_accepted=false] }
+	auth needed - same user
+	added
+
+GET `users/<InnavatorUser>/group_requests_to_me/`
+	{ [{GroupMembership} where user=pk and user_accepted=false and group_accepted=true] }
+	auth needed - same user
+	added
+
+---------------
+
+GET `groups/`
+	{ [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where members includes user] }
+	auth needed - anyone
+	added
+
+GET `groups/all/`
+	{ [{snowflake_id: InnavatorGroup, name: string}] }
+	auth needed - admin
+	added
+
+GET `groups/clubs/`
+	{ [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where is_club=true] }
+	no auth needed
+	added
+
+GET `groups/<InnavatorGroup>/`
+	{ {InnavatorGroup} }
+	auth needed - member
+	added
+
+GET `groups/<InnavatorGroup>/members/`
+	{ [{user: InnavatorUser, is_privileged: boolean} for GroupMembership where group=pk and user_accepted=true and group_accepted=true] }
+	auth needed - member
+	added
+
+GET `groups/<InnavatorGroup>/requests_from_group/`
+	{ [{GroupMembership} where group=pk and user_accepted=false and group_accepted=true] }
+	auth needed - is_privileged
+	added
+
+GET `groups/<InnavatorGroup>/requests_to_group/`
+	{ [{GroupMembership} where group=pk and user_accepted=true and group_accepted=false] }
+	auth needed - is_privileged
+	added
+
+GET `groups/<InnavatorGroup>/channels/`
+	{ [{Channel}] }
+	auth needed - member
+	added
+
+GET `groups/<InnavatorGroup>/projects/`
+	{ [{Project}] }
+	no auth needed if is_club, else auth needed - member
+	added
+
+GET `groups/<InnavatorGroup>/events/`
+	{ [{Event}] }
+	no auth needed if is_club, else auth needed - member
+	added
+
+---------------
+
+GET `channels/<Channel>/unread_message_count/`
+	{ count: int }
+	auth needed - group member
+	added
+
+---------------
+
+GET `messages/<Message>/`
+	{ {Message} }
+	auth needed - channel.group member
+	added
+
+---------------
+
+GET `roles/`
+	{ [{Role}] }
+	no auth needed
+	added
+
+GET `roles/<Role>/`
+	{ {Role} }
+	no auth needed
+	added
+
+GET `roles/<Role>/get_commission_requests/`
+	{ [{CommissionRequest} where role=Role] }
+	no auth needed
+	added
+
+GET `roles/<Role>/get_projects/`
+	{ [{Project} where looking_for_roles contains Role] }
+	no auth needed
+	added
+
+---------------
+
+GET `projects/`
+	{ [{Project}] }
+	no auth needed
+	added
+
+GET `projects/<Project>/`
+	{ {Project} }
+	no auth needed
+	added
+
+GET `projects/<Project>/members/`
+	{ [{ProjectRole} where project=pk and user_accepted=true and project_accepted=true] }
+	no auth needed
+	added
+
+GET `projects/<Project>/active_members/`
+	{ [{ProjectRole} where project=pk and is_active=true] }
+	no auth needed
+	added
+
+---------------
+
+GET `commissions/`
+	{ [{CommissionRequest}] }
+	no auth needed
+	added
+
+GET `commissions/<CommissionRequest>/`
+	{ {CommissionRequest} }
+	no auth needed
+	added
+
+---------------
+
+GET `events/<Event>/`
+	{ {Event} }
+	no auth needed if is_club, else auth needed - group member
+	added
+
+---------------
+
+GET `portfolio_entries/`
+	{ [{PortfolioEntry}] }
+	no auth needed
+	added
+
+GET `portfolio_entries/<PortfolioEntry>/`
+	{ {PortfolioEntry} }
+	no auth needed
+	added
+
+=============================
+
+DELETE `users/<InnavatorUser>/remove_mentor/`
+	{}
+	auth needed - anyone
+	added
+
+DELETE `users/<InnavatorUser>/remove_mentee/`
+	{}
+	auth needed - anyone
+	added
+
+---------------
+
+DELETE `groups/<InnavatorGroup>/`
+	{}
+	auth needed - group owner
+	added
+
+DELETE `groups/<InnavatorGroup>/leave/`
+	{}
+	auth needed - member
+	added
+
+---------------
+
+DELETE `channels/<Channel>/`
+	{}
+	auth needed - group owner
+	added
+
+---------------
+
+DELETE `messages/<Message>/`
+	{}
+	auth needed - sender or channel.group is_privileged
+	added
+
+---------------
+
+DELETE `projects/<Project>/`
+	{}
+	auth needed - group owner
+	added
+
+DELETE `projects/<Project>/leave/`
+	{}
+	auth needed - member
+	added
+
+---------------
+
+DELETE `commissions/<CommissionRequest>/`
+	{}
+	auth needed - sender
+	added
+
+---------------
+
+DELETE `events/<Event>/`
+	{}
+	auth needed - group is_privileged
+	added
+
+---------------
+
+DELETE `portfolio_entries/<PortfolioEntry>/`
+	{}
+	auth needed - same user
+	added
+
+=============================
+
+POST `jwt_token/` { username: email, password: string }
+	{ access: access_token, refresh: refresh_token }
+	no auth needed
+	added
+
+POST `jwt_token/refresh/` { refresh: refresh_token }
+	{ access: access_token }
+	no auth needed
+	added
+
+---------------
+
+POST `users/` { user: { username: string, email: email, password: string }, full_name: string optional if preferred_name present, preferred_name: string optional if full_name present, major: string }
+	{}
+	no auth needed
+	added
+
+POST `users/<InnavatorUser>/request_as_mentor/` {request_message: string optional}
+	{}
+	auth needed - anyone
+	added
+
+POST `users/<InnavatorUser>/request_as_mentee/` {request_message: string optional}
+	{}
+	auth needed - anyone
+	added
+
+POST `users/<InnavatorUser>/create_portfolio_entry/` { name: string, description: string optional }
+	{}
+	auth needed - same user
+	added
+
+---------------
+
+POST `groups/` { name: string }
+	{}
+	auth needed - anyone
+	added
+
+POST `groups/<InnavatorGroup>/create_channel/` { name: string }
+	{}
+	auth needed - is_privileged
+	added
+
+POST `groups/<InnavatorGroup>/create_project/` { name: string, description: string optional }
+	{}
+	auth needed - is_privileged
+	added
+
+POST `groups/<InnavatorGroup>/create_event/` { name: string, start_time: timestamp, description: string optional }
+	{}
+	auth needed - is_privileged
+	added
+
+POST `groups/<InnavatorGroup>/invite/` { user: InnavatorUser, request_message: string optional, is_privileged: boolean optional }
+	{}
+	auth needed - is_privileged
+	added
+
+POST `groups/<InnavatorGroup>/request_to_join/` { request_message: string optional }
+	{}
+	auth needed - anyone
+	added
+
+POST `groups/<InnavatorGroup>/remove_user/` { user: InnavatorUser }
+	{}
+	auth needed - is_privileged
+	added
+
+---------------
+
+POST `channels/<Channel>/messages/` {}
+	{ [{Message}] }
+	auth needed - group member
+	added
+
+POST `channels/<Channel>/create_message/` { contents: string }
+	{}
+	auth needed - group member
+	added
+
+---------------
+
+POST `projects/<Project>/invite/` { user: InnavatorUser, role: Role, request_message: string optional }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/request_to_join/` { role: Role, request_message: string optional }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/remove_user/` { user: InnavatorUser }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/alter_role/` { user: InnavatorUser, role: Role }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/add_needed_role/` { role: Role }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/remove_needed_role/` { role: Role }
+	{}
+	auth needed - group is_privileged
+	added
+
+---------------
+
+POST `roles/` { name: string }
+	{}
+	auth needed - admin
+	added
+
+---------------
+
+POST `commissions/` { role: Role, name: string, description: string optional }
+	{}
+	auth needed - anyone
+	added
+
+=============================
+
+PATCH `users/<InnavatorUser>/` { full_name: string optional if preferred_name present or either existing, preferred_name: string optional if full_name present or either existing, major: string, website_url: URL, profile_picture_url: URL }
+	{}
+	auth needed - same user
+	added
+
+PATCH `users/<InnavatorUser>/patch_palette/` { main_background_gradient_triplet: string, ui_group_background_gradient_triplet: string }
+	{}
+	auth needed - same user
+	added
+
+PATCH `users/<InnavatorUser>/accept_mentor_request/` {}
+	{}
+	auth needed - anyone
+	added
+
+PATCH `users/<InnavatorUser>/accept_mentee_request/` {}
+	{}
+	auth needed - anyone
+	added
+
+---------------
+
+PATCH `groups/<InnavatorGroup>/` { owner: InnavatorUser, name: string }
+	{}
+	auth needed - owner
+
+PATCH `groups/<InnavatorGroup>/accept_invite/` {}
+	{}
+	auth needed - is_privileged
+	added
+
+PATCH `groups/<InnavatorGroup>/accept_join_request/` { user: InnavatorUser }
+	{}
+	auth needed - is_privileged
+	added
+
+---------------
+
+PATCH `channels/<Channel>/` { name: string, read_restricted: boolean, write_restricted: boolean }
+	{}
+	auth needed - group is_privileged
+	added
+
+---------------
+
+PATCH `messages/<Message>/` { contents: string }
+	{}
+	auth needed - sender
+	added
+
+---------------
+
+PATCH `projects/<Project>/` { name: string, description: string, is_active: boolean }
+	{}
+	auth needed - is_privileged
+	added
+
+PATCH `projects/<Project>/accept_invite/` {}
+	{}
+	auth needed - is_privileged
+	added
+
+PATCH `projects/<Project>/accept_join_request/` { user: InnavatorUser }
+	{}
+	auth needed - is_privileged
+	added
+
+---------------
+
+PATCH `commissions/<CommissionRequest>/` { role: Role, name: string, description: string }
+	{}
+	auth needed - sender
+	added
+
+---------------
+
+PATCH `events/<Event>/` { name: string, description: string, start_time: timestamp }
+	{}
+	auth needed - group is_privileged
+	added
+
+---------------
+
+PATCH `portfolio_entries/<PortfolioEntry>/` { name: string, description: string }
+	{}
+	auth needed - same user
+	added
