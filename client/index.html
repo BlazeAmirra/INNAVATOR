@@ -154,7 +154,7 @@
 
         <h3>Portfolio Entry Details</h3>
         Portfolio Entry Snowflake: <input id="portfolio_fetch_snowflake"/><br/>
-        <button onclick="test_button(false, document.getElementById('portfolio_fetch_result'), fetchPortfolioEntry, document.getElementById('portfolio_fetch_snowflake'))">Get Commission Request</button><br/>
+        <button onclick="test_button(false, document.getElementById('portfolio_fetch_result'), fetchPortfolioEntry, document.getElementById('portfolio_fetch_snowflake'))">Get Portfolio Entry</button><br/>
         <span id="portfolio_fetch_result"></span><br/>
 
         <h1>DELETE</h1>
@@ -179,7 +179,7 @@
 
         <h3>Delete Channel</h3>
         Channel Snowflake: <input id="channel_delete_snowflake"/><br/>
-        <button onclick="test_button(false, document.getElementById('channel_delete_result'), deleteChannel, document.getElementById('channel_delete_snowflake'))">Patch Channel</button><br/>
+        <button onclick="test_button(false, document.getElementById('channel_delete_result'), deleteChannel, document.getElementById('channel_delete_snowflake'))">Delete Channel</button><br/>
         <span id="channel_delete_result"></span><br/>
 
         <h2>Messages</h2>
@@ -286,7 +286,7 @@
 
         <h3>Request to Join Group</h3>
         Group Snowflake: <input id="group_join_snowflake"/><br/>
-        <button onclick="test_button(false, document.getElementById('group_join_result'), requestToJoinGroup, document.getElementById('group_join_snowflake'))">Send Invite</button><br/>
+        <button onclick="test_button(false, document.getElementById('group_join_result'), requestToJoinGroup, document.getElementById('group_join_snowflake'))">Send Request</button><br/>
         <span id="group_join_result"></span><br/>
 
         <h2>Channels</h2>
@@ -322,7 +322,7 @@
 
         <h3>Request to Join Project</h3>
         Project Snowflake: <input id="project_join_snowflake"/><br/>
-        <button onclick="test_button(false, document.getElementById('project_join_result'), requestToJoinProject, document.getElementById('project_join_snowflake'))">Send Invite</button><br/>
+        <button onclick="test_button(false, document.getElementById('project_join_result'), requestToJoinProject, document.getElementById('project_join_snowflake'))">Send Request</button><br/>
         <span id="project_join_result"></span><br/>
 
         <h3>Project User Role Change</h3>
@@ -366,7 +366,7 @@
             document.getElementById('commission_create_role'),
             document.getElementById('commission_create_name'),
             document.getElementById('commission_create_description'),
-        )">Create Event</button><br/>
+        )">Create Commission Request</button><br/>
         <span id="commission_create_result"></span><br/>
 
         <h1>PATCH</h1>
@@ -427,7 +427,7 @@
         <button onclick="test_button(false, document.getElementById('group_join_request_result'), acceptJoinRequestToGroup,
             document.getElementById('group_join_request_snowflake'),
             document.getElementById('group_join_request_user')
-        )">Accept Invite</button><br/>
+        )">Accept Request</button><br/>
         <span id="group_join_request_result"></span><br/>
 
         <h2>Channels</h2>
@@ -476,7 +476,7 @@
         <button onclick="test_button(false, document.getElementById('project_join_request_result'), acceptJoinRequestToProject,
             document.getElementById('project_join_request_snowflake'),
             document.getElementById('project_join_request_user')
-        )">Accept Invite</button><br/>
+        )">Accept Request</button><br/>
         <span id="project_join_request_result"></span><br/>
 
         <h2>Commission Requests</h2>

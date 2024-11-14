@@ -279,7 +279,7 @@ const requestsToGroup = async group => {
 const listChannels = async group => {
     return await getAPI(`groups/${group}/channels/`);
 };
-const listGroupProjects = async () => {
+const listGroupProjects = async group => {
     return await getAPI(`groups/${group}/projects/`);
 };
 const listEvents = async group => {
