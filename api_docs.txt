@@ -28,7 +28,7 @@ GET `csrf_token/`
 
 GET `who_am_i/`
 	{ logged_in: boolean, snowflake_id: InnavatorUser if logged_in else 0 }
-	no auth needed
+	output dependent on auth presence or absence
 	added
 
 ---------------
@@ -39,12 +39,12 @@ GET `users/`
 	added
 
 GET `users/<InnavatorUser>/`
-	{ {InnavatorUser} }
+	{ {InnavatorUser where pk=pk} }
 	no auth needed
 	added
 
 GET `users/<InnavatorUser>/get_palette/`
-	{ user: InnavatorUser, main_background_gradient_triplet, ui_group_background_gradient_triplet }
+	{ {Palette} where user=pk }
 	no auth needed
 	added
 
@@ -111,7 +111,7 @@ GET `groups/clubs/`
 	added
 
 GET `groups/<InnavatorGroup>/`
-	{ {InnavatorGroup} }
+	{ {InnavatorGroup} where pk=pk }
 	auth needed - member
 	added
 
@@ -131,17 +131,17 @@ GET `groups/<InnavatorGroup>/requests_to_group/`
 	added
 
 GET `groups/<InnavatorGroup>/channels/`
-	{ [{Channel}] }
+	{ [{Channel} where group=pk] }
 	auth needed - member
 	added
 
 GET `groups/<InnavatorGroup>/projects/`
-	{ [{Project}] }
+	{ [{Project} where group=pk] }
 	no auth needed if is_club, else auth needed - member
 	added
 
 GET `groups/<InnavatorGroup>/events/`
-	{ [{Event}] }
+	{ [{Event} where group=pk] }
 	no auth needed if is_club, else auth needed - member
 	added
 
@@ -155,7 +155,7 @@ GET `channels/<Channel>/unread_message_count/`
 ---------------
 
 GET `messages/<Message>/`
-	{ {Message} }
+	{ {Message} where pk=pk }
 	auth needed - channel.group member
 	added
 
@@ -167,17 +167,17 @@ GET `roles/`
 	added
 
 GET `roles/<Role>/`
-	{ {Role} }
+	{ {Role} where pk=pk }
 	no auth needed
 	added
 
 GET `roles/<Role>/get_commission_requests/`
-	{ [{CommissionRequest} where role=Role] }
+	{ [{CommissionRequest} where role=pk] }
 	no auth needed
 	added
 
 GET `roles/<Role>/get_projects/`
-	{ [{Project} where looking_for_roles contains Role] }
+	{ [{Project} where looking_for_roles contains pk] }
 	no auth needed
 	added
 
@@ -189,7 +189,7 @@ GET `projects/`
 	added
 
 GET `projects/<Project>/`
-	{ {Project} }
+	{ {Project} where pk=pk }
 	no auth needed
 	added
 
@@ -211,14 +211,14 @@ GET `commissions/`
 	added
 
 GET `commissions/<CommissionRequest>/`
-	{ {CommissionRequest} }
+	{ {CommissionRequest} where pk=pk }
 	no auth needed
 	added
 
 ---------------
 
 GET `events/<Event>/`
-	{ {Event} }
+	{ {Event} where pk=pk }
 	no auth needed if is_club, else auth needed - group member
 	added
 
@@ -230,7 +230,7 @@ GET `portfolio_entries/`
 	added
 
 GET `portfolio_entries/<PortfolioEntry>/`
-	{ {PortfolioEntry} }
+	{ {PortfolioEntry} where pk=pk }
 	no auth needed
 	added
 
@@ -240,11 +240,13 @@ DELETE `users/<InnavatorUser>/remove_mentor/`
 	{}
 	auth needed - anyone
 	added
+	removes as a mentor, or rejects request as a mentor
 
 DELETE `users/<InnavatorUser>/remove_mentee/`
 	{}
 	auth needed - anyone
 	added
+	removes as a mentee, or rejects request as a mentee
 
 ---------------
 
@@ -257,6 +259,7 @@ DELETE `groups/<InnavatorGroup>/leave/`
 	{}
 	auth needed - member
 	added
+	leaves the group, or rejects an invite
 
 ---------------
 
@@ -283,6 +286,7 @@ DELETE `projects/<Project>/leave/`
 	{}
 	auth needed - member
 	added
+	leaves the project, or rejects an invite
 
 ---------------
 
@@ -311,11 +315,13 @@ POST `jwt_token/` { username: email, password: string }
 	{ access: access_token, refresh: refresh_token }
 	no auth needed
 	added
+	logs in: access_token is a short-term token used to authenticate, refresh_token is a long-term token used to refresh access_token
 
 POST `jwt_token/refresh/` { refresh: refresh_token }
 	{ access: access_token }
 	no auth needed
 	added
+	retrieves the short-term token without needing to log in again
 
 ---------------
 
@@ -323,16 +329,19 @@ POST `users/` { user: { username: string, email: email, password: string }, full
 	{}
 	no auth needed
 	added
+	creates a new user
 
 POST `users/<InnavatorUser>/request_as_mentor/` {request_message: string optional}
 	{}
 	auth needed - anyone
 	added
+	sends a request to the pk to be a mentor of the sender
 
 POST `users/<InnavatorUser>/request_as_mentee/` {request_message: string optional}
 	{}
 	auth needed - anyone
 	added
+	sends a request to the pk to be a mentee of the sender
 
 POST `users/<InnavatorUser>/create_portfolio_entry/` { name: string, description: string optional }
 	{}
@@ -345,6 +354,7 @@ POST `groups/` { name: string }
 	{}
 	auth needed - anyone
 	added
+	creates a new group
 
 POST `groups/<InnavatorGroup>/create_channel/` { name: string }
 	{}
@@ -375,6 +385,7 @@ POST `groups/<InnavatorGroup>/remove_user/` { user: InnavatorUser }
 	{}
 	auth needed - is_privileged
 	added
+	also rejects request to join
 
 ---------------
 
@@ -382,6 +393,7 @@ POST `channels/<Channel>/messages/` {}
 	{ [{Message}] }
 	auth needed - group member
 	added
+	retrieves messages; this uses POST because it sets the last read
 
 POST `channels/<Channel>/create_message/` { contents: string }
 	{}
@@ -404,6 +416,7 @@ POST `projects/<Project>/remove_user/` { user: InnavatorUser }
 	{}
 	auth needed - group is_privileged
 	added
+	also rejects request to join
 
 POST `projects/<Project>/alter_role/` { user: InnavatorUser, role: Role }
 	{}
@@ -426,6 +439,7 @@ POST `roles/` { name: string }
 	{}
 	auth needed - admin
 	added
+	creates a new role
 
 ---------------
 
@@ -433,6 +447,7 @@ POST `commissions/` { role: Role, name: string, description: string optional }
 	{}
 	auth needed - anyone
 	added
+	creates a new commission request
 
 =============================
 
@@ -461,6 +476,7 @@ PATCH `users/<InnavatorUser>/accept_mentee_request/` {}
 PATCH `groups/<InnavatorGroup>/` { owner: InnavatorUser, name: string }
 	{}
 	auth needed - owner
+	added
 
 PATCH `groups/<InnavatorGroup>/accept_invite/` {}
 	{}
@@ -490,17 +506,17 @@ PATCH `messages/<Message>/` { contents: string }
 
 PATCH `projects/<Project>/` { name: string, description: string, is_active: boolean }
 	{}
-	auth needed - is_privileged
+	auth needed - group is_privileged
 	added
 
 PATCH `projects/<Project>/accept_invite/` {}
 	{}
-	auth needed - is_privileged
+	auth needed - group is_privileged
 	added
 
 PATCH `projects/<Project>/accept_join_request/` { user: InnavatorUser }
 	{}
-	auth needed - is_privileged
+	auth needed - group is_privileged
 	added
 
 ---------------
