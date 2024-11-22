@@ -1,0 +1,100 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif; /* Set a clean, readable font */
+    background-color: #fff; /* Set a white background for the page */
+    color: #01010190; /* Main text color with a slight transparency */
+    min-height: 100vh; /* Ensure full viewport height is covered */
+    display: flex; /* Enable flexbox for layout */
+    flex-direction: column; /* Arrange children vertically */
+    margin: 0; /* Remove default body margin */
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1; /* Background color for the header */
+    color: #fff; /* Set header text color to white */
+    padding: 15px 0; /* Vertical padding */
+    text-align: center; /* Center header content */
+}
+
+nav ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding from list */
+    display: flex; /* Flex layout for navigation items */
+    justify-content: center; /* Center navigation items */
+}
+
+nav ul li {
+    display: inline; /* Display items inline */
+    margin-right: 20px; /* Space between items */
+}
+
+nav ul li a {
+    color: #000000; /* Set link color */
+    text-decoration: none; /* Remove link underline */
+    font-size: 18px; /* Set font size for readability */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}
+
+/* Welcome Title Styling */
+.welcome-title {
+    text-align: center; /* Center text */
+    font-size: 36px; /* Large font size */
+    color: #000000; /* Set main text color */
+    margin-top: 40px; /* Space above */
+}
+
+/* Button Container */
+.button-container {
+    display: flex; /* Enable flex layout */
+    flex-direction: column; /* Arrange buttons vertically */
+    align-items: center; /* Center align buttons */
+    margin-top: 30px; /* Space above buttons */
+}
+
+/* Option Button Styling */
+.option-button {
+    display: inline-block; /* Set as inline block for padding */
+    background-color: #ed7a92; /* Button background color */
+    color: #3b3039; /* Text color */
+    padding: 15px 30px; /* Padding around text */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
+    margin: 10px 0; /* Space between buttons */
+    font-size: 18px; /* Font size */
+    width: 200px; /* Set button width for uniformity */
+    text-align: center; /* Center align text */
+    cursor: pointer; /* Set cursor to pointer */
+}
+
+.option-button:hover {
+    background-color: #c468c4; /* Change color on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1; /* Footer background color */
+    color: #000000; /* Footer text color */
+    text-align: center; /* Center text */
+    padding: 20px 0; /* Vertical padding */
+    margin: 0; /* Remove margin */
+}
+
+footer p {
+    padding: 0; /* No extra padding */
+    margin: 0; /* Remove default margin */
+}
+
+.social-icons a {
+    margin: 0 10px; /* Space between social links */
+    color: #000000; /* Social link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.social-icons a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

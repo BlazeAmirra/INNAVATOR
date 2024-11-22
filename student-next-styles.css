@@ -1,0 +1,111 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif; /* Set a clean, readable font */
+    background-color: #fff; /* Set a white background for the page */
+    color: #01010190; /* Main text color with slight transparency */
+    min-height: 100vh; /* Ensure full viewport height is covered */
+    display: flex; /* Enable flexbox for layout */
+    flex-direction: column; /* Arrange children vertically */
+    margin: 0; /* Remove default body margin */
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1; /* Background color for the header */
+    color: #fff; /* Set header text color to white */
+    padding: 15px 0; /* Vertical padding */
+    text-align: center; /* Center header content */
+}
+
+nav ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding from list */
+    display: flex; /* Flex layout for navigation items */
+    justify-content: center; /* Center navigation items */
+}
+
+nav ul li {
+    display: inline; /* Display items inline */
+    margin-right: 20px; /* Space between items */
+}
+
+nav ul li a {
+    color: #000000; /* Set link color */
+    text-decoration: none; /* Remove link underline */
+    font-size: 18px; /* Set font size for readability */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}
+
+/* Page Title Styling */
+.page-title {
+    text-align: center; /* Center text */
+    font-size: 36px; /* Large font size */
+    color: #000000; /* Set main text color */
+    margin-top: 40px; /* Space above */
+}
+
+/* Input Section Styles */
+.input-section {
+    display: flex; /* Flex layout for alignment */
+    justify-content: center; /* Center the input box horizontally */
+    margin-top: 20px; /* Space above the input section */
+}
+
+.text-input {
+    width: 80%; /* Set width for input box */
+    max-width: 600px; /* Limit max width for large screens */
+    padding: 12px; /* Internal padding for readability */
+    font-size: 16px; /* Font size for input text */
+    border: 1px solid #d6ade1; /* Border color matching theme */
+    border-radius: 8px; /* Rounded corners for input */
+    box-sizing: border-box; /* Ensure padding doesn’t affect total width */
+}
+
+/* Button Section Styles */
+.button-section {
+    display: flex; /* Flex layout for horizontal alignment */
+    justify-content: center; /* Center the buttons horizontally */
+    margin-top: 20px; /* Space above button section */
+    gap: 20px; /* Space between the buttons */
+}
+
+.back-button, .next-button {
+    display: inline-block; /* Inline block for padding and margin */
+    background-color: #c468c4; /* Button background color */
+    color: #fff; /* White text color for contrast */
+    padding: 10px 20px; /* Padding for button dimensions */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 8px; /* Rounded corners for button */
+    font-size: 18px; /* Font size for readability */
+    transition: background-color 0.3s; /* Smooth background color change on hover */
+}
+
+.back-button:hover, .next-button:hover {
+    background-color: #a655a0; /* Darker background on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1; /* Footer background color */
+    color: #000000; /* Footer text color */
+    text-align: center; /* Center text */
+    padding: 20px 0; /* Vertical padding */
+    margin: 0; /* Remove margin */
+}
+
+footer p {
+    padding: 5px 0; /* Space above and below text */
+}
+
+.social-icons {
+    margin-top: 10px; /* Space above icons */
+}
+
+.social-icons a {
+    margin: 0 10px; /* Space between social icons */
+    color: #000000; /* Set icon color */
+    text-decoration: none; /* Remove underline */
+}
