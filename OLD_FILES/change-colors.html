@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Colors</title>
+    <link rel="stylesheet" href="change-colors-styles.css"> <!-- Link to the CSS file -->
+</head>
+
+<body>
+    <!-- Header Section with Navigation Menu -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="work.html">Work</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Page Title -->
+        <h1 class="title">Color Time</h1>
+
+        <!-- Centered Color Wheel -->
+        <div class="color-wheel-container">
+            <img src="colortime.jpg" alt="Color Wheel" class="color-wheel"> <!-- Color wheel image placeholder -->
+        </div>
+
+        <!-- Dark to Light Scale Section -->
+        <div class="scale-container">
+            <input type="range" min="0" max="6" value="3" class="color-scale"> <!-- Scale input slider -->
+        </div>
+
+        <!-- Dark and Light Labels -->
+        <div class="scale-labels">
+            <span class="dark-label">Dark</span>
+            <span class="light-label">Light</span>
+        </div>
+
+        <!-- Go Back Button -->
+        <button onclick="history.back()" class="back-button">&#x2190; Back</button> <!-- Left arrow icon -->
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Innavator - All Rights Reserved.</p>
+        <div class="social-icons">
+            <a href="https://www.uat.edu/" target="_blank">UAT</a>
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+        </div>
+    </footer>
+</body>
+
+</html>

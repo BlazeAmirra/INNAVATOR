@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- Start of the HTML document -->
+<html lang="en">
+<!-- Set language to English for accessibility and SEO -->
+
+<head>
+    <meta charset="UTF-8"> <!-- Set the character encoding to UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ensures responsiveness on different screen sizes -->
+    <title>Innavator Home</title> <!-- Title of the homepage -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to main CSS styles -->
+    <link rel="stylesheet" href="home-styles.css"> <!-- Link to home page specific CSS styles -->
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <!-- Navigation bar for main links -->
+        <nav>
+            <ul> <!-- Unordered list for navigation items -->
+                <li><a href="index.html">Home</a></li> <!-- Link to Home page -->
+                <li><a href="settings.html">Settings</a></li> <!-- Link to Settings page -->
+                <li><a href="work.html">Work</a></li> <!-- Link to Work page -->
+                <li><a href="about.html">About</a></li> <!-- Link to About page -->
+                <li><a href="contact.html">Contact</a></li> <!-- Link to Contact page -->
+            </ul>
+        </nav>
+
+        <script>
+            // Executes the following code when the window finishes loading
+            window.onload = function() {
+                // Selects the modal element by its ID
+                var modal = document.getElementById("userAgreementModal");
+        
+                // Show the modal when the page loads
+                modal.style.display = "block";
+        
+                // Function to close the modal if the user agrees
+                document.getElementById("agreeButton").onclick = function() {
+                    modal.style.display = "none";
+                };
+        
+                // Function to redirect if the user cancels
+                document.getElementById("cancelButton").onclick = function() {
+                    alert("You must agree to the terms to proceed.");
+                    window.location.href = "index.html"; // Or whatever page you want to redirect to
+                };
+            };
+        </script>
+        
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Placeholder for app logo with link to UAT page -->
+        <div class="logo-container">
+            <!-- Link to UAT page wrapping the logo image -->
+            <a href="https://www.uat.edu/" target="_blank">
+                <img src="UATLogo.png" alt="UAT Logo" class="UAT-logo"> <!-- Replace "UATLogo.png" with actual logo path -->
+            </a>
+        </div>
+
+        <!-- Section for App Name Display -->
+        <h1 class="app-name">Innavator</h1> <!-- Displays the app name centered -->
+
+        <!-- Sign-in Button Section -->
+        <div class="signin-container">
+            <!-- Button linking to sign-in page -->
+            <a href="welcome.html" class="signin-button">SIGN IN</a>
+        </div>
+
+        <!-- Placeholder for secondary logo with link to Innavator page -->
+        <div class="secondary-logo-container">
+            <!-- Link to Innavator page wrapping the secondary logo image -->
+            <a href="about.html">
+                <!-- Class `hover-logo` applied for hover effect -->
+                <img src="InnavatorLogo.png" alt="Innavator App Logo" class="secondary-logo hover-logo">
+                <!-- Replace "InnavatorLogo.png" with actual secondary logo path -->
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer Section with copyright information -->
+    <footer>
+        <p>&copy; Copyright © 2024 Innavator - All Rights Reserved.</p>
+        <!-- Container for social media links -->
+        <div class="social-icons">
+            <a href="https://www.uat.edu/" target="_blank">UAT</a>
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <!-- User Agreement Modal -->
+<div id="userAgreementModal">
+    <div class="modal-content"> <!-- Content area of the modal -->
+        <h2><strong>Innavator App User Agreement</strong></h2> <!-- Title of the modal -->
+        <p> <!-- Paragraph containing the introduction -->
+            Welcome to the Innavator app, a project developed by Students at the University of Advancing Technology Production class designed to help students like you build projects, teamwork skills, and individual profiles to achieve success in your career.
+        </p>
+        <p> <!-- Paragraph explaining to read the terms -->
+            Before you proceed, please take a moment to read and agree to the following terms.
+        </p>
+        <p><strong>User Consent</strong></p>
+        <p>By clicking "<strong>I Agree</strong>" below, you agree to the following:</p>
+        <p><strong>1. Content and Project Sharing:</strong> By submitting any content, including but not limited to projects, assignments, and portfolios, you consent to having this information displayed within the Innavator app. This content may be viewed by other students, faculty, and potential employers as part of the app’s networking and project collaboration features.</p>
+        <p><strong>2. Social Media Information:</strong> If you choose to link your social media accounts or provide related information within the app, you consent to this information being accessible to other users of the platform. This may include but is not limited to LinkedIn, X (Formerly Twitter), and other professional or creative platforms you share.</p>
+        <p><strong>3. Ownership and Attribution:</strong> You retain ownership of your work submitted through Innavator. We respect your intellectual property and will ensure proper attribution of your content. By participating, you grant the app and its developers permission to display and share your contributions for the purposes of collaboration and inspiration within the UAT community.</p>
+        <p><strong>4. Consent to Participate:</strong> By using the Innavator app, you acknowledge that this platform is designed to facilitate learning, creativity, and professional development. You agree to engage respectfully and ethically with other students and their work.</p>
+        <p><strong>5. Data Usage:</strong> Any information provided in the app will be used solely for the purposes of project collaboration, skill development, and career advancement within the UAT community. Your data will not be shared outside of this scope without your explicit consent.</p>
+        <p><strong>6. Changes to Agreement:</strong> This agreement may be updated periodically to reflect changes in app functionality or user policies. You will be notified of any significant changes, and continued use of the app signifies your acceptance of those terms.</p>
+        <p>Do you agree to these terms?</p>
+        <p>If you do not agree, you will not be able to proceed with using the Innavator app.</p>
+        <p>Thank you for helping us make UAT’s learning experience more interactive and inspiring!</p>
+        <p>We’re excited to have you on board as part of the UAT community!</p>
+
+        <button class="modal-button" id="agreeButton">I Agree</button> <!-- Button for agreeing to the terms -->
+        <button class="modal-button cancel" id="cancelButton">Cancel</button> <!-- Button for canceling the agreement -->
+    </div>
+</div>
+
+</body>
+
+</html>

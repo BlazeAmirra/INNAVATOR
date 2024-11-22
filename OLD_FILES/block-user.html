@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block User</title>
+    <link rel="stylesheet" href="block-user-styles.css"> <!-- Link to external CSS file -->
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <!-- Navigation Menu -->
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="chat-settings.html">Chat Settings</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Title -->
+        <h1 class="title">Block User</h1>
+
+        <!-- Confirmation Message -->
+        <p class="confirmation-text">Are you sure you want to block this user?</p>
+
+        <!-- Buttons for Confirmation -->
+        <div class="button-container">
+            <button class="block-button" onclick="blockUser()">Yes, Block</button>
+            <button class="cancel-button" onclick="tryAgain()">No, Cancel</button>
+        </div>
+
+        <!-- Message Display -->
+        <p id="message" class="message"></p>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Innavator - All Rights Reserved.</p>
+            <div class="social-icons">
+                <a href="https://www.uat.edu/" target="_blank">UAT</a>
+                <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+                <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Function triggered when the "Yes, Block" button is clicked
+        function blockUser() {
+            const messageElement = document.getElementById("message"); // Get the message element
+            messageElement.textContent = "User has been blocked."; // Display blocking confirmation
+            messageElement.style.color = "#d9534f"; // Set the message text color to red
+        }
+
+        // Function triggered when the "No, Cancel" button is clicked
+        function tryAgain() {
+            const messageElement = document.getElementById("message"); // Get the message element
+            messageElement.textContent = "You can try again."; // Display try again message
+            messageElement.style.color = "#5bc0de"; // Set the message text color to blue
+        }
+    </script>
+</body>
+
+</html>
+

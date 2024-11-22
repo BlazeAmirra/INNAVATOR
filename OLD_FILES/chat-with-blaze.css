@@ -1,0 +1,166 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #01010190;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Back Arrow Styling */
+.back-arrow {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px;
+}
+
+.back-arrow a {
+    color: #000;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.back-arrow a:hover {
+    text-decoration: underline;
+}
+
+/* Logo Section Styling */
+.logo-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.logo-image {
+    width: 100px;
+    height: auto;
+}
+
+/* Page Title Styling */
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    color: #000000;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+/* Chat Box Section Styles */
+.chat-box {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #d6ade1;
+    border-radius: 8px;
+    padding: 15px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.profile-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+/* Styling for user-response-box */
+.user-response-box {
+    flex-direction: row-reverse;
+}
+
+.user-response-box .profile-picture {
+    margin-left: 15px;
+    margin-right: 0;
+}
+
+.chat-message {
+    color: #3b3039;
+    font-size: 16px;
+}
+
+/* Centered Image Section Styles */
+.centered-image-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.centered-image {
+    width: 300px;
+    height: 200px;
+    border-radius: 8px;
+    border: 1px solid #d6ade1;
+}
+
+/* User Input Box Section */
+.input-box-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.user-input-box {
+    width: 80%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #c468c4;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1;
+    color: #000000;
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+}
+
+footer p {
+    padding: 5px 0;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    margin: 0 10px;
+    color: #000000;
+    text-decoration: none;
+}

@@ -1,0 +1,104 @@
+/* General Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: fff; /* background */
+    color: #01010190;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Title */
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Buttons Container */
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Settings Buttons */
+.settings-button {
+    background-color: #d6ade1; /* Button background color */
+    color: #000000; /* Button text color */
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 20px;
+    margin: 10px 0; /* Space between buttons */
+    border-radius: 5px; /* Rounded corners */
+    width: 200px; /* Fixed button width */
+    text-align: center; /* Center text inside button */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effect */
+}
+
+/* Hover Effect for Buttons */
+.settings-button:hover {
+    background-color: #b893c7; /* Change background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1;
+    color: #000000;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto;
+    width: 100%;
+}
+
+footer p {
+    padding: 5px 0;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    margin: 0 10px;
+    color: #000000;
+    text-decoration: none;
+}

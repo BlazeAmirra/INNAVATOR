@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat</title>
+    <link rel="stylesheet" href="group-chat-styles.css">
+    <style>
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .whiteboard-title {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        .whiteboard-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .whiteboard-buttons button,
+        .whiteboard-buttons input[type="color"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #d6ade1;
+            color: #000;
+            border: 1px solid #d6ade1;
+            border-radius: 8px;
+        }
+
+        .whiteboard-buttons button:hover {
+            background-color: #c89bd5;
+        }
+
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Initially hide the color picker */
+        .color-picker-container input[type="color"] {
+            display: none;
+            padding: 0;
+            border: none;
+            background: transparent;
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="work.html">Work</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Page Title -->
+        <h1 class="page-title">Group Chat</h1>
+
+        <!-- Chat Messages Section -->
+        <div class="chat-container">
+            <!-- Message 1 - Left Side -->
+            <div class="chat-message left">
+                <a href="chat-with-blaze.html">
+                    <img src="art5.jpg" alt="Blaze" class="chat-image">
+                </a>
+                <p class="chat-text">Hello, ready to work on the project?</p>
+            </div>
+
+            <!-- Message 2 - Right Side -->
+            <div class="chat-message right">
+                <a href="chat-with-preston.html">
+                    <img src="art7.jpg" alt="Preston" class="chat-image">
+                </a>
+                <p class="chat-text">Yep, I have started on the code.</p>
+            </div>
+
+            <!-- Message 3 - Left Side -->
+            <div class="chat-message left">
+                <a href="chat-with-alexis.html">
+                    <img src="art12.jpg" alt="Alexis" class="chat-image">
+                </a>
+                <p class="chat-text">I will see if I can find some security issues we may run into.</p>
+            </div>
+
+            <!-- Message 4 - Right Side -->
+            <div class="chat-message right">
+                <a href="chat-with-marcus.html">
+                    <img src="art16.jpg" alt="Marcus" class="chat-image">
+                </a>
+                <p class="chat-text">Sweet! I can document the results and conduct test.</p>
+            </div>
+        </div>
+
+        <!-- Whiteboard Section -->
+        <div class="whiteboard-container">
+            <h2 class="whiteboard-title">Collaborative Whiteboard</h2>
+            <canvas id="whiteboard" width="800" height="600"></canvas> <!-- The whiteboard canvas where the drawing occurs -->
+            <div class="whiteboard-buttons">
+                <button id="clearButton">Clear Whiteboard</button> <!-- Button to clear the whiteboard -->
+                <button id="undoButton">Undo</button> <!-- Button to undo last action -->
+                <button id="redoButton">Redo</button> <!-- Button to redo undone actions -->
+                <!-- Color Picker Button and Hidden Color Input -->
+                <div class="color-picker-container">
+                    <button id="colorPickerButton">Color Picker</button> <!-- Button to toggle color picker visibility -->
+                    <input type="color" id="colorPicker" value="#000000" title="Choose Drawing Color"> <!-- Hidden color picker input -->
+                </div>
+                <button id="saveButton">Save as Image</button> <!-- Button to save the whiteboard as an image -->
+            </div>
+        </div>
+
+        <!-- Go Back Button Section -->
+        <div class="go-back-button">
+            <a href="welcome.html">Go Back</a> <!-- Go back to the previous page -->
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Innavator - All Rights Reserved.</p>
+        <div class="social-icons">
+            <a href="https://www.uat.edu/" target="_blank">UAT</a>
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <!-- Whiteboard Script -->
+    <script>
+        // Get references to elements on the page
+        const canvas = document.getElementById('whiteboard'); // Reference to the canvas element where drawing occurs
+        const ctx = canvas.getContext('2d'); // Get the 2D context of the canvas to draw on
+        const clearButton = document.getElementById('clearButton'); // Reference to the clear button
+        const undoButton = document.getElementById('undoButton'); // Reference to the undo button
+        const redoButton = document.getElementById('redoButton'); // Reference to the redo button
+        const saveButton = document.getElementById('saveButton'); // Reference to the save button
+        const colorPicker = document.getElementById('colorPicker'); // Reference to the color picker input
+        const colorPickerButton = document.getElementById('colorPickerButton'); // Reference to the color picker button
+
+        let drawing = false; // Track whether the user is currently drawing on the canvas
+        let history = []; // Array to store the states of the whiteboard for undo/redo functionality
+        let redoStack = []; // Stack to store states for redo functionality
+        let currentColor = colorPicker.value; // Set the default drawing color to the value of the color picker input
+
+        // Function to get the mouse position relative to the canvas
+        const getMousePos = (event) => {
+            const rect = canvas.getBoundingClientRect(); // Get the position of the canvas element on the page
+            return {
+                x: event.clientX - rect.left, // Calculate mouse X position relative to the canvas
+                y: event.clientY - rect.top // Calculate mouse Y position relative to the canvas
+            };
+        };
+
+        // Function to save the current state of the canvas (for undo/redo)
+        const saveState = () => {
+            if (history.length >= 50) history.shift(); // If there are more than 50 states, remove the oldest state
+            history.push(canvas.toDataURL()); // Save the current canvas state as a data URL
+            redoStack = []; // Clear the redo stack when a new action is made
+        };
+
+        // Function to restore the canvas to a previous state from history
+        const restoreState = (state) => {
+            const img = new Image(); // Create a new image element to hold the saved canvas state
+            img.src = state; // Set the image source to the saved canvas state
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before restoring the image
+                ctx.drawImage(img, 0, 0); // Draw the restored image onto the canvas
+            };
+        };
+
+        // Event listener for mouse down (start drawing)
+        canvas.addEventListener('mousedown', (event) => {
+            drawing = true; // Set the drawing flag to true to indicate the user is drawing
+            saveState(); // Save the current canvas state before starting the new drawing
+            const { x, y } = getMousePos(event); // Get the current mouse position on the canvas
+            ctx.beginPath(); // Begin a new path for the drawing
+            ctx.moveTo(x, y); // Move the pen to the starting position
+        });
+
+        // Event listener for mouse move (drawing while the mouse is moving)
+        canvas.addEventListener('mousemove', (event) => {
+            if (drawing) {
+                const { x, y } = getMousePos(event); // Get the current mouse position on the canvas
+                ctx.lineTo(x, y); // Draw a line to the current mouse position
+                ctx.strokeStyle = currentColor; // Set the drawing color
+                ctx.lineWidth = 2; // Set the line width
+                ctx.lineJoin = 'round'; // Set the line join style for smooth curves
+                ctx.stroke(); // Actually draw the line
+            }
+        });
+
+        // Event listener for mouse up (stop drawing)
+        canvas.addEventListener('mouseup', () => {
+            drawing = false; // Set the drawing flag to false to stop drawing
+        });
+
+        // Clear the canvas when the clear button is clicked
+        clearButton.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
+            saveState(); // Save the empty state to the history for undo/redo
+        });
+
+        // Undo the last drawing action
+        undoButton.addEventListener('click', () => {
+            if (history.length > 0) {
+                const lastState = history.pop(); // Get the last saved state from history
+                redoStack.push(canvas.toDataURL()); // Push the current state to the redo stack
+                if (history.length > 0) {
+                    restoreState(history[history.length - 1]); // Restore the previous state from history
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas if there are no more history states
+                }
+            }
+        });
+
+        // Redo the last undone action
+        redoButton.addEventListener('click', () => {
+            if (redoStack.length > 0) {
+                const redoState = redoStack.pop(); // Get the last undone state from redo stack
+                restoreState(redoState); // Restore the redo state to the canvas
+                history.push(canvas.toDataURL()); // Save the current state to history for future undo actions
+            }
+        });
+
+        // Open/close the color picker when the button is clicked
+        colorPickerButton.addEventListener('click', () => {
+            colorPicker.style.display = colorPicker.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Update the drawing color when the color picker value changes
+        colorPicker.addEventListener('input', (event) => {
+            currentColor = event.target.value; // Set the drawing color to the selected color
+        });
+
+        // Save the canvas as an image when the save button is clicked
+        saveButton.addEventListener('click', () => {
+            const link = document.createElement('a'); // Create a new anchor element for the download link
+            link.href = canvas.toDataURL(); // Set the link's href attribute to the canvas image data URL
+            link.download = 'whiteboard-image.png'; // Set the download attribute to specify the file name
+            link.click(); // Simulate a click to trigger the download
+        });
+
+        // Initially save the initial empty canvas state
+        saveState();
+    </script>
+</body>
+
+</html>

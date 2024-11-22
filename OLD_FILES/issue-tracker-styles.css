@@ -1,0 +1,151 @@
+/* General Page Styles */
+body {
+    font-family: Arial, sans-serif; /* Use Arial font */
+    background-color: #ffffff; /* Set a solid white background */
+    color: #01010190; /* Text color */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center-align elements horizontally */
+    margin: 0; /* Remove default margin */
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1; /* Header background color */
+    color: #fff; /* Header text color */
+    padding: 15px 0; /* Add padding to the header */
+    text-align: center; /* Center-align text */
+    width: 100%; /* Full width of the screen */
+}
+
+nav ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+    display: flex; /* Display links in a row */
+    justify-content: center; /* Center-align navigation links */
+}
+
+nav ul li {
+    display: inline; /* Inline display for list items */
+    margin-right: 20px; /* Space between links */
+}
+
+nav ul li a {
+    color: #000000; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 18px; /* Font size for links */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Page Title */
+.title {
+    font-size: 32px; /* Font size for title */
+    font-weight: bold; /* Bold font for title */
+    color: #000000; /* Title color */
+    text-align: center; /* Center-align title */
+    margin-top: 20px; /* Add space above the title */
+}
+
+/* Description Text */
+.description {
+    font-size: 18px; /* Font size for description */
+    text-align: center; /* Center-align text */
+    margin: 10px 0; /* Space above and below description */
+    color: #01010190; /* Slightly muted color */
+}
+
+/* Issue Table Styles */
+.issue-table {
+    width: 80%; /* Take 80% of the page width */
+    margin: 20px 0; /* Space above and below the table */
+    border-collapse: collapse; /* Remove spacing between table cells */
+}
+
+.issue-table th,
+.issue-table td {
+    border: 1px solid #d6ade1; /* Border around cells */
+    padding: 10px; /* Padding inside cells */
+    text-align: left; /* Left-align cell content */
+}
+
+.issue-table th {
+    background-color: #d6ade1; /* Header row background color */
+    color: #000000; /* Header row text color */
+}
+
+.issue-table td {
+    background-color: #f9f9f9; /* Alternate row color */
+    color: #000000; /* Cell text color */
+}
+
+/* Form Styles */
+.issue-form {
+    width: 80%; /* Take 80% of the page width */
+    margin: 20px 0; /* Space above and below the form */
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center-align form elements */
+}
+
+.issue-form label {
+    font-size: 18px; /* Font size for labels */
+    color: #000000; /* Label text color */
+    margin-bottom: 10px; /* Space below the label */
+}
+
+.issue-form textarea {
+    width: 100%; /* Full width of the form container */
+    height: 100px; /* Fixed height for the text area */
+    padding: 10px; /* Padding inside the text area */
+    border: 1px solid #3b3039; /* Border around text area */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size for text area content */
+    margin-bottom: 20px; /* Space below the text area */
+}
+
+.submit-button {
+    background-color: #d6ade1; /* Button background color */
+    color: #fff; /* Button text color */
+    font-size: 18px; /* Font size for button text */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+}
+
+.submit-button:hover {
+    background-color: #c396d8; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1; /* Footer background matches header/nav color */
+    color: #000000; /* White text color */
+    width: 100%; /* Full width of the page */
+    text-align: center; /* Center-align text */
+    padding: 15px 0; /* Add padding to the footer */
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+.footer-content {
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center-align content */
+}
+
+.social-icons a {
+    color: #000000; /* White color for social icons */
+    text-decoration: none; /* Remove underline from links */
+    margin: 0 10px; /* Add space between links */
+    font-size: 18px; /* Font size for social links */
+}
+
+.social-icons a:hover {
+    text-decoration: underline; /* Underline links on hover */
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <link rel="stylesheet" href="account-information-styles.css"> <!-- Link to the CSS file -->
+</head>
+
+<body>
+    <!-- Header Section with Navigation Menu -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="work.html">Work</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Centered Profile Picture with Click Event -->
+        <div class="profile-pic-container" onclick="triggerFileInput()">
+            <img src="editpicture.png" alt="Profile Picture" class="profile-pic" id="profilePic">
+        </div>
+
+        <!-- Hidden File Input -->
+        <input type="file" id="uploadPic" accept="image/*" onchange="changeProfilePic()" style="display: none;">
+
+        <!-- Edit Picture Title -->
+        <h2 class="edit-picture-title">Edit Picture</h2>
+
+        <!-- Name Field -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" class="input-field" placeholder="Enter your name">
+
+        <!-- School Email Field -->
+        <label for="school-email">School Email:</label>
+        <input type="email" id="school-email" name="school-email" class="input-field" placeholder="Enter your school email">
+
+        <!-- Personal Email Field (Optional) -->
+        <label for="personal-email">Personal Email (Optional):</label>
+        <input type="email" id="personal-email" name="personal-email" class="input-field" placeholder="Enter your personal email">
+
+        <!-- App Phone Number (Display Only) -->
+        <p class="static-info">Your app phone #: (123)456-7890</p>
+
+        <!-- Optional Phone Number Field -->
+        <label for="phone-optional">Your phone # (Optional):</label>
+        <input type="tel" id="phone-optional" name="phone-optional" class="input-field" placeholder="Enter your phone number">
+
+        <!-- Present Hours Field -->
+        <label for="present-hours">Present hours:</label>
+        <input type="text" id="present-hours" name="present-hours" class="input-field" placeholder="Enter your available hours">
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Innavator - All Rights Reserved.</p>
+        <div class="social-icons">
+            <a href="https://www.uat.edu/" target="_blank">UAT</a>
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <script>
+        // Function to trigger the file input when the profile image is clicked
+        function triggerFileInput() {
+            document.getElementById('uploadPic').click();
+        }
+
+        // Function to change the profile picture when a new image is uploaded
+        function changeProfilePic() {
+            const fileInput = document.getElementById('uploadPic');
+            const profilePic = document.getElementById('profilePic');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePic.src = e.target.result;
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    </script>
+</body>
+
+</html>
