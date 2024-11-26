@@ -132,14 +132,26 @@ class MessagesPermissions(permissions.BasePermission):
 
 class RolesPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action in ['list', 'retrieve']:
+        if view.action in ['list', 'retrieve', 'get_commission_requests', 'get_projects']:
             return True
-        return request.user.is_staff
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        return False
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['retrieve']:
+        if view.action in ['retrieve', 'get_commission_requests', 'get_projects']:
             return True
-        return request.user.is_staff
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        return False
 
 class ProjectsPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -234,3 +246,32 @@ class PortfolioEntriesPermissions(permissions.BasePermission):
             return True
 
         return obj.user.user == request.user
+
+class SubjectsPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if view.action in ['list', 'retrieve', 'tutors']:
+            return True
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        if view.action in ['add_tutor_willingness', 'remove_tutor_willingness']:
+            return True
+
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ['retrieve', 'tutors']:
+            return True
+
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_staff:
+            return True
+
+        if view.action in ['add_tutor_willingness', 'remove_tutor_willingness']:
+            return True
+
+        return False

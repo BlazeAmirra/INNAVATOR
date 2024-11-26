@@ -126,6 +126,8 @@
         <button onclick="test_button(false, document.getElementById('project_details_result'), getProject, document.getElementById('project_details_snowflake'))">Fetch Project</button>
         <button onclick="test_button(false, document.getElementById('project_details_result'), listProjectMembers, document.getElementById('project_details_snowflake'))">List Members</button>
         <button onclick="test_button(false, document.getElementById('project_details_result'), listActiveProjectMembers, document.getElementById('project_details_snowflake'))">List Active Project Members</button><br/>
+        <button onclick="test_button(false, document.getElementById('project_details_result'), requestsFromProject, document.getElementById('project_details_snowflake'))">List Invites</button>
+        <button onclick="test_button(false, document.getElementById('project_details_result'), requestsToProject, document.getElementById('project_details_snowflake'))">List Requests to Join</button><br/>
         <span id="project_details_result"></span><br/>
 
         <h2>Commission Requests</h2>
@@ -156,6 +158,18 @@
         Portfolio Entry Snowflake: <input id="portfolio_fetch_snowflake"/><br/>
         <button onclick="test_button(false, document.getElementById('portfolio_fetch_result'), fetchPortfolioEntry, document.getElementById('portfolio_fetch_snowflake'))">Get Portfolio Entry</button><br/>
         <span id="portfolio_fetch_result"></span><br/>
+
+        <h2>Subjects</h2>
+
+        <h3>Subject List</h3>
+        <button onclick="test_button(false, document.getElementById('subject_list_result'), listSubjects)">List Subjects</button><br/>
+        <span id="subject_list_result"></span><br/>
+
+        <h3>Subject Details</h3>
+        Subject Snowflake: <input id="subject_fetch_snowflake"/><br/>
+        <button onclick="test_button(false, document.getElementById('subject_fetch_result'), fetchSubject, document.getElementById('subject_fetch_snowflake'))">Get Subject</button>
+        <button onclick="test_button(false, document.getElementById('subject_fetch_result'), fetchSubjectTutors, document.getElementById('subject_fetch_snowflake'))">Get Tutors</button><br/>
+        <span id="subject_fetch_result"></span><br/>
 
         <h1>DELETE</h1>
 
@@ -217,6 +231,13 @@
         Portfolio Entry Snowflake: <input id="portfolio_delete_snowflake"/><br/>
         <button onclick="test_button(false, document.getElementById('portfolio_delete_result'), deletePortfolioEntry, document.getElementById('portfolio_delete_snowflake'))">Delete Portfolio Entry</button><br/>
         <span id="portfolio_delete_result"></span><br/>
+
+        <h2>Subjects</h2>
+
+        <h3>Remove Tutor Willingness</h3>
+        Subject Snowflake: <input id="subject_delete_snowflake"/><br/>
+        <button onclick="test_button(false, document.getElementById('subject_delete_result'), removeTutorWillingness, document.getElementById('subject_delete_snowflake'))">Remove Tutor Willingness</button><br/>
+        <span id="subject_delete_result"></span><br/>
 
         <h1>POST</h1>
 
@@ -368,6 +389,13 @@
             document.getElementById('commission_create_description'),
         )">Create Commission Request</button><br/>
         <span id="commission_create_result"></span><br/>
+
+        <h2>Subjects</h2>
+
+        <h3>Add Tutor Willingness</h3>
+        Subject Snowflake: <input id="subject_add_snowflake"/><br/>
+        <button onclick="test_button(false, document.getElementById('subject_add_result'), addTutorWillingness, document.getElementById('subject_add_snowflake'))">Add Tutor Willingness</button><br/>
+        <span id="subject_add_result"></span><br/>
 
         <h1>PATCH</h1>
 

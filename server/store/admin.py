@@ -264,3 +264,25 @@ class PortfolioEntryAdmin(admin.ModelAdmin):
     # we DO NOT put words in other peoples' mouths
     def has_change_permission(self, request, obj=None):
         return False
+
+@admin.register(innavator_models.Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ("snowflake_id", "name")
+    readonly_fields = ["snowflake_id"]
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.snowflake_id = innavator_slowflake_generator.__next__()
+        return super().save_model(request, obj, form, change)
+
+@admin.register(innavator_models.WillingnessToTutor)
+class WillingnessToTutorAdmin(admin.ModelAdmin):
+    list_display = ("snowflake_id", "user", "subject")
+    readonly_fields = ["snowflake_id"]
+
+    # adding a willingness to tutor this way makes no sense
+    def has_add_permission(self, request):
+        return False
+    # changing a willingness to tutor this way makes no sense
+    def has_change_permission(self, request, obj=None):
+        return False

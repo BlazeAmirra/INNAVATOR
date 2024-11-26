@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report User</title>
+    <link rel="stylesheet" href="report-user-styles.css"> <!-- Link to the CSS file for styling -->
+</head>
+
+<body>
+    <!-- Header Section with Navigation Menu -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li> <!-- Link to the Home page -->
+                <li><a href="settings.html">Settings</a></li> <!-- Link to the Settings page -->
+                <li><a href="work.html">Work</a></li> <!-- Link to the Work page -->
+                <li><a href="about.html">About</a></li> <!-- Link to the About page -->
+                <li><a href="contact.html">Contact</a></li> <!-- Link to the Contact page -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <!-- Page Title -->
+        <h1 class="title">Report User</h1> <!-- Title of the page -->
+
+        <!-- Subtitle or Instructions -->
+        <p class="instructions">Please describe the issue you experienced with the user below:</p> <!-- Subtitle or explanation for the user -->
+
+        <!-- Textbox for User Input -->
+        <form action="submit.html" method="POST"> <!-- Form to submit the report -->
+            <textarea name="user-issue" id="user-issue" class="input-box" placeholder="Type your issue here..." required></textarea>
+            <!-- A text area where users can type their issue; it's required to submit -->
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-button">Submit Report</button> <!-- Button to submit the form -->
+        </form>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Innavator - All Rights Reserved.</p> <!-- Footer copyright -->
+        <div class="social-icons">
+            <a href="https://www.uat.edu/" target="_blank">UAT</a> <!-- Link to UAT website -->
+            <a href="https://x.com/UATedu" target="_blank">Twitter</a> <!-- Link to Twitter -->
+            <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a> <!-- Link to Instagram -->
+        </div>
+    </footer>
+</body>
+
+</html>

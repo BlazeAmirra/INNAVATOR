@@ -34,7 +34,7 @@ GET `who_am_i/`
 ---------------
 
 GET `users/`
-	{ [{InnavatorUser}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{InnavatorUser}] }
 	no auth needed
 	added
 
@@ -49,64 +49,64 @@ GET `users/<InnavatorUser>/get_palette/`
 	added
 
 GET `users/<InnavatorUser>/portfolio/`
-	{ [{PortfolioEntry} where user=pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{PortfolioEntry} where user=pk] }
 	no auth needed
 	added
 
 GET `users/<InnavatorUser>/mentors/`
-	{ [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=true] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/mentees/`
-	{ [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=true] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/requests_as_mentor_from_me/`
-	{ [{Mentorship} where mentee=pk and mentor_accepted=false and mentee_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentee=pk and mentor_accepted=false and mentee_accepted=true] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/requests_as_mentor_to_me/`
-	{ [{Mentorship} where mentor=pk and mentor_accepted=false and mentee_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentor=pk and mentor_accepted=false and mentee_accepted=true] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/requests_as_mentee_from_me/`
-	{ [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=false] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentor=pk and mentor_accepted=true and mentee_accepted=false] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/requests_as_mentee_to_me/`
-	{ [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=false] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Mentorship} where mentee=pk and mentor_accepted=true and mentee_accepted=false] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/group_requests_from_me/`
-	{ [{GroupMembership} where user=pk and user_accepted=true and group_accepted=false] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{GroupMembership} where user=pk and user_accepted=true and group_accepted=false] }
 	auth needed - same user
 	added
 
 GET `users/<InnavatorUser>/group_requests_to_me/`
-	{ [{GroupMembership} where user=pk and user_accepted=false and group_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{GroupMembership} where user=pk and user_accepted=false and group_accepted=true] }
 	auth needed - same user
 	added
 
 ---------------
 
 GET `groups/`
-	{ [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where members includes user] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where members includes user] }
 	auth needed - anyone
 	added
 
 GET `groups/all/`
-	{ [{snowflake_id: InnavatorGroup, name: string}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string}] }
 	auth needed - admin
 	added
 
 GET `groups/clubs/`
-	{ [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where is_club=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where is_club=true] }
 	no auth needed
 	added
 
@@ -116,32 +116,32 @@ GET `groups/<InnavatorGroup>/`
 	added
 
 GET `groups/<InnavatorGroup>/members/`
-	{ [{user: InnavatorUser, is_privileged: boolean} for GroupMembership where group=pk and user_accepted=true and group_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{user: InnavatorUser, is_privileged: boolean} for GroupMembership where group=pk and user_accepted=true and group_accepted=true] }
 	auth needed - member
 	added
 
 GET `groups/<InnavatorGroup>/requests_from_group/`
-	{ [{GroupMembership} where group=pk and user_accepted=false and group_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{GroupMembership} where group=pk and user_accepted=false and group_accepted=true] }
 	auth needed - is_privileged
 	added
 
 GET `groups/<InnavatorGroup>/requests_to_group/`
-	{ [{GroupMembership} where group=pk and user_accepted=true and group_accepted=false] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{GroupMembership} where group=pk and user_accepted=true and group_accepted=false] }
 	auth needed - is_privileged
 	added
 
 GET `groups/<InnavatorGroup>/channels/`
-	{ [{Channel} where group=pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Channel} where group=pk] }
 	auth needed - member
 	added
 
 GET `groups/<InnavatorGroup>/projects/`
-	{ [{Project} where group=pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Project} where group=pk] }
 	no auth needed if is_club, else auth needed - member
 	added
 
 GET `groups/<InnavatorGroup>/events/`
-	{ [{Event} where group=pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Event} where group=pk] }
 	no auth needed if is_club, else auth needed - member
 	added
 
@@ -162,7 +162,7 @@ GET `messages/<Message>/`
 ---------------
 
 GET `roles/`
-	{ [{Role}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Role}] }
 	no auth needed
 	added
 
@@ -172,19 +172,19 @@ GET `roles/<Role>/`
 	added
 
 GET `roles/<Role>/get_commission_requests/`
-	{ [{CommissionRequest} where role=pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{CommissionRequest} where role=pk] }
 	no auth needed
 	added
 
 GET `roles/<Role>/get_projects/`
-	{ [{Project} where looking_for_roles contains pk] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Project} where looking_for_roles contains pk] }
 	no auth needed
 	added
 
 ---------------
 
 GET `projects/`
-	{ [{Project}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Project}] }
 	no auth needed
 	added
 
@@ -194,19 +194,29 @@ GET `projects/<Project>/`
 	added
 
 GET `projects/<Project>/members/`
-	{ [{ProjectRole} where project=pk and user_accepted=true and project_accepted=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{ProjectRole} where project=pk and user_accepted=true and project_accepted=true] }
 	no auth needed
 	added
 
 GET `projects/<Project>/active_members/`
-	{ [{ProjectRole} where project=pk and is_active=true] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{ProjectRole} where project=pk and is_active=true] }
 	no auth needed
+	added
+
+GET `projects/<Project>/requests_from_project/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{ProjectRole} where project=pk and user_accepted=false and project_accepted=true] }
+	auth needed - group is_privileged
+	added
+
+GET `projects/<Project>/requests_to_project/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{ProjectRole} where project=pk and user_accepted=true and project_accepted=false] }
+	auth needed - group is_privileged
 	added
 
 ---------------
 
 GET `commissions/`
-	{ [{CommissionRequest}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{CommissionRequest}] }
 	no auth needed
 	added
 
@@ -225,12 +235,29 @@ GET `events/<Event>/`
 ---------------
 
 GET `portfolio_entries/`
-	{ [{PortfolioEntry}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{PortfolioEntry}] }
 	no auth needed
 	added
 
 GET `portfolio_entries/<PortfolioEntry>/`
 	{ {PortfolioEntry} where pk=pk }
+	no auth needed
+	added
+
+---------------
+
+GET `subjects/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{Subject}] }
+	no auth needed
+	added
+
+GET `subjects/<Subject>/`
+	{ {Subject} where pk=pk }
+	no auth needed
+	added
+
+GET `subjects/<Subject>/tutors/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{WillingnessToTutor} where subject=pk] }
 	no auth needed
 	added
 
@@ -307,6 +334,13 @@ DELETE `events/<Event>/`
 DELETE `portfolio_entries/<PortfolioEntry>/`
 	{}
 	auth needed - same user
+	added
+
+---------------
+
+DELETE `subjects/<Subject>/remove_tutor_willingness/`
+	{}
+	auth needed - anyone
 	added
 
 =============================
@@ -390,7 +424,7 @@ POST `groups/<InnavatorGroup>/remove_user/` { user: InnavatorUser }
 ---------------
 
 POST `channels/<Channel>/messages/` {}
-	{ [{Message}] }
+	{ count: int, previous: null or URL, next: null or URL, results: [{Message}] }
 	auth needed - group member
 	added
 	retrieves messages; this uses POST because it sets the last read
@@ -449,6 +483,13 @@ POST `commissions/` { role: Role, name: string, description: string optional }
 	added
 	creates a new commission request
 
+---------------
+
+POST `subjects/<Subject>/add_tutor_willingness/` {}
+	{}
+	auth needed - anyone
+	added
+
 =============================
 
 PATCH `users/<InnavatorUser>/` { full_name: string optional if preferred_name present or either existing, preferred_name: string optional if full_name present or either existing, major: string, website_url: URL, profile_picture_url: URL }
@@ -462,14 +503,16 @@ PATCH `users/<InnavatorUser>/patch_palette/` { main_background_gradient_triplet:
 	added
 
 PATCH `users/<InnavatorUser>/accept_mentor_request/` {}
-	{}
+	{ {Group} }
 	auth needed - anyone
 	added
+	returned group is newly created one joined by mentor and mentee, both of whom are privileged, and the owner is the mentor
 
 PATCH `users/<InnavatorUser>/accept_mentee_request/` {}
-	{}
+	{ {Group} }
 	auth needed - anyone
 	added
+	returned group is newly created one joined by mentor and mentee, both of whom are privileged, and the owner is the mentor
 
 ---------------
 
@@ -513,11 +556,13 @@ PATCH `projects/<Project>/accept_invite/` {}
 	{}
 	auth needed - group is_privileged
 	added
+	also adds user to group
 
 PATCH `projects/<Project>/accept_join_request/` { user: InnavatorUser }
 	{}
 	auth needed - group is_privileged
 	added
+	also adds user to group
 
 ---------------
 

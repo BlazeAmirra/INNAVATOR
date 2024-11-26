@@ -342,3 +342,17 @@ class PortfolioEntrySerializer(serializers.ModelSerializer):
         return escape(value)
     def validate_description(self, value):
         return escape(value)
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.Subject
+        fields = '__all__'
+
+    # this is rather paranoid given that these are only admin-set
+    def validate_name(self, value):
+        return escape(value)
+
+class WillingnessToTutorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.WillingnessToTutor
+        fields = '__all__'

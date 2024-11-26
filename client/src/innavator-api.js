@@ -2,11 +2,11 @@
 const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
 
 const baseRequest = {
-    credentials: 'include',
+    credentials: 'include'
 };
 const invalidTokens = {
     "error": "Not logged in."
-}
+};
 
 let access_token = '';
 let logged_in = false;
@@ -72,7 +72,7 @@ const _apiGET = async (uri, headers) => {
     return await _makeAPIrequest(uri, {
         method: 'GET',
         headers: headers,
-        ...baseRequest,
+        ...baseRequest
     });
 };
 const _anonGetAPI = async uri => {
@@ -87,7 +87,7 @@ const _apiDELETE = async (uri, headers) => {
     return await _makeAPIrequest(uri, {
         method: 'DELETE',
         headers: headers,
-        ...baseRequest,
+        ...baseRequest
     });
 };
 const _apiMUT = async (uri, headers, json, method) => {
@@ -97,7 +97,7 @@ const _apiMUT = async (uri, headers, json, method) => {
         method: method,
         headers: headers,
         body: JSON.stringify(json),
-        ...baseRequest,
+        ...baseRequest
     });
 };
 const _anonPostAPI = async (uri, json) => {
@@ -319,6 +319,12 @@ const listProjectMembers = async project => {
 const listActiveProjectMembers = async project => {
     return await getAPI(`projects/${project}/active_members/`);
 };
+const requestsFromProject = async project => {
+    return await getAPI(`projects/${project}/requests_from_project/`);
+};
+const requestsToProject = async project => {
+    return await getAPI(`projects/${project}/requests_to_project/`);
+};
 
 const listCommissionRequests = async () => {
     return await getAPI(`commissions/`);
@@ -336,6 +342,16 @@ const listPortfolioEntries = async () => {
 };
 const fetchPortfolioEntry = async portfolio_entry => {
     return await getAPI(`portfolio_entries/${portfolio_entry}/`);
+};
+
+const listSubjects = async () => {
+    return await getAPI(`subjects/`);
+};
+const fetchSubject = async subject => {
+    return await getAPI(`subjects/${subject}/`);
+};
+const fetchSubjectTutors = async subject => {
+    return await getAPI(`subjects/${subject}/tutors/`);
 };
 
 // DELETE
@@ -381,7 +397,11 @@ const deletePortfolioEntry = async portfolio_entry => {
     return await deleteAPI(`portfolio_entries/${portfolio_entry}/`);
 };
 
-// POST: `jwt_token/`, `jwt_token/refresh/` and `users/` are handled specially above
+const removeTutorWillingness = async subject => {
+    return await deleteAPI(`subjects/${subject}/remove_tutor_willingness/`)
+};
+
+// POST: `jwt_token/`, `jwt_token/refresh/`, and `users/` are handled specially above
 
 const requestMentor = async user => {
     return await postAPI(`users/${user}/request_as_mentor/`, {});
@@ -450,6 +470,10 @@ const createCommissionRequest = async (role, name, description) => {
     return await postAPI(`commissions/`, {'role': role, 'name': name, 'description': description});
 };
 
+const addTutorWillingness = async subject => {
+    return await postAPI(`subjects/${subject}/add_tutor_willingness/`, {})
+};
+
 // PATCH
 
 const patchUser = async diff => {
@@ -470,7 +494,7 @@ const patchGroup = async snowflake_and_diff => {
     return await patchAPI(`groups/${group}/`, diff);
 };
 const acceptInviteToGroup = async group => {
-    return await patchAPI(`groups/${group}/accept_invite/`);
+    return await patchAPI(`groups/${group}/accept_invite/`, {});
 };
 const acceptJoinRequestToGroup = async (group, user) => {
     return await patchAPI(`groups/${group}/accept_join_request/`, {'user': user});
@@ -491,7 +515,7 @@ const patchProject = async snowflake_and_diff => {
     return await patchAPI(`projects/${project}/`, diff);
 };
 const acceptInviteToProject = async project => {
-    return await patchAPI(`projects/${project}/accept_invite/`);
+    return await patchAPI(`projects/${project}/accept_invite/`, {});
 };
 const acceptJoinRequestToProject = async (project, user) => {
     return await patchAPI(`projects/${project}/accept_join_request/`, {'user': user});

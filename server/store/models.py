@@ -123,6 +123,13 @@ single_color_regex = f'^{contains_color_regex}$'
 color_pair_regex = f'^{contains_color_regex} {contains_color_regex}$'
 color_triplet_regex = f'^{contains_color_regex} {contains_color_regex} {contains_color_regex}$'
 
+class Subject(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    name = models.CharField("Subject", max_length=100)
+
+    def __str__(self):
+        return f'"{self.name}" Subject'
+
 class InnavatorUserManager(models.Manager):
     def create(self, username, email, password):
         user = get_user_model()(
@@ -138,10 +145,7 @@ class InnavatorUserManager(models.Manager):
         )
         innavator_user.save()
 
-        palette = Palette(
-            user = innavator_user
-        )
-        palette.save()
+        Palette(user=innavator_user).save()
 
         return innavator_user
 
@@ -158,6 +162,7 @@ class InnavatorUser(models.Model):
 
     # "self" allows recursion
     mentees = models.ManyToManyField("self", symmetrical=False, through="Mentorship")
+    willing_to_tutor = models.ManyToManyField(Subject, through="WillingnessToTutor")
 
     objects = InnavatorUserManager()
 
@@ -182,6 +187,17 @@ class Palette(models.Model):
 
     def __str__(self):
         return f"{self.user}'s palette"
+
+class WillingnessToTutor(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    user = models.ForeignKey(InnavatorUser, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Willingnesses to mentor"
+
+    def __str__(self):
+        return f"{self.user}'s willingness to mentor {self.subject}"
 
 class InnavatorGroup(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)

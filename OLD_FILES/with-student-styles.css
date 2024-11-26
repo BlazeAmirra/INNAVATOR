@@ -1,0 +1,112 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #01010190;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    align-items: center; /* Centers content horizontally */
+}
+
+/* Header and Navigation Styles */
+header {
+    background-color: #d6ade1;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Page Title Styling */
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    color: #000000;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Centered Input Container Styling */
+.input-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+textarea {
+    width: 300px;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #d6ade1;
+    border-radius: 8px;
+    resize: none;
+}
+
+/* Navigation Buttons Styling */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin-top: 20px;
+}
+
+.back-arrow,
+.next-button {
+    color: #000000;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.back-arrow:hover,
+.next-button:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #d6ade1;
+    color: #000000;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto;
+    width: 100%;
+}
+
+footer p {
+    padding: 5px 0;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    margin: 0 10px;
+    color: #000000;
+    text-decoration: none;
+}

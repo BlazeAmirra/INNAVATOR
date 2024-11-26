@@ -191,7 +191,6 @@ from django.contrib.auth import get_user_model
 from rest_framework import mixins, status
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.views import APIView
 
 from store import models as innavator_models
 from store import permissions as innavator_permissions
@@ -213,7 +212,7 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = innavator_serializers.EmailTokenObtainPairSerializer
 
 class InnavatorUserViewset(viewsets.ModelViewSet):
-    queryset = innavator_models.InnavatorUser.objects.all()
+    queryset = innavator_models.InnavatorUser.objects.all().exclude(user__username="admin")
     serializer_class = innavator_serializers.InnavatorUserSerializer
     permission_classes = (innavator_permissions.UsersPermissions,) # comma is necessary
 
@@ -239,57 +238,51 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def mentors(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentee=self.get_object(),
             mentor_accepted=True,
             mentee_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def mentees(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentor=self.get_object(),
             mentor_accepted=True,
             mentee_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_as_mentor_from_me(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentee=self.get_object(),
             mentor_accepted=False,
             mentee_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_as_mentor_to_me(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentor=self.get_object(),
             mentor_accepted=False,
             mentee_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_as_mentee_from_me(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentor=self.get_object(),
             mentor_accepted=True,
             mentee_accepted=False
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_as_mentee_to_me(self, request, pk):
-        serializer = innavator_serializers.MentorshipSerializer(innavator_models.Mentorship.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.MentorshipSerializer, innavator_models.Mentorship.objects.filter(
             mentee=self.get_object(),
             mentor_accepted=True,
             mentee_accepted=False
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     # creates a request to add the PK as a mentor of the sender
     @action(detail=True, methods=['post'])
@@ -335,7 +328,11 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if mentorship.mentor_accepted and not mentorship.mentee_accepted:
                 mentorship.mentee_accepted = True
                 mentorship.save()
-                return Response(status=status.HTTP_202_ACCEPTED)
+
+                return Response(
+                    innavator_serializers.InnavatorGroupSerializer(innavator_utils.create_mentorship_group(mentor=receiver, mentee=sender)).data,
+                    status=status.HTTP_202_ACCEPTED
+                )
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # accepts the PK's request to be a mentee of the sender
@@ -348,7 +345,11 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if mentorship.mentee_accepted and not mentorship.mentor_accepted:
                 mentorship.mentor_accepted = True
                 mentorship.save()
-                return Response(status=status.HTTP_202_ACCEPTED)
+
+                return Response(
+                    innavator_serializers.InnavatorGroupSerializer(innavator_utils.create_mentorship_group(mentor=sender, mentee=receiver)).data,
+                    status=status.HTTP_202_ACCEPTED
+                )
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # removes the PK as a mentor of the sender
@@ -370,7 +371,6 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         receiver = self.get_object()
         if sender.mentees.contains(receiver):
             mentorship = innavator_models.Mentorship.objects.get(mentor=sender, mentee=receiver)
-            data = innavator_serializers.MentorshipSerializer(mentorship).data
             sender.mentees.remove(receiver)
             mentorship.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -378,28 +378,25 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def group_requests_from_me(self, request, pk):
-        serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipDetailSerializer, innavator_models.GroupMembership.objects.filter(
             user=self.get_object(),
             user_accepted=True,
             group_accepted=False
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def group_requests_to_me(self, request, pk):
-        serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipDetailSerializer, innavator_models.GroupMembership.objects.filter(
             user=self.get_object(),
             user_accepted=False,
             group_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def portfolio(self, request, pk):
-        serializer = innavator_serializers.PortfolioEntrySerializer(innavator_models.PortfolioEntry.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.PortfolioEntrySerializer, innavator_models.PortfolioEntry.objects.filter(
             user=self.get_object()
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['post'])
     def create_portfolio_entry(self, request, pk):
@@ -515,60 +512,53 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
     permission_classes = (innavator_permissions.GroupsPermissions,) # comma is necessary
 
     def list(self, request):
-        serializer = innavator_serializers.InnavatorGroupPreviewSerializer(innavator_models.InnavatorGroup.objects.filter(members=innavator_utils.get_innavator_user_from_user(request.user)), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(
+            members=innavator_utils.get_innavator_user_from_user(request.user)
+        ))
 
     @action(detail=False, methods=['get'])
     def all(self, request):
-        serializer = innavator_serializers.InnavatorGroupPreviewSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, self.queryset)
 
     @action(detail=False, methods=['get'])
     def clubs(self, request):
-        serializer = innavator_serializers.InnavatorGroupPreviewSerializer(innavator_models.InnavatorGroup.objects.filter(is_club=True), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(is_club=True))
 
     @action(detail=True, methods=['get'])
     def members(self, request, pk):
-        serializer = innavator_serializers.GroupMembershipSerializer(innavator_models.GroupMembership.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipSerializer, innavator_models.GroupMembership.objects.filter(
             group=self.get_object(),
             user_accepted=True,
             group_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_from_group(self, request, pk):
-        serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipDetailSerializer, innavator_models.GroupMembership.objects.filter(
             group=self.get_object(),
             user_accepted=False,
             group_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def requests_to_group(self, request, pk):
-        serializer = innavator_serializers.GroupMembershipDetailSerializer(innavator_models.GroupMembership.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipDetailSerializer, innavator_models.GroupMembership.objects.filter(
             group=self.get_object(),
             user_accepted=True,
             group_accepted=False
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def channels(self, request, pk):
-        serializer = innavator_serializers.ChannelSerializer(innavator_models.Channel.objects.filter(group=self.get_object()), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.ChannelSerializer, innavator_models.Channel.objects.filter(group=self.get_object()))
 
     @action(detail=True, methods=['get'])
     def projects(self, request, pk):
-        serializer = innavator_serializers.ProjectSerializer(innavator_models.Project.objects.filter(group=self.get_object()), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(group=self.get_object()))
 
     @action(detail=True, methods=['get'])
     def events(self, request, pk):
-        serializer = innavator_serializers.EventSerializer(innavator_models.Event.objects.filter(group=self.get_object()), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.EventSerializer, innavator_models.Event.objects.filter(group=self.get_object()))
 
     @action(detail=True, methods=['post'])
     def create_channel(self, request, pk):
@@ -767,8 +757,7 @@ class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets
         sender = innavator_utils.get_innavator_user_from_user(request.user)
         innavator_utils.update_last_read_message(channel, sender)
 
-        serializer = innavator_serializers.MessageSerializer(innavator_models.Message.objects.filter(channel=channel).order_by('-snowflake_id'), many=True)
-        return Response(serializer.data)
+        return innavator_utils.paginate(self, innavator_serializers.MessageSerializer, innavator_models.Message.objects.filter(channel=channel).order_by('-snowflake_id'))
 
     @action(detail=True, methods=['get'])
     def unread_message_count(self, request, pk):
@@ -812,17 +801,15 @@ class RoleViewset(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=True, methods=['get'])
     def get_commission_requests(self, request, pk):
-        serializer = innavator_serializers.CommissionRequestSerializer(innavator_models.CommissionRequest.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.CommissionRequestSerializer, innavator_models.CommissionRequest.objects.filter(
             role=self.get_object()
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def get_projects(self, request, pk):
-        serializer = innavator_serializers.ProjectSerializer(innavator_models.Project.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(
             looking_for_roles=self.get_object()
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
 class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.Project.objects.all()
@@ -831,20 +818,18 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
     @action(detail=True, methods=['get'])
     def members(self, request, pk):
-        serializer = innavator_serializers.ProjectRoleSerializer(innavator_models.ProjectRole.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.ProjectRoleSerializer, innavator_models.ProjectRole.objects.filter(
             project=self.get_object(),
             user_accepted=True,
             project_accepted=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['get'])
     def active_members(self, request, pk):
-        serializer = innavator_serializers.ProjectRoleSerializer(innavator_models.ProjectRole.objects.filter(
+        return innavator_utils.paginate(self, innavator_serializers.ProjectRoleSerializer, innavator_models.ProjectRole.objects.filter(
             project=self.get_object(),
             is_active=True
-        ), many=True)
-        return Response(serializer.data)
+        ))
 
     @action(detail=True, methods=['post'])
     def invite(self, request, pk):
@@ -887,6 +872,22 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                 return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
+    @action(detail=True, methods=['get'])
+    def requests_from_project(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.ProjectRoleSerializer, innavator_models.ProjectRole.objects.filter(
+            project=self.get_object(),
+            user_accepted=False,
+            project_accepted=True
+        ))
+
+    @action(detail=True, methods=['get'])
+    def requests_to_project(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.ProjectRoleSerializer, innavator_models.ProjectRole.objects.filter(
+            project=self.get_object(),
+            user_accepted=True,
+            project_accepted=False
+        ))
+
     @action(detail=True, methods=['patch'])
     def accept_invite(self, request, pk):
         user = innavator_utils.get_innavator_user_from_user(request.user)
@@ -898,6 +899,14 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                 membership.user_accepted = True
                 membership.is_active = True
                 membership.save()
+
+                if not project.group.members.contains(user):
+                    project.group.members.add(user, through_defaults={
+                        'snowflake_id': innavator_slowflake_generator.__next__(),
+                        'user_accepted': True,
+                        'group_accepted': True
+                    })
+
                 return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -914,7 +923,15 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                     membership.project_accepted = True
                     membership.is_active = True
                     membership.save()
-                    return Response(status=status.HTTP_202_ACCEPTED)
+
+                    if not project.group.members.contains(receiver):
+                        project.group.members.add(receiver, through_defaults={
+                            'snowflake_id': innavator_slowflake_generator.__next__(),
+                            'user_accepted': True,
+                            'group_accepted': True
+                        })
+
+                    return Response(innavator_serializers.InnavatorGroupSerializer(project.group).data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     # this also rejects a request to join
@@ -1023,3 +1040,36 @@ class PortfolioEntryViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, 
     queryset = innavator_models.PortfolioEntry.objects.all()
     serializer_class = innavator_serializers.PortfolioEntrySerializer
     permission_classes = (innavator_permissions.PortfolioEntriesPermissions,) # comma is necessary
+
+class SubjectViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = innavator_models.Subject.objects.all()
+    serializer_class = innavator_serializers.SubjectSerializer
+    permission_classes = (innavator_permissions.SubjectsPermissions,) # comma is necessary
+
+    @action(detail=True, methods=['get'])
+    def tutors(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.WillingnessToTutorSerializer, innavator_models.WillingnessToTutor.objects.filter(
+            subject=self.get_object()
+        ))
+
+    @action(detail=True, methods=['post'])
+    def add_tutor_willingness(self, request, pk):
+        sender = innavator_utils.get_innavator_user_from_user(request.user)
+        subject = self.get_object()
+
+        if not sender.willing_to_tutor.contains(subject):
+            sender.willing_to_tutor.add(subject, through_defaults={
+                'snowflake_id': innavator_slowflake_generator.__next__()
+            })
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['delete'])
+    def remove_tutor_willingness(self, request, pk):
+        sender = innavator_utils.get_innavator_user_from_user(request.user)
+        subject = self.get_object()
+
+        if sender.willing_to_tutor.contains(subject):
+            sender.willing_to_tutor.remove(subject)
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)

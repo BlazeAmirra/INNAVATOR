@@ -186,7 +186,11 @@ REST_FRAMEWORK = {
     # For automatic OpenAPI schema.
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     # CUSTOM: for JWT authentication
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",) # comma is necessary
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",), # comma is necessary
+    # CUSTOM: for pagination
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    # CUSTOM: for pagination
+    "PAGE_SIZE": 10,
 }
 
 
