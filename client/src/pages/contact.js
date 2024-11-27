@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/contact.js';
+import '../components/page-title.js';
 
 export class Contact extends LitElement {
   static get styles() {
@@ -22,16 +23,27 @@ export class Contact extends LitElement {
 
   render() {
     return html`
-      <div class="contactContainer">
-        <h1>Contact</h1>
-        <div class="contactWrapper">
-          This website was deployed from sample code in the
-          <a href="https://github.com/GoogleCloudPlatform/avocano"
-            >GoogleCloudPlatform/avocano</a
-          >
-          repo on GitHub.
-        </div>
-      </div>
+      <app-page-title>Contact Us</app-page-title>
+
+      <section class="contact-form"> <!-- Section for the contact form -->
+          <h3>Get in Touch</h3> <!-- Subheading for the contact form -->
+          <form> <!-- Start of the contact form -->
+              <label for="name">Name</label> <!-- Label for the name input -->
+              <input type="text" id="name" placeholder="Your name"> <!-- Input field for the user's name -->
+              <label for="email">Email</label> <!-- Label for the email input -->
+              <input type="email" id="email" placeholder="Your email"> <!-- Input field for the user's email -->
+              <label for="message">Message</label>  <!-- Label for the message input -->
+              <textarea id="message" placeholder="Your message"></textarea>  <!-- Textarea for the user's message -->
+              <button type="submit">Send Message</button> <!-- Submit button for the form -->
+          </form> <!-- End of the contact form -->
+      </section>
+
+      <section class="email-contact"> <!-- Section for email contact information -->
+          <h3>Contact via Email</h3> <!-- Subheading for email contact -->
+          <p>If you prefer, you can also reach us via email at:  <!-- Paragraph introducing the email contact -->
+              <a href="mailto:innavatoruat@gmail.com">innavatoruat@gmail.com</a> <!-- Email link for contacting -->
+          </p>
+      </section>
     `;
   }
 }

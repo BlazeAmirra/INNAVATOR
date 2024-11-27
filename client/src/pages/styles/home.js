@@ -24,6 +24,129 @@ const styles = css`
   .loading {
     padding: 20px;
   }
+  
+  /* Logo Container */
+  .logo-container {
+    display: flex; /* Flex layout for centering */
+    justify-content: center; /* Center horizontally */
+    padding-top: 40px; /* Space from the top */
+  }
+
+  /* UAT Logo Image Styling */
+  .UAT-logo {
+    max-width: 200px; /* Set max width for responsiveness */
+    height: auto; /* Maintain aspect ratio */
+    cursor: pointer; /* Set cursor to pointer for interactivity */
+  }
+
+  /* App Name Styling */
+  .app-name {
+    text-align: center; /* Center text */
+    font-size: 36px; /* Set large font size */
+    color: #000000; /* Set main text color */
+    margin-top: 20px; /* Add space above */
+  }
+
+  /* Sign-in Button Container */
+  .signin-container {
+    display: flex; /* Flex layout for centering */
+    justify-content: center; /* Center button horizontally */
+    margin-top: 30px; /* Space above button */
+  }
+
+  /* Sign-in Button Styling */
+  .signin-button {
+    display: inline-block; /* Set as inline block for padding */
+    background-color: #ed7a92; /* Background color */
+    color: #3b3039; /* Text color */
+    padding: 10px 20px; /* Padding around text */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make text bold */
+    cursor: pointer; /* Set cursor to pointer */
+  }
+
+  .signin-button:hover {
+    background-color: #c468c4; /* Change color on hover */
+  }
+
+  /* Secondary Logo Container */
+  .secondary-logo-container {
+    display: flex; /* Flex layout for centering */
+    justify-content: center; /* Center content horizontally */
+    margin-top: 20px; /* Add space above */
+    padding-bottom: 40px; /* Space below before footer */
+  }
+
+  /* Secondary Logo Image Styling */
+  .secondary-logo {
+    max-width: 250px; /* Increase max width to make it larger */
+    height: auto; /* Maintain aspect ratio */
+    cursor: pointer; /* Set cursor to pointer for interactivity */
+  }
+
+  /* Hover Effect for Secondary Logo */
+  .hover-logo {
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth hover transition */
+  }
+
+  .hover-logo:hover {
+    content: url('assets/The\ Best\ logo\ \(1\).jpg'); /* Change to the hover image on hover */
+    transform: scale(1.1); /* Slightly increase size on hover */
+    opacity: 0.8; /* Slightly dim the image */
+  }
+
+  /* Styles specific to the modal */
+  #userAgreementModal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+  }
+
+  /* Modal content */
+  .modal-content {
+      background-color: white;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* Could be more or less, depending on screen size */
+      max-width: 600px;
+      text-align: center;
+      border-radius: 10px;
+      max-height: 400px; /* Limit the height of the modal */
+      overflow-y: auto; /* Enable vertical scrolling */
+  }
+
+  /* Buttons */
+  .modal-button {
+      padding: 10px 20px; /* Adds padding around the button text */
+      background-color: #ed7a92; /* Sets the background color of the button */
+      color: #3b3039; /* Sets the text color of the button */
+      border: none; /* Removes any default border */
+      border-radius: 5px; /* Rounds the corners of the button */
+      cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
+      margin: 10px; /* Adds margin around the button */
+      font-weight: bold; /* Makes the button text bold */
+  }
+
+  .modal-button:hover {
+      background-color: #c468c4; /* Changes the background color when the button is hovered */
+  }
+
+  .modal-button.cancel {
+      background-color: #fbc791; /* Sets a different background color for the cancel button */
+      font-weight: bold; /* Ensures the cancel button text is bold as well */
+  }
+
+  .modal-button.cancel:hover {
+      background-color: #8e2565; /* Changes the background color for the cancel button when hovered */
+  }
+
 `;
 
 export default styles;

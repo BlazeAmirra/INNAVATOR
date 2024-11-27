@@ -30,8 +30,160 @@ const routes = [
     pattern: 'shipping',
   },
   {
+    name: 'about',
+    pattern: 'about',
+  },
+  {
+    name: 'account-information',
+    pattern: 'account-information',
+  },
+  {
+    name: 'ai-next',
+    pattern: 'ai-next',
+  },
+  {
+    name: 'ai',
+    pattern: 'ai',
+  },
+  {
+    name: 'art',
+    pattern: 'art',
+  },
+  {
+    name: 'block-user',
+    pattern: 'block-user',
+  },
+  {
+    name: 'change-colors',
+    pattern: 'change-colors',
+  },
+  {
+    name: 'chat-settings',
+    pattern: 'chat-settings',
+  },
+  {
+    name: 'chat-with',
+    pattern: 'chat-with',
+  },
+  {
+    name: 'commission',
+    pattern: 'commission',
+  },
+  {
     name: 'contact',
     pattern: 'contact',
+  },
+  {
+    name: 'create-something',
+    pattern: 'create-something',
+  },
+  {
+    name: 'electronics',
+    pattern: 'electronics',
+  },
+  {
+    name: 'feedback',
+    pattern: 'feedback',
+  },
+  {
+    name: 'founders',
+    pattern: 'founders',
+  },
+  {
+    name: 'games',
+    pattern: 'games',
+  },
+  {
+    name: 'group-chat',
+    pattern: 'group-chat',
+  },
+  {
+    name: 'inspiration',
+    pattern: 'inspiration',
+  },
+  {
+    name: 'issue-tracker',
+    pattern: 'issue-tracker',
+  },
+  {
+    name: 'learn',
+    pattern: 'learn',
+  },
+  {
+    name: 'movies',
+    pattern: 'movies',
+  },
+  {
+    name: 'my-portfolio',
+    pattern: 'my-portfolio',
+  },
+  {
+    name: 'no-partner',
+    pattern: 'no-partner',
+  },
+  {
+    name: 'partner-option',
+    pattern: 'partner-option',
+  },
+  {
+    name: 'patents',
+    pattern: 'patents',
+  },
+  {
+    name: 'portfolio',
+    pattern: 'portfolio',
+  },
+  {
+    name: 'profiles',
+    pattern: 'profiles',
+  },
+  {
+    name: 'report-user',
+    pattern: 'report-user',
+  },
+  {
+    name: 'settings',
+    pattern: 'settings',
+  },
+  {
+    name: 'showcase',
+    pattern: 'showcase',
+  },
+  {
+    name: 'stars',
+    pattern: 'stars',
+  },
+  {
+    name: 'student-next',
+    pattern: 'student-next',
+  },
+  {
+    name: 'uat-dictionary',
+    pattern: 'uat-dictionary',
+  },
+  {
+    name: 'video-audio',
+    pattern: 'video-audio',
+  },
+  {
+    name: 'view',
+    pattern: 'view',
+  },
+  {
+    name: 'welcome',
+    pattern: 'welcome',
+  },
+  {
+    name: 'with-student',
+    pattern: 'with-student',
+  },
+  {
+    name: 'work',
+    pattern: 'work',
+  },
+  {
+    name: 'yes-partner',
+    pattern: 'yes-partner',
   },
   {
     name: 'checkout',

@@ -14,7 +14,6 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/footer.js';
-import { getConfig } from '../utils/config.js';
 import './link.js';
 
 export class Footer extends LitElement {
@@ -23,17 +22,13 @@ export class Footer extends LitElement {
   }
 
   render() {
-    const { VERSION, AVOCANO_PURCHASE_MODE } = getConfig();
-
     return html`
-      <div class="footer">
-        <div class="footerWrapper">
-          Made with 💚 from the
-          <a href="https://github.com/GoogleCloudPlatform/avocano/">Pit Crew</a>
-        </div>
-        <div class="version">
-          Avocano v${VERSION} (purchase mode: ${AVOCANO_PURCHASE_MODE})
-        </div>
+      <p>Copyright © 2024 Innavator - All Rights Reserved.</p>
+      <!-- Container for social media links -->
+      <div class="social-icons">
+        <a href="https://www.uat.edu/" target="_blank">UAT</a>
+        <a href="https://x.com/UATedu" target="_blank">Twitter</a>
+        <a href="https://www.instagram.com/uatedu" target="_blank">Instagram</a>
       </div>
     `;
   }

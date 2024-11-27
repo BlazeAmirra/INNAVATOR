@@ -13,12 +13,16 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+/*
 import { getActiveProduct } from '../utils/fetch.js';
 import cache from '../utils/cache.js';
-import styles from './styles/home.js';
 import '../components/product-item.js';
+*/
+import styles from './styles/home.js';
+import '../components/page-title.js';
 
 export class Home extends LitElement {
+  /*
   constructor() {
     super();
     this.title = 'Home';
@@ -71,6 +75,51 @@ export class Home extends LitElement {
               .productItem=${productItem}
             ></app-product-item>`}
       </div>
+    `;
+  }
+  */
+  constructor() {
+    super();
+    this.title = 'Home';
+    /*
+    this.state = {
+      status: 'loading'
+    };
+    */
+  }
+
+  static get styles() {
+    return styles;
+  }
+
+  render() {
+    return html`
+      <!-- Placeholder for app logo with link to UAT page -->
+        <div class="logo-container">
+            <!-- Link to UAT page wrapping the logo image -->
+            <a href="https://www.uat.edu/" target="_blank">
+                <img src="assets/UATLogo.png" alt="UAT Logo" class="UAT-logo"> <!-- Replace "UATLogo.png" with actual logo path -->
+            </a>
+        </div>
+
+        <!-- Section for App Name Display -->
+        <app-page-title>Innavator</app-page-title> <!-- Displays the app name centered -->
+
+        <!-- Sign-in Button Section -->
+        <div class="signin-container">
+            <!-- Button linking to sign-in page -->
+            <app-link href="/welcome" class="signin-button">SIGN IN</app-link>
+        </div>
+
+        <!-- Placeholder for secondary logo with link to Innavator page -->
+        <div class="secondary-logo-container">
+            <!-- Link to Innavator page wrapping the secondary logo image -->
+            <app-link href="/about">
+                <!-- Class 'hover-logo' applied for hover effect -->
+                <img src="assets/InnavatorLogo.png" alt="Innavator App Logo" class="secondary-logo hover-logo">
+                <!-- Replace "assets/InnavatorLogo.png" with actual secondary logo path -->
+            </app-link>
+        </div>
     `;
   }
 }

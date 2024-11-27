@@ -1,49 +1,3 @@
-/* General Styles */
-body { /* Applies styles to the entire body of the document */
-    font-family: Arial, sans-serif; /* Sets the font for the body text */
-    line-height: 1.6; /* Increases the line height for better readability */
-    background-color: #fff; /* Sets the background color of the page to white */
-    color: #01010190; /* Sets the text color with some transparency */
-    min-height: 100vh; /* Ensures the body covers the full viewport height */
-    display: flex; /* Enables flexbox layout for the body */
-    flex-direction: column; /* Arranges children in a column layout */
-    margin: 0; /* Removes default margin around the body */
-}
-
-/* Header and Navigation */
-header { /* Styles the header section */
-    background-color: #d6ade1; /* Sets the background color of the header */
-    color: #fff; /* Sets the text color of the header to white */
-    padding: 15px 0; /* Adds vertical padding to the header */
-    text-align: center; /* Centers the header content */
-}
-
-nav ul { /* Styles the unordered list inside the navigation */
-    list-style: none; /* Removes bullet points from the list */
-    padding: 0; /* Removes default padding from the list */
-    display: flex; /* Enables flexbox layout for the list items */
-    justify-content: center; /* Centers the navigation links horizontally */
-}
-
-nav ul li { /* Styles each list item in the navigation */
-    display: inline; /* Displays the list items in a horizontal line */
-    margin-right: 20px; /* Adds space to the right of each list item */
-}
-
-nav ul li:last-child { /* Targets the last list item in the navigation */
-    margin-right: 0; /* Removes margin on the last item to prevent extra space */
-}
-
-nav ul li a { /* Styles the anchor tags inside the list items */
-    color: #000000; /* Sets the text color of the links to black */
-    text-decoration: none; /* Removes the underline from links */
-    font-size: 18px; /* Sets the font size of the links */
-}
-
-nav ul li a:hover { /* Styles links on hover */
-    text-decoration: underline; /* Underlines the text when hovered over */
-}
-
 /* Contact Form Title Section */
 .title { /* Styles the title section of the contact form */
     background-color: #c67bd9; /* Sets the background color of the title section */
@@ -56,11 +10,6 @@ nav ul li a:hover { /* Styles links on hover */
 .title h2 { /* Styles the heading inside the title section */
     font-size: 32px; /* Sets the font size of the heading */
     color: #000000; /* Sets the text color to black */
-}
-
-/* Main content wrapper to grow and shrink */
-main { /* Styles the main content area of the page */
-    flex: 1; /* Allows the main content to grow and fill the available space */
 }
 
 /* Contact Form */
@@ -130,29 +79,5 @@ main { /* Styles the main content area of the page */
 }
 
 .email-contact a:hover { /* Styles the email link on hover */
-    text-decoration: underline; /* Underlines the text when hovered over */
-}
-
-/* Footer Section */
-footer { /* Styles the footer section of the page */
-    background-color: #d6ade1; /* Sets the background color of the footer */
-    color: #000000; /* Sets the text color inside the footer to black */
-    text-align: center; /* Centers the text in the footer */
-    padding: 20px 0; /* Adds vertical padding to the footer */
-    margin: 0; /* Removes extra margin around the footer */
-}
-
-footer p { /* Styles the paragraph inside the footer */
-    padding: 0; /* Ensures padding doesn't increase the footer size */
-    margin: 0; /* Removes default margin from the paragraph */
-}
-
-.social-icons a { /* Styles the anchor tags inside the social icons section */
-    margin: 0 10px; /* Adds horizontal margin between social icons */
-    color: #000000; /* Sets the text color of the social icons to black */
-    text-decoration: none; /* Removes underline from the social icon links */
-}
-
-.social-icons a:hover { /* Styles social icon links on hover */
     text-decoration: underline; /* Underlines the text when hovered over */
 }

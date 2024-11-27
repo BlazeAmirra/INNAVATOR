@@ -38,38 +38,15 @@ export class Header extends LitElement {
     const { AVOCANO_PURCHASE_MODE } = getConfig();
 
     return html`
-      <div class="header">
-        <h1><a href="/">${this.headerTitle || 'Simulatum'}</a></h1>
-        <div class="navigationBar">
-          <div class="navigationPanel">
-            <app-link href="/products">Products</app-link>
-            <app-link href="/shipping">Shipping</app-link>
-            <app-link href="/contact">Contact</app-link>
-            ${AVOCANO_PURCHASE_MODE === 'cart'
-              ? html`<app-link href="/checkout">Checkout</app-link>`
-              : ``}
-          </div>
-          <div class="navigationPanel">
-            ${AVOCANO_PURCHASE_MODE === 'cart'
-              ? html`<app-link href="/checkout">
-                  <div class="shoppingCart">
-                    <img
-                      class="shoppingCartIcon"
-                      alt="Shopping Cart"
-                      src=${cartIcon}
-                      loading="lazy"
-                    />
-                    ${this.cart.length
-                      ? html`<div class="shoppingCartTotal">
-                          ${getCartItemTotal(this.cart)}
-                        </div>`
-                      : ``}
-                  </div>
-                </app-link>`
-              : ``}
-          </div>
-        </div>
-      </div>
+      <nav>
+        <ul> <!-- Unordered list for navigation items -->
+          <li><app-link href="/">Home</app-link></li> <!-- Link to Home page -->
+          <li><app-link href="/settings">Settings</app-link></li> <!-- Link to Settings page -->
+          <li><app-link href="/work">Work</app-link></li> <!-- Link to Work page -->
+          <li><app-link href="/about">About</app-link></li> <!-- Link to About page -->
+          <li><app-link href="/contact">Contact</app-link></li> <!-- Link to Contact page -->
+        </ul>
+      </nav>
     `;
   }
 }

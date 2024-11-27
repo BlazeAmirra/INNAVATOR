@@ -16,68 +16,38 @@ import { css } from 'lit';
 
 const styles = css`
   :host {
-    font-family: var(--base-font), sans-serif;
-    width: 100%;
+    background-color: #d6ade1; /* Background color for the header */
+    color: #fff; /* Set header text color to white */
+    padding: 15px 0; /* Vertical padding */
+    text-align: center; /* Center header content */
+    width: 100%; /* Full width of the screen */
   }
 
-  .header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0 2em;
-    background-color: var(--color-primary);
-    background-image: linear-gradient(to right, white, var(--color-primary));
+  nav ul { /* Styles the unordered list inside the navigation */
+    list-style: none; /* Removes bullet points from the list */
+    padding: 0; /* Removes default padding from the list */
+    display: flex; /* Enables flexbox layout for the list items */
+    justify-content: center; /* Centers the navigation links horizontally */
+    margin: 0;
   }
 
-  h1 {
-    font-family: var(--site-name-font), cursive;
-    font-size: 45px;
+  nav ul li { /* Styles each list item in the navigation */
+    display: inline; /* Displays the list items in a horizontal line */
+    margin-right: 20px; /* Adds space to the right of each list item */
   }
 
-  h1 > a {
-    color: var(--site-name-color) !important;
+  nav ul li:last-child { /* Targets the last list item in the navigation */
+    margin-right: 0; /* Removes margin on the last item to prevent extra space */
   }
 
-  .header > h1 > a {
-    text-decoration: none;
+  nav ul li a { /* Styles the anchor tags inside the list items */
+    color: #000000; /* Sets the text color of the links to black */
+    text-decoration: none; /* Removes the underline from links */
+    font-size: 18px; /* Sets the font size of the links */
   }
 
-  .header > h1 > a:active {
-    text-decoration: underline;
-  }
-
-  .navigationBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
-  .navigationPanel {
-    display: flex;
-  }
-
-  .shoppingCartIcon {
-    width: auto;
-    height: 30px;
-  }
-
-  .shoppingCartTotal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    background: floralwhite;
-    position: relative;
-    bottom: 23px;
-    left: 18px;
-    border: 2px solid black;
-    border-radius: 20px;
-    text-align: center;
-    height: 22px;
-    width: 22px;
+  nav ul li a:hover { /* Styles links on hover */
+    text-decoration: underline; /* Underlines the text when hovered over */
   }
 `;
 
