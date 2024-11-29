@@ -9,8 +9,17 @@ const invalidTokens = {
 };
 
 let access_token = '';
+let refresh_token = undefined;
 let logged_in = false;
 let this_user = 0;
+
+export const get_logged_in = () => {
+    return logged_in;
+}
+
+export const get_this_user = () => {
+    return this_user;
+}
 
 // https://stackoverflow.com/a/69058154
 const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000;
@@ -176,7 +185,7 @@ const patchAPI = async (uri, json) => {
 
 // special
 
-const register = async (username, full_name, preferred_name, major, email, password) => {
+export const register = async (username, full_name, preferred_name, major, email, password) => {
     return await postAPI('users/', {
         "user": {
             "username": username,
@@ -188,13 +197,13 @@ const register = async (username, full_name, preferred_name, major, email, passw
         "major": major
     });
 };
-const who_am_i = async () => {
+export const who_am_i = async () => {
     let who_am_i_response = await getAPI("who_am_i/");
     logged_in = who_am_i_response["logged_in"] ? true : false;
     this_user = who_am_i_response["snowflake_id"] ? who_am_i_response["snowflake_id"] : 0;
     return who_am_i_response;
 };
-const login = async (email, password) => {
+export const login = async (email, password) => {
     let token_response = await postAPI('jwt_token/', {
         "username": email, // sic: auth system has no convenient way to rename this field
         "password": password
@@ -207,7 +216,7 @@ const login = async (email, password) => {
 
     return await who_am_i();
 };
-const logout = async () => {
+export const logout = async () => {
     access_token = '';
     logged_in = false;
     this_user = 0;
@@ -218,320 +227,320 @@ const logout = async () => {
 
 // GET: `csrf_token/` and `who_am_i/` are specially handled above
 
-const listUsers = async () => {
+export const listUsers = async () => {
     return await getAPI(`users/`);
 };
-const fetchUser = async user => {
+export const fetchUser = async user => {
     return await getAPI(`users/${user}/`);
 };
-const fetchPalette = async user => {
+export const fetchPalette = async user => {
     return await getAPI(`users/${user}/get_palette/`);
 };
-const fetchPortfolio = async user => {
+export const fetchPortfolio = async user => {
     return await getAPI(`users/${user}/portfolio/`);
 };
-const fetchMentors = async () => {
+export const fetchMentors = async () => {
     return await getAPI(`users/${this_user}/mentors/`);
 };
-const fetchMentees = async () => {
+export const fetchMentees = async () => {
     return await getAPI(`users/${this_user}/mentees/`);
 };
-const fetchRequestsAsMentorFromMe = async () => {
+export const fetchRequestsAsMentorFromMe = async () => {
     return await getAPI(`users/${this_user}/requests_as_mentor_from_me/`);
 };
-const fetchRequestsAsMentorToMe = async () => {
+export const fetchRequestsAsMentorToMe = async () => {
     return await getAPI(`users/${this_user}/requests_as_mentor_to_me/`);
 };
-const fetchRequestsAsMenteeFromMe = async () => {
+export const fetchRequestsAsMenteeFromMe = async () => {
     return await getAPI(`users/${this_user}/requests_as_mentee_from_me/`);
 };
-const fetchRequestsAsMenteeToMe = async () => {
+export const fetchRequestsAsMenteeToMe = async () => {
     return await getAPI(`users/${this_user}/requests_as_mentee_to_me/`);
 };
-const fetchGroupRequestsFromMe = async () => {
+export const fetchGroupRequestsFromMe = async () => {
     return await getAPI(`users/${this_user}/group_requests_from_me/`);
 };
-const fetchGroupRequestsToMe = async () => {
+export const fetchGroupRequestsToMe = async () => {
     return await getAPI(`users/${this_user}/group_requests_to_me/`);
 };
 
-const listGroups = async () => {
+export const listGroups = async () => {
     return await getAPI(`groups/`);
 };
-const listAllGroups = async () => {
+export const listAllGroups = async () => {
     return await getAPI(`groups/all/`);
 };
-const listClubs = async () => {
+export const listClubs = async () => {
     return await getAPI(`groups/clubs/`);
 };
-const fetchGroup = async group => {
+export const fetchGroup = async group => {
     return await getAPI(`groups/${group}/`);
 };
-const listMembers = async group => {
+export const listMembers = async group => {
     return await getAPI(`groups/${group}/members/`);
 };
-const requestsFromGroup = async group => {
+export const requestsFromGroup = async group => {
     return await getAPI(`groups/${group}/requests_from_group/`);
 };
-const requestsToGroup = async group => {
+export const requestsToGroup = async group => {
     return await getAPI(`groups/${group}/requests_to_group/`);
 };
-const listChannels = async group => {
+export const listChannels = async group => {
     return await getAPI(`groups/${group}/channels/`);
 };
-const listGroupProjects = async group => {
+export const listGroupProjects = async group => {
     return await getAPI(`groups/${group}/projects/`);
 };
-const listEvents = async group => {
+export const listEvents = async group => {
     return await getAPI(`groups/${group}/events/`);
 };
 
-const unreadMessageCount = async channel => {
+export const unreadMessageCount = async channel => {
     return await getAPI(`channels/${channel}/unread_message_count/`);
 };
 
-const fetchMessage = async message => {
+export const fetchMessage = async message => {
     return await getAPI(`messages/${message}/`);
 };
 
-const listRoles = async () => {
+export const listRoles = async () => {
     return await getAPI(`roles/`);
 };
-const fetchRole = async role => {
+export const fetchRole = async role => {
     return await getAPI(`roles/${role}/`);
 };
-const listCommissionRequestsForRole = async role => {
+export const listCommissionRequestsForRole = async role => {
     return await getAPI(`roles/${role}/get_commission_requests/`);
 };
-const listProjectsNeedingRole = async role => {
+export const listProjectsNeedingRole = async role => {
     return await getAPI(`roles/${role}/get_projects/`);
 };
 
-const listProjects = async () => {
+export const listProjects = async () => {
     return await getAPI(`projects/`);
 };
-const getProject = async project => {
+export const getProject = async project => {
     return await getAPI(`projects/${project}/`);
 };
-const listProjectMembers = async project => {
+export const listProjectMembers = async project => {
     return await getAPI(`projects/${project}/members/`);
 };
-const listActiveProjectMembers = async project => {
+export const listActiveProjectMembers = async project => {
     return await getAPI(`projects/${project}/active_members/`);
 };
-const requestsFromProject = async project => {
+export const requestsFromProject = async project => {
     return await getAPI(`projects/${project}/requests_from_project/`);
 };
-const requestsToProject = async project => {
+export const requestsToProject = async project => {
     return await getAPI(`projects/${project}/requests_to_project/`);
 };
 
-const listCommissionRequests = async () => {
+export const listCommissionRequests = async () => {
     return await getAPI(`commissions/`);
 };
-const fetchCommissionRequest = async commission_request => {
+export const fetchCommissionRequest = async commission_request => {
     return await getAPI(`commissions/${commission_request}/`);
 };
 
-const fetchEvent = async event_snowflake => {
+export const fetchEvent = async event_snowflake => {
     return await getAPI(`events/${event_snowflake}/`);
 };
 
-const listPortfolioEntries = async () => {
+export const listPortfolioEntries = async () => {
     return await getAPI(`portfolio_entries/`);
 };
-const fetchPortfolioEntry = async portfolio_entry => {
+export const fetchPortfolioEntry = async portfolio_entry => {
     return await getAPI(`portfolio_entries/${portfolio_entry}/`);
 };
 
-const listSubjects = async () => {
+export const listSubjects = async () => {
     return await getAPI(`subjects/`);
 };
-const fetchSubject = async subject => {
+export const fetchSubject = async subject => {
     return await getAPI(`subjects/${subject}/`);
 };
-const fetchSubjectTutors = async subject => {
+export const fetchSubjectTutors = async subject => {
     return await getAPI(`subjects/${subject}/tutors/`);
 };
 
 // DELETE
 
-const removeMentor = async user => {
+export const removeMentor = async user => {
     return await deleteAPI(`users/${user}/remove_mentor/`);
 };
-const removeMentee = async user => {
+export const removeMentee = async user => {
     return await deleteAPI(`users/${user}/remove_mentee/`);
 };
 
-const deleteGroup = async group => {
+export const deleteGroup = async group => {
     return await deleteAPI(`groups/${group}/`);
 };
-const leaveGroup = async group => {
+export const leaveGroup = async group => {
     return await deleteAPI(`groups/${group}/leave/`);
 };
 
-const deleteChannel = async channel => {
+export const deleteChannel = async channel => {
     return await deleteAPI(`channels/${channel}/`);
 };
 
-const deleteMessage = async message => {
+export const deleteMessage = async message => {
     return await deleteAPI(`messages/${message}/`);
 };
 
-const deleteProject = async project => {
+export const deleteProject = async project => {
     return await deleteAPI(`projects/${project}/`);
 };
-const leaveProject = async project => {
+export const leaveProject = async project => {
     return await deleteAPI(`projects/${project}/leave/`);
 };
 
-const deleteCommissionRequest = async commission_request => {
+export const deleteCommissionRequest = async commission_request => {
     return await deleteAPI(`commissions/${commission_request}/`);
 };
 
-const deleteEvent = async event => {
+export const deleteEvent = async event => {
     return await deleteAPI(`events/${event}/`);
 };
 
-const deletePortfolioEntry = async portfolio_entry => {
+export const deletePortfolioEntry = async portfolio_entry => {
     return await deleteAPI(`portfolio_entries/${portfolio_entry}/`);
 };
 
-const removeTutorWillingness = async subject => {
+export const removeTutorWillingness = async subject => {
     return await deleteAPI(`subjects/${subject}/remove_tutor_willingness/`)
 };
 
 // POST: `jwt_token/`, `jwt_token/refresh/`, and `users/` are handled specially above
 
-const requestMentor = async user => {
+export const requestMentor = async user => {
     return await postAPI(`users/${user}/request_as_mentor/`, {});
 };
-const requestMentee = async user => {
+export const requestMentee = async user => {
     return await postAPI(`users/${user}/request_as_mentee/`, {});
 };
-const createPortfolioEntry = async name => {
+export const createPortfolioEntry = async name => {
     return await postAPI(`users/${this_user}/create_portfolio_entry/`, {'name': name});
 };
 
-const createGroup = async name => {
+export const createGroup = async name => {
     return await postAPI(`groups/`, {'name': name});
 };
-const createChannel = async (group, name) => {
+export const createChannel = async (group, name) => {
     return await postAPI(`groups/${group}/create_channel/`, {'name': name});
 };
-const createProject = async (group, name) => {
+export const createProject = async (group, name) => {
     return await postAPI(`groups/${group}/create_project/`, {'name': name});
 };
 // awkwardly named because `createEvent` is reserved JavaScript
-const eventCreate = async (group, name, description, start) => {
+export const eventCreate = async (group, name, description, start) => {
     return await postAPI(`groups/${group}/create_event/`, {'name': name, 'description': description, 'start_time': start})
 };
-const inviteUserToGroup = async (group, user) => {
+export const inviteUserToGroup = async (group, user) => {
     return await postAPI(`groups/${group}/invite/`, {'user': user});
 };
-const requestToJoinGroup = async group => {
+export const requestToJoinGroup = async group => {
     return await postAPI(`groups/${group}/request_to_join/`, {});
 };
-const removeUserFromGroup = async (group, user) => {
+export const removeUserFromGroup = async (group, user) => {
     return await postAPI(`groups/${group}/remove_user/`, {'user': user});
 };
 
-const listMessages = async channel => {
+export const listMessages = async channel => {
     return await postAPI(`channels/${channel}/messages/`, {});
 };
-const sendMessage = async (channel, contents) => {
+export const sendMessage = async (channel, contents) => {
     return await postAPI(`channels/${channel}/create_message/`, {'contents': contents});
 };
 
-const inviteUserToProject = async (project, user, role) => {
+export const inviteUserToProject = async (project, user, role) => {
     return await postAPI(`projects/${project}/invite/`, {'user': user, 'role': role});
 };
-const requestToJoinProject = async (project, role) => {
+export const requestToJoinProject = async (project, role) => {
     return await postAPI(`projects/${project}/request_to_join/`, {'role': role});
 };
-const removeUserFromProject = async (project, user) => {
+export const removeUserFromProject = async (project, user) => {
     return await postAPI(`projects/${project}/remove_user/`, {'user': user});
 };
-const alterRole = async (project, user, role) => {
+export const alterRole = async (project, user, role) => {
     return await postAPI(`projects/${project}/alter_role/`, {'user': user, 'role': role});
 };
-const addNeededRole = async (project, role) => {
+export const addNeededRole = async (project, role) => {
     return await postAPI(`projects/${project}/add_needed_role/`, {'role': role});
 };
-const removeNeededRole = async (project, role) => {
+export const removeNeededRole = async (project, role) => {
     return await postAPI(`projects/${project}/remove_needed_role/`, {'role': role});
 };
 
-const createRole = async (name) => {
+export const createRole = async (name) => {
     return await postAPI(`roles/`, {'name': name});
 };
 
-const createCommissionRequest = async (role, name, description) => {
+export const createCommissionRequest = async (role, name, description) => {
     return await postAPI(`commissions/`, {'role': role, 'name': name, 'description': description});
 };
 
-const addTutorWillingness = async subject => {
+export const addTutorWillingness = async subject => {
     return await postAPI(`subjects/${subject}/add_tutor_willingness/`, {})
 };
 
 // PATCH
 
-const patchUser = async diff => {
+export const patchUser = async diff => {
     return await patchAPI(`users/${this_user}/`, diff);
 };
-const patchPalette = async diff => {
+export const patchPalette = async diff => {
     return await patchAPI(`users/${this_user}/patch_palette/`, diff);
 };
-const acceptMentor = async user => {
+export const acceptMentor = async user => {
     return await patchAPI(`users/${user}/accept_mentor_request/`, {});
 };
-const acceptMentee = async user => {
+export const acceptMentee = async user => {
     return await patchAPI(`users/${user}/accept_mentee_request/`, {});
 };
 
-const patchGroup = async snowflake_and_diff => {
+export const patchGroup = async snowflake_and_diff => {
     let {group, ...diff} = snowflake_and_diff;
     return await patchAPI(`groups/${group}/`, diff);
 };
-const acceptInviteToGroup = async group => {
+export const acceptInviteToGroup = async group => {
     return await patchAPI(`groups/${group}/accept_invite/`, {});
 };
-const acceptJoinRequestToGroup = async (group, user) => {
+export const acceptJoinRequestToGroup = async (group, user) => {
     return await patchAPI(`groups/${group}/accept_join_request/`, {'user': user});
 };
 
-const patchChannel = async snowflake_and_diff => {
+export const patchChannel = async snowflake_and_diff => {
     let {channel, ...diff} = snowflake_and_diff;
     return await patchAPI(`channels/${channel}/`, diff);
 };
 
-const patchMessage = async snowflake_and_diff => {
+export const patchMessage = async snowflake_and_diff => {
     let {message, ...diff} = snowflake_and_diff;
     return await patchAPI(`messages/${message}/`, diff);
 };
 
-const patchProject = async snowflake_and_diff => {
+export const patchProject = async snowflake_and_diff => {
     let {project, ...diff} = snowflake_and_diff;
     return await patchAPI(`projects/${project}/`, diff);
 };
-const acceptInviteToProject = async project => {
+export const acceptInviteToProject = async project => {
     return await patchAPI(`projects/${project}/accept_invite/`, {});
 };
-const acceptJoinRequestToProject = async (project, user) => {
+export const acceptJoinRequestToProject = async (project, user) => {
     return await patchAPI(`projects/${project}/accept_join_request/`, {'user': user});
 };
 
-const patchCommissionRequest = async snowflake_and_diff => {
+export const patchCommissionRequest = async snowflake_and_diff => {
     let {commission_request, ...diff} = snowflake_and_diff;
     return await patchAPI(`commissions/${commission_request}/`, diff);
 };
 
-const patchEvent = async snowflake_and_diff => {
+export const patchEvent = async snowflake_and_diff => {
     let {event, ...diff} = snowflake_and_diff;
     return await patchAPI(`events/${event}/`, diff);
 };
 
-const patchPortfolioEntry = async snowflake_and_diff => {
+export const patchPortfolioEntry = async snowflake_and_diff => {
     let {portfolio_entry, ...diff} = snowflake_and_diff;
     return await patchAPI(`portfolio_entries/${portfolio_entry}/`, diff);
 };

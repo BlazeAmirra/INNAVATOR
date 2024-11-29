@@ -13,34 +13,19 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
-import { getConfig } from '../utils/config.js';
-import { getCartItemTotal } from '../helpers/checkout.js';
 import styles from './styles/header.js';
 import './link.js';
 
-const cartIcon = new URL('../../assets/shopping_cart.svg', import.meta.url)
-  .href;
-
 export class Header extends LitElement {
-  static get properties() {
-    return {
-      headerTitle: { type: String },
-      cart: { type: Array },
-    };
-  }
-
   static get styles() {
     return styles;
   }
 
   render() {
-    document.title = this.headerTitle;
-    const { AVOCANO_PURCHASE_MODE } = getConfig();
-
     return html`
       <nav>
         <ul> <!-- Unordered list for navigation items -->
-          <li><app-link href="/">Home</app-link></li> <!-- Link to Home page -->
+          <li><app-link href="/welcome">Home</app-link></li> <!-- Link to Home page -->
           <li><app-link href="/settings">Settings</app-link></li> <!-- Link to Settings page -->
           <li><app-link href="/work">Work</app-link></li> <!-- Link to Work page -->
           <li><app-link href="/about">About</app-link></li> <!-- Link to About page -->

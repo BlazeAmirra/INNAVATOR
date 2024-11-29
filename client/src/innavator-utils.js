@@ -1,4 +1,13 @@
-const collect_optionals = (...pairs) => {
+export const parsed_json_or_null = (str) => {
+    try {
+        return JSON.parse(str);
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+export const collect_optionals = (...pairs) => {
     let retVal = {};
     pairs.forEach(pair => {
         if (pair[1] = pair[1].trim()) {
@@ -9,7 +18,7 @@ const collect_optionals = (...pairs) => {
 };
 
 // if has_optionals, input_elements is list of pairs of [string, element]
-const test_button = async (has_optionals, result_element, api_function, ...input_elements) => {
+export const test_button = async (has_optionals, result_element, api_function, ...input_elements) => {
     let retVal = "";
     if (has_optionals) {
         retVal = JSON.stringify(await api_function(collect_optionals(...input_elements.map(element => {element[1] = element[1].value; return element;}))));

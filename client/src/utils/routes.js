@@ -110,6 +110,14 @@ const routes = [
     pattern: 'learn',
   },
   {
+    name: 'login',
+    pattern: 'login',
+  },
+  {
+    name: 'logout',
+    pattern: 'logout',
+  },
+  {
     name: 'movies',
     pattern: 'movies',
   },
@@ -136,6 +144,10 @@ const routes = [
   {
     name: 'profiles',
     pattern: 'profiles',
+  },
+  {
+    name: 'register',
+    pattern: 'register',
   },
   {
     name: 'report-user',

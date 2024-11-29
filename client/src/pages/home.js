@@ -108,7 +108,8 @@ export class Home extends LitElement {
         <!-- Sign-in Button Section -->
         <div class="signin-container">
             <!-- Button linking to sign-in page -->
-            <app-link href="/welcome" class="signin-button">SIGN IN</app-link>
+            <app-link href="/login" class="signin-button">SIGN IN</app-link>
+            <app-link href="/register" class="signin-button">REGISTER</app-link>
         </div>
 
         <!-- Placeholder for secondary logo with link to Innavator page -->

@@ -13,23 +13,50 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-router.js';
+
 import styles from './styles/welcome.js';
 import '../components/page-title.js';
+import * as innavator_api from '../innavator-api.js';
 
-export class Welcome extends LitElement {
-  constructor() {
-    super();
-    this.title = "Welcome";
-  }
-
+export class Welcome extends navigator(LitElement) {
   static get styles() {
     return styles;
   }
 
+  static get properties() {
+    return {
+      username: {type: String},
+      loaded: {type: Boolean},
+      logged_in: {type: Boolean}
+    };
+  }
+
+  constructor() {
+    super();
+    this.title = "Welcome";
+    this.username = "";
+    this.loaded = false;
+    this.not_logged_in = false;
+  }
+
+  async update() {
+    super.update();
+    let result = await innavator_api.who_am_i();
+    if (result.logged_in) {
+      result = await innavator_api.fetchUser(result.snowflake_id);
+      this.username = result.user.username;
+    }
+    else {
+      this.not_logged_in = true;
+    }
+    this.loaded = true;
+  }
+
   render() {
-    return html`
+    return this.loaded ? html`
       <!-- Welcome Message -->
-        <app-page-title>Welcome to Innavator!</app-page-title> <!-- Displays the welcome title centered -->
+        <app-page-title>Welcome to Innavator, ${this.username}!</app-page-title> <!-- Displays the welcome title centered -->
 
         <!-- Button Section for Various Options -->
         <div class="button-container">
@@ -45,7 +72,7 @@ export class Welcome extends LitElement {
             <!-- Button for Founder's Chat -->
             <app-link href="/founders" class="option-button">★ Founder's Chat</app-link>
         </div>
-    `;
+    ` : html`<span>Loading...</span>`;
   }
 }
 

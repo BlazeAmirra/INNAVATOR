@@ -43,6 +43,8 @@ import './pages/group-chat.js';
 import './pages/inspiration.js';
 import './pages/issue-tracker.js';
 import './pages/learn.js';
+import './pages/login.js';
+import './pages/logout.js';
 import './pages/movies.js';
 import './pages/my-portfolio.js';
 import './pages/no-partner.js';
@@ -50,6 +52,7 @@ import './pages/partner-option.js';
 import './pages/patents.js';
 import './pages/portfolio.js';
 import './pages/profiles.js';
+import './pages/register.js';
 import './pages/report-user.js';
 import './pages/settings.js';
 import './pages/showcase.js';
@@ -86,6 +89,7 @@ import '@material/mwc-textfield';
 import '@material/mwc-select';
 import '@material/mwc-list';
 import '@material/mwc-dialog';
+import { who_am_i } from './innavator-api.js';
 
 export class InnavatorShell extends router(LitElement) {
   static get properties() {
@@ -119,6 +123,7 @@ export class InnavatorShell extends router(LitElement) {
   async connectedCallback() {
     super.connectedCallback();
 
+    /*
     const config = await getSiteConfig();
     // Show loading animation only when
     // site config is unavailable
@@ -150,7 +155,7 @@ export class InnavatorShell extends router(LitElement) {
 
     this.state.config = config;
 
-    /* Dynamically pull fonts we require */
+    /* Dynamically pull fonts we require
     if (window.WebFont && config.base_font) {
       window.WebFont.load({
         google: {
@@ -158,6 +163,16 @@ export class InnavatorShell extends router(LitElement) {
         },
       });
     }
+    */
+
+    let result = await who_am_i();
+    if (result.logged_in && (this.route === 'home' || this.route === 'login' || this.route === 'register')) {
+      this.route = 'welcome';
+    }
+    else if (!result.logged_in && !(this.route === 'home' || this.route === 'login' || this.route === 'register')) {
+      this.route = 'home';
+    }
+    this.state.loading = false;
 
     this.requestUpdate();
   }
@@ -178,19 +193,19 @@ export class InnavatorShell extends router(LitElement) {
   }
 
   render() {
-    const { config, loading, apiError } = this.state;
+    const { loading, apiError } = this.state;
     const { AVOCANO_PURCHASE_MODE } = getConfig();
 
     if (apiError) {
       return html`<app-error .apiError=${apiError}></app-error>`;
     }
 
+    document.title = "Innavator";
+
     return loading
       ? html`<app-loading></app-loading>`
-      : html`<app-header
-            .headerTitle=${config.site_name}
-            .cart=${this.state.cart}
-          ></app-header>
+      : html`
+          ${(this.route === 'home' || this.route === 'login' || this.route === 'register') ? html`` : html`<app-header></app-header>`}
           <app-main active-route=${this.route}>
             <div class="route" route="home">
               <app-home></app-home>
@@ -267,6 +282,12 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="learn">
               <app-learn></app-learn>
             </div>
+            <div class="route" route="login">
+              <app-login></app-login>
+            </div>
+            <div class="route" route="logout">
+              <app-logout></app-logout>
+            </div>
             <div class="route" route="movies">
               <app-movies></app-movies>
             </div>
@@ -287,6 +308,9 @@ export class InnavatorShell extends router(LitElement) {
             </div>
             <div class="route" route="profiles">
               <app-profiles></app-profiles>
+            </div>
+            <div class="route" route="register">
+              <app-register></app-register>
             </div>
             <div class="route" route="report-user">
               <app-report-user></app-report-user>

@@ -43,7 +43,7 @@ export class Stars extends LitElement {
 
         <div class="pink-stars">
           <!-- Large Purple Submit Star -->
-          <app-link href="/" class="submit-star"> <!-- Link to home page -->
+          <app-link href="/welcome" class="submit-star"> <!-- Link to home page -->
               <div class="large-star">
                   Submit
               </div>
