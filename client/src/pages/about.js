@@ -15,6 +15,9 @@
 import { LitElement, html } from 'lit';
 import styles from './styles/about.js';
 import '../components/page-title.js';
+import { listGroupProjects } from '../innavator-api.js';
+
+const logo = new URL('../../assets/InnavatorLogo.png', import.meta.url).href;
 
 export class About extends LitElement {
   constructor() {
@@ -30,7 +33,7 @@ export class About extends LitElement {
     return html`
       <app-page-title>About the Innavator App</app-page-title>
       <div class="secondary-logo-container"> <!-- Placeholder for secondary logo -->
-        <img src="assets/InnavatorLogo.png" alt="Innavator App Logo" class="secondary-logo"/> <!-- Static logo -->
+        <img src=${logo} alt="Innavator App Logo" class="secondary-logo"/> <!-- Static logo -->
       </div>
 
       <div class="content">

@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:8000/api';
-//const API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
+//const INNAVATOR_API_URL = 'http://localhost:8000/api';
+const INNAVATOR_API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
 
 const baseRequest = {
     credentials: 'include'
@@ -26,7 +26,7 @@ const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')
 
 // begin code extracted from Avocano
 const _makeAPIrequest = async (uri, init) => {
-    let url = `${API_URL}/${uri}`;
+    let url = `${INNAVATOR_API_URL}/${uri}`;
     let apiError = { url: url };
     let response, data;
 

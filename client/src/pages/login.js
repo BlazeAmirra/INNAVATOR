@@ -42,6 +42,7 @@ export class Login extends navigator(LitElement) {
     }
 
     handleInput(e) {
+        console.log("CHANGED");
         let {id, value} = e.target;
         this[id] = value;
     }
@@ -50,7 +51,7 @@ export class Login extends navigator(LitElement) {
         let result = await innavator_api.login(this.email, this.password);
         if (result["logged_in"]) {
             this.error = "";
-            window.location.replace("/welcome");
+            window.location.replace("/");
         }
         else {
             if (result.apiError) {
@@ -77,10 +78,10 @@ export class Login extends navigator(LitElement) {
         return html`
             <app-page-title>Log In</app-page-title>
             <div class="signin-container">
-                Email: <input id="email" @change=${this.handleInput}/>
+                Email: <input id="email" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                Password: <input type="password" id="password" @change=${this.handleInput}/>
+                Password: <input type="password" id="password" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
                 <span @click=${this.attempt_login} class="signin-button">SIGN IN</span>
