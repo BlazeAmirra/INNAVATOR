@@ -16,6 +16,10 @@ import { LitElement, html } from 'lit';
 import styles from './styles/my-portfolio.js';
 import '../components/page-title.js';
 
+const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
+const art6 = new URL('../../assets/art6.jpg', import.meta.url).href;
+const electronics1 = new URL('../../assets/electronics1.png', import.meta.url).href;
+
 export class MyPortfolio extends LitElement {
   constructor() {
     super();
@@ -34,7 +38,7 @@ export class MyPortfolio extends LitElement {
         <!-- Portfolio Image (Clickable Link) -->
         <div class="portfolio-image-container">
             <a href="https://example-website.com" target="_blank"> <!-- Link to portfolio website -->
-                <img src="assets/art5.jpg" alt="Portfolio Thumbnail" class="portfolio-image"> <!-- Portfolio image thumbnail -->
+                <img src=${art5} alt="Portfolio Thumbnail" class="portfolio-image"> <!-- Portfolio image thumbnail -->
             </a>
         </div>
 
@@ -45,8 +49,8 @@ export class MyPortfolio extends LitElement {
 
         <!-- Two Images Side by Side -->
         <div class="image-pair">
-            <img src="assets/electronics1.jpg" alt="Image 1" class="portfolio-image">
-            <img src="assets/art6.jpg" alt="Image 2" class="portfolio-image">
+            <img src=${electronics1} alt="Image 1" class="portfolio-image">
+            <img src=${art6} alt="Image 2" class="portfolio-image">
         </div>
 
         <!-- Go Back Button -->

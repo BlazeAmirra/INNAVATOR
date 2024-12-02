@@ -418,6 +418,12 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['get'])
+    def willingnesses_to_tutor(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.WillingnessToTutorSerializer, innavator_models.WillingnessToTutor.objects.filter(
+            user=self.get_object()
+        ))
+
     def create(self, request):
         serializer = self.get_serializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

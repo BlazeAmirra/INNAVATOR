@@ -91,7 +91,7 @@ const styles = css`
   }
 
   .hover-logo:hover {
-    content: url('assets/The\ Best\ logo\ \(1\).jpg'); /* Change to the hover image on hover */
+    content: var(--hover-img); /* Change to the hover image on hover */
     transform: scale(1.1); /* Slightly increase size on hover */
     opacity: 0.8; /* Slightly dim the image */
   }

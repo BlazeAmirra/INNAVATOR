@@ -115,6 +115,7 @@ export class InnavatorShell extends router(LitElement) {
       config: {},
       cart: [],
       loading: true,
+      logged_in: false
     };
 
     this.childUpdateRequest = this.childUpdateRequest.bind(this);
@@ -166,6 +167,7 @@ export class InnavatorShell extends router(LitElement) {
     */
 
     let result = await who_am_i();
+    this.state.logged_in = result.logged_in ? true : false;
     if (result.logged_in && (this.route === 'home' || this.route === 'login' || this.route === 'register')) {
       this.route = 'welcome';
     }
@@ -205,7 +207,7 @@ export class InnavatorShell extends router(LitElement) {
     return loading
       ? html`<app-loading></app-loading>`
       : html`
-          ${(this.route === 'home' || this.route === 'login' || this.route === 'register') ? html`` : html`<app-header></app-header>`}
+          ${!this.state.logged_in ? html`` : html`<app-header></app-header>`}
           <app-main active-route=${this.route}>
             <div class="route" route="home">
               <app-home></app-home>

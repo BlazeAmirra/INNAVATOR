@@ -16,6 +16,9 @@ import { LitElement, html } from 'lit';
 import styles from './styles/electronics.js';
 import '../components/page-title.js';
 
+const electronics = new URL('../../assets/electronics.jpg', import.meta.url).href;
+const electronics1 = new URL('../../assets/electronics1.jpg', import.meta.url).href;
+
 export class Electronics extends LitElement {
   constructor() {
     super();
@@ -33,7 +36,7 @@ export class Electronics extends LitElement {
 
         <!-- First Image and Description Section -->
         <div class="content-section">
-            <img src="assets/electronics.jpg" alt="Electronics Image 1" class="content-image"> <!-- Replace with actual image path -->
+            <img src=${electronics} alt="Electronics Image 1" class="content-image"> <!-- Replace with actual image path -->
             <div class="description-box">
                 <p>This is Project Motor display by NeAndrea Harris. It shows the word motor on the top of the M5 stick
                     when the button is pressed. When the side button is pressed, it says congratulations, here is a cookie.
@@ -43,7 +46,7 @@ export class Electronics extends LitElement {
 
         <!-- Second Image and Description Section -->
         <div class="content-section">
-            <img src="assets/electronics1.jpg" alt="Electronics Image 2" class="content-image"> <!-- Replace with actual image path -->
+            <img src=${electronics1} alt="Electronics Image 2" class="content-image"> <!-- Replace with actual image path -->
             <div class="description-box">
                 <p>This is project Sumo Rojo by NeAndrea Harris. Her first ever Robot from first robotics. This is one of
                     the inspirations that got her into robotics and her first attempt of coding.

@@ -16,6 +16,12 @@ import { LitElement, html } from 'lit';
 import styles from './styles/art.js';
 import '../components/page-title.js';
 
+const art1 = new URL('../../assets/art1.png', import.meta.url).href;
+const art2 = new URL('../../assets/art2.png', import.meta.url).href;
+const art3 = new URL('../../assets/art3.png', import.meta.url).href;
+const art4 = new URL('../../assets/art4.png', import.meta.url).href;
+const innavatorLogo = new URL('../../assets/InnavatorLogo.png', import.meta.url).href;
+
 export class Art extends LitElement {
   constructor() {
     super();
@@ -40,31 +46,31 @@ export class Art extends LitElement {
       <section class="art-gallery">
           <!-- First Artwork with Image and Description -->
           <div class="art-item">
-              <img src="assets/art1.png" alt="Amirra in the fighting stance">
+              <img src=${art1} alt="Amirra in the fighting stance">
               <p class="art-description">Amirra in the fighting stance is an original piece by NeAndrea Harris for a possible future animated show called Jracana.</p>
           </div>
 
           <!-- Second Artwork with Image and Description -->
           <div class="art-item">
-              <img src="assets/InnavatorLogo.png" alt="Amirra Innavator logo">
+              <img src=${innavatorLogo} alt="Amirra Innavator logo">
               <p class="art-description">Amirra Innavator logo was inspired by NeAndrea Harris' Original character canon just for fun.</p>
           </div>
 
           <!-- Third Artwork with Image and Description -->
           <div class="art-item">
-              <img src="assets/art2.png" alt="BlazeAmirra logo">
+              <img src=${art2} alt="BlazeAmirra logo">
               <p class="art-description">BlazeAmirra by NeAndrea Harris "nickname" logo for a head canon just for fun.</p>
           </div>
 
           <!-- Fourth Artwork with Image and Description -->
           <div class="art-item">
-              <img src="assets/art3.png" alt="Zin artwork">
+              <img src=${art3} alt="Zin artwork">
               <p class="art-description">Zin by NeAndrea Harris is an inspirational balance and peace in one's life.</p>
           </div>
 
           <!-- Fifth Artwork with Image and Description -->
           <div class="art-item">
-              <img src="assets/art4.png" alt="A spring night artwork">
+              <img src=${art4} alt="A spring night artwork">
               <p class="art-description">A spring night, a new classic addition to NeAndrea Harris's background themes originally for the project "I Am The DJ." Still an amazing picture of traditional and digital art together.</p>
           </div>
       </section>

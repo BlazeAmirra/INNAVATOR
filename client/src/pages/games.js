@@ -16,6 +16,8 @@ import { LitElement, html } from 'lit';
 import styles from './styles/games.js';
 import '../components/page-title.js';
 
+const maxwell = new URL('../../assets/maxwell.png', import.meta.url).href;
+
 export class Games extends LitElement {
   constructor() {
     super();
@@ -34,7 +36,7 @@ export class Games extends LitElement {
         <!-- Centered Image with Clickable Link -->
         <div class="image-container">
             <a href="https://greendog3.itch.io/maxwells-bullet-sumo"> <!-- Link to the game details page -->
-                <img src="assets/maxwell.png" alt="Game Image" class="game-image"> <!-- Game image -->
+                <img src=${maxwell} alt="Game Image" class="game-image"> <!-- Game image -->
             </a>
         </div>
 

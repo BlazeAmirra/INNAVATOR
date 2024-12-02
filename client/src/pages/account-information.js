@@ -15,6 +15,8 @@
 import { LitElement, html } from 'lit';
 import styles from './styles/account-information.js';
 
+const editpicture = new URL('../../assets/editpicture.png', import.meta.url).href;
+
 export class AccountInfo extends LitElement {
   constructor() {
     super();
@@ -29,7 +31,7 @@ export class AccountInfo extends LitElement {
     return html`
       <!-- Centered Profile Picture with Click Event -->
         <div class="profile-pic-container" onclick="triggerFileInput()">
-            <img src="assets/editpicture.png" alt="Profile Picture" class="profile-pic" id="profilePic">
+            <img src=${editpicture} alt="Profile Picture" class="profile-pic" id="profilePic">
         </div>
 
         <!-- Hidden File Input -->

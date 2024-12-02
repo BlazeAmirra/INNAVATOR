@@ -164,7 +164,7 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = innavator_models.InnavatorUser
-        exclude = ['mentees']
+        exclude = ['mentees', 'willing_to_tutor']
         extra_kwargs = {'user': {'required': False, 'allow_null': True}}
 
     def validate_user(self, value):

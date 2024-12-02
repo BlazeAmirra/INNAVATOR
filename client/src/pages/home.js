@@ -21,6 +21,12 @@ import '../components/product-item.js';
 import styles from './styles/home.js';
 import '../components/page-title.js';
 
+// Replace "assets/InnavatorLogo.png" with actual secondary logo path
+const innavatorLogo = new URL('../../assets/InnavatorLogo.png', import.meta.url).href;
+const theBestLogo = new URL('../../assets/theBestLogo.jpg', import.meta.url).href;
+// Replace "UATLogo.png" with actual logo path
+const uatLogo = new URL('../../assets/UATLogo.png', import.meta.url).href;
+
 export class Home extends LitElement {
   /*
   constructor() {
@@ -98,7 +104,7 @@ export class Home extends LitElement {
         <div class="logo-container">
             <!-- Link to UAT page wrapping the logo image -->
             <a href="https://www.uat.edu/" target="_blank">
-                <img src="assets/UATLogo.png" alt="UAT Logo" class="UAT-logo"> <!-- Replace "UATLogo.png" with actual logo path -->
+                <img src=${uatLogo} alt="UAT Logo" class="UAT-logo">
             </a>
         </div>
 
@@ -117,8 +123,7 @@ export class Home extends LitElement {
             <!-- Link to Innavator page wrapping the secondary logo image -->
             <app-link href="/about">
                 <!-- Class 'hover-logo' applied for hover effect -->
-                <img src="assets/InnavatorLogo.png" alt="Innavator App Logo" class="secondary-logo hover-logo">
-                <!-- Replace "assets/InnavatorLogo.png" with actual secondary logo path -->
+                <img src=${innavatorLogo} alt="Innavator App Logo" style="--hover-img: url('${theBestLogo}');" class="secondary-logo hover-logo">
             </app-link>
         </div>
     `;

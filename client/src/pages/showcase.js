@@ -16,6 +16,17 @@ import { LitElement, html } from 'lit';
 import styles from './styles/showcase.js';
 import '../components/page-title.js';
 
+const threedtools = new URL('../../assets/3dtools.png', import.meta.url).href;
+const advertising = new URL('../../assets/advertising.png', import.meta.url).href;
+const apps = new URL('../../assets/apps.png', import.meta.url).href;
+const coding = new URL('../../assets/coding.png', import.meta.url).href;
+const gardening = new URL('../../assets/gardening.png', import.meta.url).href;
+const live = new URL('../../assets/live.png', import.meta.url).href;
+const meet = new URL('../../assets/meet.png', import.meta.url).href;
+const nerf = new URL('../../assets/nerf.png', import.meta.url).href;
+const robotics = new URL('../../assets/robotics.png', import.meta.url).href;
+const view = new URL('../../assets/view.png', import.meta.url).href;
+
 export class Showcase extends LitElement {
   constructor() {
     super();
@@ -36,9 +47,9 @@ export class Showcase extends LitElement {
 
         <!-- Videos & Profiles Image Links -->
         <div class="image-row">
-            <app-link href="/profile1" target="_blank"><img src="assets/live.png" alt="Profile 1" class="rounded-image"></app-link>
-            <app-link href="/profile2" target="_blank"><img src="assets/meet.png" alt="Profile 2" class="rounded-image"></app-link>
-            <app-link href="/view" target="_blank"><img src="assets/view.png" alt="Profile 3" class="rounded-image"></app-link>
+            <app-link href="/profile1" target="_blank"><img src=${live} alt="Profile 1" class="rounded-image"></app-link>
+            <app-link href="/profile2" target="_blank"><img src=${meet} alt="Profile 2" class="rounded-image"></app-link>
+            <app-link href="/view" target="_blank"><img src=${view} alt="Profile 3" class="rounded-image"></app-link>
         </div>
 
         <!-- Subtitle: Clubs & Classes -->
@@ -46,12 +57,12 @@ export class Showcase extends LitElement {
 
         <!-- Clubs & Classes Image Links (2 Rows) -->
         <div class="image-grid">
-            <app-link href="/club1" target="_blank"><img src="assets/gardening.png" alt="Club 1" class="rounded-image"></app-link>
-            <app-link href="/club2" target="_blank"><img src="assets/nerf.png" alt="Club 2" class="rounded-image"></app-link>
-            <app-link href="/club3" target="_blank"><img src="assets/advertising.png" alt="Club 3" class="rounded-image"></app-link>
-            <app-link href="/class1" target="_blank"><img src="assets/coding.png" alt="Class 1" class="rounded-image"></app-link>
-            <app-link href="/class2" target="_blank"><img src="assets/robotics.png" alt="Class 2" class="rounded-image"></app-link>
-            <app-link href="/class3" target="_blank"><img src="assets/3dtools.png" alt="Class 3" class="rounded-image"></app-link>
+            <app-link href="/club1" target="_blank"><img src=${gardening} alt="Club 1" class="rounded-image"></app-link>
+            <app-link href="/club2" target="_blank"><img src=${nerf} alt="Club 2" class="rounded-image"></app-link>
+            <app-link href="/club3" target="_blank"><img src=${advertising} alt="Club 3" class="rounded-image"></app-link>
+            <app-link href="/class1" target="_blank"><img src=${coding} alt="Class 1" class="rounded-image"></app-link>
+            <app-link href="/class2" target="_blank"><img src=${robotics} alt="Class 2" class="rounded-image"></app-link>
+            <app-link href="/class3" target="_blank"><img src=${threedtools} alt="Class 3" class="rounded-image"></app-link>
         </div>
 
         <!-- Subtitle: Interactive Projects -->
@@ -59,7 +70,7 @@ export class Showcase extends LitElement {
 
         <!-- Interactive Project Center Image -->
         <div class="center-image">
-            <app-link href="/project" target="_blank"><img src="assets/apps.png" alt="Interactive Project" class="rounded-square"></app-link>
+            <app-link href="/project" target="_blank"><img src=${apps} alt="Interactive Project" class="rounded-square"></app-link>
         </div>
 
         <!-- Go Back Button -->

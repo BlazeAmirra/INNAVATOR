@@ -42,7 +42,6 @@ export class Login extends navigator(LitElement) {
     }
 
     handleInput(e) {
-        console.log("CHANGED");
         let {id, value} = e.target;
         this[id] = value;
     }

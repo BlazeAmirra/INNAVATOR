@@ -16,6 +16,8 @@ import { LitElement, html } from 'lit';
 import styles from './styles/change-colors.js';
 import '../components/page-title.js';
 
+const colortime = new URL('../../assets/colortime.jpg', import.meta.url).href;
+
 export class ChangeColors extends LitElement {
   constructor() {
     super();
@@ -33,7 +35,7 @@ export class ChangeColors extends LitElement {
 
         <!-- Centered Color Wheel -->
         <div class="color-wheel-container">
-            <img src="assets/colortime.jpg" alt="Color Wheel" class="color-wheel"> <!-- Color wheel image placeholder -->
+            <img src=${colortime} alt="Color Wheel" class="color-wheel"> <!-- Color wheel image placeholder -->
         </div>
 
         <!-- Dark to Light Scale Section -->

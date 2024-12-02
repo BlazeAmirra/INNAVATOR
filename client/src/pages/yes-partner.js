@@ -16,6 +16,10 @@ import { LitElement, html } from 'lit';
 import styles from './styles/yes-partner.js';
 import '../components/page-title.js'
 
+const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
+const art7 = new URL('../../assets/art7.jpg', import.meta.url).href;
+const art8 = new URL('../../assets/art8.jpg', import.meta.url).href;
+
 export class YesPartner extends LitElement {
   constructor() {
     super();
@@ -35,13 +39,13 @@ export class YesPartner extends LitElement {
         <div class="partner-section">
             <!-- Clickable images for partners -->
             <app-link href="/chat-with-preston" class="partner-link">
-                <img src="assets/art7.jpg" alt="Partner 1" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art7} alt="Partner 1" class="partner-image"> <!-- Replace with actual image path -->
             </app-link>
             <app-link href="/chat-with-blaze" class="partner-link">
-                <img src="assets/art5.jpg" alt="Partner 2" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art5} alt="Partner 2" class="partner-image"> <!-- Replace with actual image path -->
             </app-link>
             <app-link href="/chat-with-nick" class="partner-link">
-                <img src="assets/art8.jpg" alt="Partner 3" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art8} alt="Partner 3" class="partner-image"> <!-- Replace with actual image path -->
             </app-link>
         </div>
 

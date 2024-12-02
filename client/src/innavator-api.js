@@ -263,6 +263,9 @@ export const fetchGroupRequestsFromMe = async () => {
 export const fetchGroupRequestsToMe = async () => {
     return await getAPI(`users/${this_user}/group_requests_to_me/`);
 };
+export const fetchMyWillingnessesToTutor = async () => {
+    return await getAPI(`users/${this_user}/willingnesses_to_tutor/`);
+};
 
 export const listGroups = async () => {
     return await getAPI(`groups/`);

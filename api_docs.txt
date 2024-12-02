@@ -93,6 +93,11 @@ GET `users/<InnavatorUser>/group_requests_to_me/`
 	auth needed - same user
 	added
 
+GET `users/<InnavatorUser>/willingnesses_to_tutor/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{WillingnessToTutor} where user=pk] }
+	no auth needed
+	added
+
 ---------------
 
 GET `groups/`

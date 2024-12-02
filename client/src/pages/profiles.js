@@ -16,6 +16,11 @@ import { LitElement, html } from 'lit';
 import styles from './styles/profiles.js';
 import '../components/page-title.js';
 
+const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
+const art7 = new URL('../../assets/art7.jpg', import.meta.url).href;
+const art8 = new URL('../../assets/art8.jpg', import.meta.url).href;
+const art12 = new URL('../../assets/art12.jpg', import.meta.url).href;
+
 export class Profiles extends LitElement {
   constructor() {
     super();
@@ -36,7 +41,7 @@ export class Profiles extends LitElement {
             <!-- Profile Item 1 -->
             <app-link href="/chat-with-alexis"> <!-- Link to Profile 1 page -->
                 <div class="profile-item">
-                    <img src="assets/art12.jpg" alt="Profile 1" class="profile-image" /> <!-- Profile image -->
+                    <img src=${art12} alt="Profile 1" class="profile-image" /> <!-- Profile image -->
                     <p class="profile-name">Alexis</p> <!-- Profile name -->
                 </div>
             </app-link>
@@ -44,7 +49,7 @@ export class Profiles extends LitElement {
             <!-- Profile Item 2 -->
             <app-link href="/chat-with-blaze"> <!-- Link to Profile 2 page -->
                 <div class="profile-item">
-                    <img src="assets/art5.jpg" alt="Profile 2" class="profile-image" />
+                    <img src=${art5} alt="Profile 2" class="profile-image" />
                     <p class="profile-name">Blaze</p>
                 </div>
             </app-link>
@@ -52,7 +57,7 @@ export class Profiles extends LitElement {
             <!-- Profile Item 3 -->
             <app-link href="/chat-with-nick"> <!-- Link to Profile 3 page -->
                 <div class="profile-item">
-                    <img src="assets/art8.jpg" alt="Profile 3" class="profile-image" />
+                    <img src=${art8} alt="Profile 3" class="profile-image" />
                     <p class="profile-name">Nick</p>
                 </div>
             </app-link>
@@ -60,7 +65,7 @@ export class Profiles extends LitElement {
             <!-- Profile Item 4 -->
             <app-link href="/chat-with-preston"> <!-- Link to Profile 4 page -->
                 <div class="profile-item">
-                    <img src="assets/art7.jpg" alt="Profile 4" class="profile-image" />
+                    <img src=${art7} alt="Profile 4" class="profile-image" />
                     <p class="profile-name">Preston</p>
                 </div>
             </app-link>

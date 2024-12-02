@@ -26,7 +26,7 @@ class UsersPermissions(permissions.BasePermission):
             return True
         if view.action in [
             'mentors', 'mentees', 'requests_as_mentor_from_me', 'requests_as_mentor_to_me', 'requests_as_mentee_from_me', 'requests_as_mentee_to_me',
-            'update', 'partial_update', 'destroy', 'patch_palette', 'group_requests_from_me', 'group_requests_to_me'
+            'update', 'partial_update', 'destroy', 'patch_palette', 'group_requests_from_me', 'group_requests_to_me', 'willingnesses_to_tutor'
         ]:
             return obj.user == request.user
 

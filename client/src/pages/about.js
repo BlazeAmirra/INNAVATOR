@@ -15,7 +15,6 @@
 import { LitElement, html } from 'lit';
 import styles from './styles/about.js';
 import '../components/page-title.js';
-import { listGroupProjects } from '../innavator-api.js';
 
 const logo = new URL('../../assets/InnavatorLogo.png', import.meta.url).href;
 

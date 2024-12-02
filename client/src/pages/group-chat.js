@@ -16,6 +16,11 @@ import { LitElement, html } from 'lit';
 import styles from './styles/group-chat.js';
 import '../components/page-title.js';
 
+const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
+const art7 = new URL('../../assets/art7.jpg', import.meta.url).href;
+const art12 = new URL('../../assets/art12.jpg', import.meta.url).href;
+const art16 = new URL('../../assets/art16.jpg', import.meta.url).href;
+
 export class GroupChat extends LitElement {
   constructor() {
     super();
@@ -36,7 +41,7 @@ export class GroupChat extends LitElement {
             <!-- Message 1 - Left Side -->
             <div class="chat-message left">
                 <app-link href="/chat-with-blaze">
-                    <img src="assets/art5.jpg" alt="Blaze" class="chat-image">
+                    <img src=${art5} alt="Blaze" class="chat-image">
                 </app-link>
                 <p class="chat-text">Hello, ready to work on the project?</p>
             </div>
@@ -44,7 +49,7 @@ export class GroupChat extends LitElement {
             <!-- Message 2 - Right Side -->
             <div class="chat-message right">
                 <app-link href="/chat-with-preston">
-                    <img src="assets/art7.jpg" alt="Preston" class="chat-image">
+                    <img src=${art7} alt="Preston" class="chat-image">
                 </app-link>
                 <p class="chat-text">Yep, I have started on the code.</p>
             </div>
@@ -52,7 +57,7 @@ export class GroupChat extends LitElement {
             <!-- Message 3 - Left Side -->
             <div class="chat-message left">
                 <app-link href="/chat-with-alexis">
-                    <img src="assets/art12.jpg" alt="Alexis" class="chat-image">
+                    <img src=${art12} alt="Alexis" class="chat-image">
                 </app-link>
                 <p class="chat-text">I will see if I can find some security issues we may run into.</p>
             </div>
@@ -60,7 +65,7 @@ export class GroupChat extends LitElement {
             <!-- Message 4 - Right Side -->
             <div class="chat-message right">
                 <app-link href="/chat-with-marcus">
-                    <img src="assets/art16.jpg" alt="Marcus" class="chat-image">
+                    <img src=${art16} alt="Marcus" class="chat-image">
                 </app-link>
                 <p class="chat-text">Sweet! I can document the results and conduct test.</p>
             </div>
