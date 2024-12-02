@@ -85,26 +85,26 @@ export class Register extends navigator(LitElement) {
         return html`
             <app-page-title>Register</app-page-title>
             <div class="signin-container">
-                Email: <input id="email" @input=${this.handleInput}/>
+                Email: <input id="email" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                Password: <input type="password" id="password" @input=${this.handleInput}/>
+                Password: <input type="password" id="password" @input="${this.handleInput}"/>
             </div>
             <br/>
             <div class="signin-container">
-                Username: <input id="username" @input=${this.handleInput}/>
+                Username: <input id="username" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                Full Name: <input id="full_name" @input=${this.handleInput}/>
+                Full Name: <input id="full_name" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                Preferred Name: <input id="preferred_name" @input=${this.handleInput}/>
+                Preferred Name: <input id="preferred_name" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                Major: <input id="major" @input=${this.handleInput}/>
+                Major: <input id="major" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                <span @click=${this.attempt_register} class="signin-button">REGISTER</span>
+                <span @click="${this.attempt_register}" class="signin-button">REGISTER</span>
             </div>
             <div class="signin-container">
                 <span style="color: red;">${this.error}</span>

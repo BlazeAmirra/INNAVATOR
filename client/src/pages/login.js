@@ -83,7 +83,7 @@ export class Login extends navigator(LitElement) {
                 Password: <input type="password" id="password" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                <span @click=${this.attempt_login} class="signin-button">SIGN IN</span>
+                <span @click="${this.attempt_login}" class="signin-button">SIGN IN</span>
             </div>
             <div class="signin-container">
                 <span style="color: red;">${this.error}</span>

@@ -25,18 +25,20 @@ export class Contact extends LitElement {
     return html`
       <app-page-title>Contact Us</app-page-title>
 
-      <section class="contact-form"> <!-- Section for the contact form -->
-          <h3>Get in Touch</h3> <!-- Subheading for the contact form -->
-          <form> <!-- Start of the contact form -->
-              <label for="name">Name</label> <!-- Label for the name input -->
-              <input type="text" id="name" placeholder="Your name"> <!-- Input field for the user's name -->
-              <label for="email">Email</label> <!-- Label for the email input -->
-              <input type="email" id="email" placeholder="Your email"> <!-- Input field for the user's email -->
-              <label for="message">Message</label>  <!-- Label for the message input -->
-              <textarea id="message" placeholder="Your message"></textarea>  <!-- Textarea for the user's message -->
-              <button type="submit">Send Message</button> <!-- Submit button for the form -->
-          </form> <!-- End of the contact form -->
+      <!--
+      <section class="contact-form">
+          <h3>Get in Touch</h3>
+          <form>
+              <label for="name">Name</label>
+              <input type="text" id="name" placeholder="Your name">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="Your email">
+              <label for="message">Message</label>
+              <textarea id="message" placeholder="Your message"></textarea>
+              <button type="submit">Send Message</button>
+          </form>
       </section>
+      -->
 
       <section class="email-contact"> <!-- Section for email contact information -->
           <h3>Contact via Email</h3> <!-- Subheading for email contact -->

@@ -14,79 +14,128 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/account-information.js';
+import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
 const editpicture = new URL('../../assets/editpicture.png', import.meta.url).href;
 
 export class AccountInfo extends LitElement {
+  static get styles() {
+    return styles;
+  }
+
+  static get properties() {
+    return {
+      full_name: {type: String},
+      preferred_name: {type: String},
+      website_url: {type: String},
+      profile_picture_url: {type: String},
+      error: {type: String}
+    };
+  }
+
   constructor() {
     super();
     this.title = 'Account Information';
+    this.full_name = '';
+    this.preferred_name = '';
+    this.website_url = '';
+    this.profile_picture_url = '';
+    this.error = '';
   }
 
-  static get styles() {
-    return styles;
+  // Function to trigger the file input when the profile image is clicked
+  triggerFileInput() {
+    /*
+      document.getElementById('uploadPic').click();
+    */
+    alert("Sorry, cloud UGC storage is not supported yet. Please use a URL instead.");
+  }
+
+  // Function to change the profile picture when a new image is uploaded
+  changeProfilePic() {
+    /*
+      const fileInput = document.getElementById('uploadPic');
+      const profilePic = document.getElementById('profilePic');
+
+      if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              profilePic.src = e.target.result;
+          }
+          reader.readAsDataURL(fileInput.files[0]);
+      }
+    */
+    alert("Sorry, cloud UGC storage is not implemented yet. Please use a URL instead.");
+  }
+
+  handleInput(e) {
+    let {id, value} = e.target;
+    this[id] = value;
+  }
+
+  async attempt_user_patch () {
+    let result = await innavator_api.patchUser(innavator_utils.collect_optionals(
+      ["full_name", this.full_name],
+      ["preferred_name", this.preferred_name],
+      ["website_url", this.website_url],
+      ["profile_picture_url", this.profile_picture_url]
+    ));
+    if (result.apiError) {
+      if (result.apiError.message) {
+        let messageJSON = innavator_utils.parsed_json_or_null(result.apiError.message);
+        if (messageJSON && messageJSON.detail) {
+          this.error = messageJSON.detail;
+        }
+        else {
+          this.error = result.apiError.message;
+        }
+      }
+      else {
+        this.error = result.apiError;
+      }
+    }
+    else {
+      window.location.replace("/");
+    }
   }
 
   render() {
     return html`
       <!-- Centered Profile Picture with Click Event -->
-        <div class="profile-pic-container" onclick="triggerFileInput()">
-            <img src=${editpicture} alt="Profile Picture" class="profile-pic" id="profilePic">
+        <div class="profile-pic-container" @click="${this.triggerFileInput}">
+            <img src=${editpicture} alt="Profile Picture" class="profile-pic" id="profilePic" />
         </div>
 
         <!-- Hidden File Input -->
-        <input type="file" id="uploadPic" accept="image/*" onchange="changeProfilePic()" style="display: none;">
+        <input type="file" id="uploadPic" accept="image/*" @change="${this.changeProfilePic}" style="display: none;" />
 
         <!-- Edit Picture Title -->
-        <h2 class="edit-picture-title">Edit Picture</h2>
+        <!-- gotta get back to this after over, say, a month -->
+        <!-- <h2 class="edit-picture-title">Edit Picture</h2> -->
 
-        <!-- Name Field -->
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" class="input-field" placeholder="Enter your name">
+        <!-- Full Name Field -->
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" class="input-field" placeholder="Enter your full name" @input="${this.handleInput}" />
 
-        <!-- School Email Field -->
-        <label for="school-email">School Email:</label>
-        <input type="email" id="school-email" name="school-email" class="input-field" placeholder="Enter your school email">
+        <!-- Preferred Name Field -->
+        <label for="preferred_name">Preferred Name:</label>
+        <input type="text" id="preferred_name" name="preferred_name" class="input-field" placeholder="Enter your preferred name" @input="${this.handleInput}" />
 
-        <!-- Personal Email Field (Optional) -->
-        <label for="personal-email">Personal Email (Optional):</label>
-        <input type="email" id="personal-email" name="personal-email" class="input-field" placeholder="Enter your personal email">
+        <!-- Website URL Field -->
+        <label for="website_url">Website URL:</label>
+        <input type="url" id="website_url" name="website_url" class="input-field" placeholder="Enter your website URL (optional)" @input="${this.handleInput}" />
 
-        <!-- App Phone Number (Display Only) -->
-        <p class="static-info">Your app phone #: (123)456-7890</p>
+        <!-- PFP Url -->
+        <label for="profile_picture_url">Profile Picture URL:</label>
+        <input type="url" id="profile_picture_url" name="profile_picture_url" class="input-field" placeholder="Enter the URL to your profile picture (optional)" @input="${this.handleInput}" />
 
-        <!-- Optional Phone Number Field -->
-        <label for="phone-optional">Your phone # (Optional):</label>
-        <input type="tel" id="phone-optional" name="phone-optional" class="input-field" placeholder="Enter your phone number">
-
-        <!-- Present Hours Field -->
-        <label for="present-hours">Present hours:</label>
-        <input type="text" id="present-hours" name="present-hours" class="input-field" placeholder="Enter your available hours">
+        <br/><br/>
+        <span @click="${this.attempt_user_patch}" class="signin-button">EDIT</span>
+        <br/><br/>
+        <span style="color: red;">${this.error}</span>
     `;
   }
 }
 
 customElements.define('app-account-information', AccountInfo);
-
-/*
-<script>
-        // Function to trigger the file input when the profile image is clicked
-        function triggerFileInput() {
-            document.getElementById('uploadPic').click();
-        }
-
-        // Function to change the profile picture when a new image is uploaded
-        function changeProfilePic() {
-            const fileInput = document.getElementById('uploadPic');
-            const profilePic = document.getElementById('profilePic');
-
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profilePic.src = e.target.result;
-                }
-                reader.readAsDataURL(fileInput.files[0]);
-            }
-        }
-    </script>
-*/

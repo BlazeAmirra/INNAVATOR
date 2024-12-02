@@ -45,6 +45,8 @@ const styles = css`
     /* Side-by-Side Image Pair Styling */
     .image-pair {
         display: flex;
+        width: 100%;
+        overflow: auto;
         justify-content: center;
         gap: 20px;
         margin-top: 20px;

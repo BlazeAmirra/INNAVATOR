@@ -16,6 +16,8 @@ import { LitElement, html } from 'lit';
 import styles from './styles/with-student.js';
 import '../components/page-title.js';
 
+// TO BE REVISITED
+
 export class AINext extends LitElement {
   constructor() {
     super();

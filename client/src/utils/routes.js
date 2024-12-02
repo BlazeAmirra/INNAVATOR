@@ -38,6 +38,10 @@ const routes = [
     pattern: 'account-information',
   },
   {
+    name: 'add-portfolio-entry',
+    pattern: 'add-portfolio-entry',
+  },
+  {
     name: 'ai-next',
     pattern: 'ai-next',
   },
@@ -184,6 +188,10 @@ const routes = [
   {
     name: 'welcome',
     pattern: 'welcome',
+  },
+  {
+    name: 'what-is-a-patent',
+    pattern: 'what-is-a-patent',
   },
   {
     name: 'with-student',

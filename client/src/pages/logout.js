@@ -60,7 +60,7 @@ export class Logout extends navigator(LitElement) {
         return html`
             <app-page-title>Log Out?</app-page-title>
             <div class="signin-container">
-                <span @click=${this.attempt_logout} class="signin-button">Yes</span>
+                <span @click="${this.attempt_logout}" class="signin-button">Yes</span>
                 <app-link href="/welcome" class="signin-button">No</app-link>
             </div>
             <div class="signin-container">

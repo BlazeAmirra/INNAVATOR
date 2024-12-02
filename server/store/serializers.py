@@ -167,20 +167,22 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
         exclude = ['mentees', 'willing_to_tutor']
         extra_kwargs = {'user': {'required': False, 'allow_null': True}}
 
-    def validate_user(self, value):
-        value['email'] = escape(value['email'])
-        return value
+# apparently this sanitization isn't needed
 
-    def validate_full_name(self, value):
-        return escape(value)
-    def validate_preferred_name(self, value):
-        return escape(value)
-    def validate_major(self, value):
-        return escape(value)
-    def validate_website_url(self, value):
-        return escape(value)
-    def validate_profile_picture_url(self, value):
-        return escape(value)
+#    def validate_user(self, value):
+#        value['email'] = escape(value['email'])
+#        return value
+
+#    def validate_full_name(self, value):
+#        return escape(value)
+#    def validate_preferred_name(self, value):
+#        return escape(value)
+#    def validate_major(self, value):
+#        return escape(value)
+#    def validate_website_url(self, value):
+#        return escape(value)
+#    def validate_profile_picture_url(self, value):
+#        return escape(value)
 
     def create(self, validated_data):
         user = innavator_models.InnavatorUser.objects.create(
@@ -219,24 +221,24 @@ class MentorshipSerializer(serializers.ModelSerializer):
         model = innavator_models.Mentorship
         fields = '__all__'
 
-    def validate_request_message(self, value):
-        return escape(value)
+#    def validate_request_message(self, value):
+#        return escape(value)
 
 class InnavatorGroupPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.InnavatorGroup
         fields = ['snowflake_id', 'name']
 
-    def validate_name(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
 
 class InnavatorGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.InnavatorGroup
         exclude = ['members']
 
-    def validate_name(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
 
     def update(self, instance, validated_data):
         validated_data.pop("is_club", False)
@@ -252,8 +254,8 @@ class GroupMembershipDetailSerializer(serializers.ModelSerializer):
         model = innavator_models.GroupMembership
         fields = '__all__'
 
-    def validate_request_message(self, value):
-        return escape(value)
+#    def validate_request_message(self, value):
+#        return escape(value)
 
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -261,8 +263,8 @@ class ChannelSerializer(serializers.ModelSerializer):
         exclude = ['last_read_list']
         extra_kwargs = {'group': {'read_only': True}}
 
-    def validate_name(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -270,8 +272,8 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'channel': {'read_only': True}, 'sender': {'read_only': True}}
 
-    def validate_contents(self, value):
-        return escape(value)
+#    def validate_contents(self, value):
+#        return escape(value)
 
     def update(self, instance, validated_data):
         instance.contents = validated_data.get('contents', instance.contents)
@@ -286,8 +288,8 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     # this is rather paranoid given that these are only admin-set
-    def validate_name(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -295,10 +297,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         exclude = ['group', 'members']
         extra_kwargs = {'looking_for_roles': {'read_only': True}}
 
-    def validate_name(self, value):
-        return escape(value)
-    def validate_description(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
+#    def validate_description(self, value):
+#        return escape(value)
 
 class ProjectRoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -316,10 +318,10 @@ class CommissionRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'sender': {'read_only': True}}
 
-    def validate_name(self, value):
-        return escape(value)
-    def validate_description(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
+#    def validate_description(self, value):
+#        return escape(value)
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -327,10 +329,10 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'group': {'read_only': True}}
 
-    def validate_name(self, value):
-        return escape(value)
-    def validate_description(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
+#    def validate_description(self, value):
+#        return escape(value)
 
 class PortfolioEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -338,10 +340,10 @@ class PortfolioEntrySerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'user': {'read_only': True}}
 
-    def validate_name(self, value):
-        return escape(value)
-    def validate_description(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
+#    def validate_description(self, value):
+#        return escape(value)
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -349,8 +351,8 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     # this is rather paranoid given that these are only admin-set
-    def validate_name(self, value):
-        return escape(value)
+#    def validate_name(self, value):
+#        return escape(value)
 
 class WillingnessToTutorSerializer(serializers.ModelSerializer):
     class Meta:

@@ -382,7 +382,7 @@ POST `users/<InnavatorUser>/request_as_mentee/` {request_message: string optiona
 	added
 	sends a request to the pk to be a mentee of the sender
 
-POST `users/<InnavatorUser>/create_portfolio_entry/` { name: string, description: string optional }
+POST `users/<InnavatorUser>/create_portfolio_entry/` { name: string, description: string optional, picture_url: URL optional, url: URL optional }
 	{}
 	auth needed - same user
 	added

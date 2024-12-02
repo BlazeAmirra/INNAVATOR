@@ -16,6 +16,8 @@ import { LitElement, html } from 'lit';
 import styles from './styles/ai.js';
 import '../components/page-title.js';
 
+// TO BE REVISITED
+
 export class AI extends LitElement {
   constructor() {
     super();

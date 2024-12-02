@@ -24,6 +24,7 @@ import styles from './styles/shell.js';
 import './pages/home.js';
 import './pages/about.js';
 import './pages/account-information.js';
+import './pages/add-portfolio-entry.js';
 import './pages/ai-next.js';
 import './pages/ai.js';
 import './pages/art.js';
@@ -62,6 +63,7 @@ import './pages/uat-dictionary.js';
 import './pages/video-audio.js';
 import './pages/view.js';
 import './pages/welcome.js';
+import './pages/what-is-a-patent.js';
 import './pages/with-student.js';
 import './pages/work.js';
 import './pages/yes-partner.js';
@@ -230,6 +232,9 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="account-information">
               <app-account-information></app-account-information>
             </div>
+            <div class="route" route="add-portfolio-entry">
+              <app-add-portfolio-entry></app-add-portfolio-entry>
+            </div>
             <div class="route" route="ai-next">
               <app-ai-next></app-ai-next>
             </div>
@@ -340,6 +345,9 @@ export class InnavatorShell extends router(LitElement) {
             </div>
             <div class="route" route="welcome">
               <app-welcome></app-welcome>
+            </div>
+            <div class="route" route="what-is-a-patent">
+              <app-what-is-a-patent></app-what-is-a-patent>
             </div>
             <div class="route" route="with-student">
               <app-with-student></app-with-student>

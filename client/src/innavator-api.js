@@ -421,8 +421,8 @@ export const requestMentor = async user => {
 export const requestMentee = async user => {
     return await postAPI(`users/${user}/request_as_mentee/`, {});
 };
-export const createPortfolioEntry = async name => {
-    return await postAPI(`users/${this_user}/create_portfolio_entry/`, {'name': name});
+export const createPortfolioEntry = async data => {
+    return await postAPI(`users/${this_user}/create_portfolio_entry/`, data);
 };
 
 export const createGroup = async name => {

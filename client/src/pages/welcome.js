@@ -35,28 +35,38 @@ export class Welcome extends navigator(LitElement) {
   constructor() {
     super();
     this.title = "Welcome";
-    this.username = "";
+    this.greeting_name = "";
     this.loaded = false;
     this.not_logged_in = false;
   }
 
   async update() {
     super.update();
-    let result = await innavator_api.who_am_i();
-    if (result.logged_in) {
-      result = await innavator_api.fetchUser(result.snowflake_id);
-      this.username = result.user.username;
+    if (!this.loaded) {
+      let result = await innavator_api.who_am_i();
+      if (result.logged_in) {
+        result = await innavator_api.fetchUser(result.snowflake_id);
+        if (result.preferred_name != "") {
+          this.greeting_name = result.preferred_name;
+        }
+        else if (result.preferred_name != "") {
+          this.greeting_name = result.full_name;
+        }
+        else {
+          this.greeting_name = result.user.username;
+        }
+      }
+      else {
+        this.not_logged_in = true;
+      }
+      this.loaded = true;
     }
-    else {
-      this.not_logged_in = true;
-    }
-    this.loaded = true;
   }
 
   render() {
     return this.loaded ? html`
       <!-- Welcome Message -->
-        <app-page-title>Welcome to Innavator, ${this.username}!</app-page-title> <!-- Displays the welcome title centered -->
+        <app-page-title>Welcome to Innavator, ${this.greeting_name}!</app-page-title> <!-- Displays the welcome title centered -->
 
         <!-- Button Section for Various Options -->
         <div class="button-container">
