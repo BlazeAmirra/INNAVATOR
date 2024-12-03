@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/art.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const art1 = new URL('../../assets/art1.png', import.meta.url).href;
@@ -39,7 +40,7 @@ export class Art extends LitElement {
 
       <!-- Go Back Button -->
       <div class="back-button-container">
-          <app-link href="/commission"><span class="back-button">&larr; Go Back</span></app-link>
+          <app-back-button/>
       </div>
 
       <!-- Art Content Section -->

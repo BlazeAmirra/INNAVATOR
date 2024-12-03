@@ -12,31 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from 'lit';
+import { LitElement, html } from 'lit';
+import styles from './styles/back-button.js';
 
-const styles = css`
-    /* Dictionary Container Styling */
-    .dictionary-container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f5f5f5;
-        border-radius: 10px;
-        border: 1px solid #d6ade1;
-    }
+export class BackButton extends LitElement {
+  static get styles() {
+    return styles;
+  }
 
-    .dictionary-container p {
-        font-size: 18px;
-        color: #3b3039;
-        margin-bottom: 10px;
-    }
+  constructor() {
+    super();
+  }
 
-    /* Back Button Styling */
-    .back-button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-`;
+  render() {
+    return html`
+        <span onclick="history.back()">&#x2190; Back</span> <!-- Left arrow icon -->
+    `;
+  }
+}
 
-export default styles;
+customElements.define('app-back-button', BackButton);

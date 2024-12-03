@@ -50,36 +50,6 @@ const styles = css`
     .option-button:hover {
         background-color: #c468c4;
     }
-
-    /* Go Back Button Styling */
-    .go-back-button {
-        display: inline-block;
-        background-color: #d6ade1; /* Matching footer color */
-        color: #3b3039;
-        padding: 15px 30px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        margin: 10px 0;
-        font-size: 18px;
-        width: 200px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .go-back-button:hover {
-        background-color: #c468c4;
-    }
-
-    .go-back-button:before {
-    
-        margin-right: 10px;
-        font-size: 24px;
-    }
-
-    .go-back-button:hover:before {
-        color: #fff;
-    }
 `;
 
 export default styles;

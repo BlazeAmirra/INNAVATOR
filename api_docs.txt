@@ -266,6 +266,11 @@ GET `subjects/<Subject>/tutors/`
 	no auth needed
 	added
 
+GET `subjects/<Subject>/portfolio_entries/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{PortfolioEntry} where subject=pk] }
+	no auth needed
+	added
+
 =============================
 
 DELETE `users/<InnavatorUser>/remove_mentor/`

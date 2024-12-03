@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/chat-with.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const art9 = new URL('../../assets/art9.jpg', import.meta.url).href;
@@ -33,11 +34,7 @@ export class ChatWith extends LitElement {
   render() {
     return html`
       <!-- Back Arrow for Navigation -->
-        <div class="back-arrow">
-            <app-link href="/profiles"> <!-- Link to previous page (update href as needed) -->
-                &#8592; Back
-            </app-link>
-        </div>
+        <app-back-button></app-back-button>
 
         <!-- Logo Section -->
         <div class="logo-section">

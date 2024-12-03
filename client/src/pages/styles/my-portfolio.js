@@ -67,19 +67,18 @@ const styles = css`
     }
 
     .back-button {
-        display: inline-block;
-        padding: 10px 20px;
+        font-size: 18px;
+        padding: 8px 16px;
         background-color: #d6ade1;
-        color: #fff;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 5px;
+        color: #000000;
         border: 1px solid #3b3039;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
     .back-button:hover {
-        background-color: #c296d9;
-        color: #000;
+        background-color: #b893c7;
     }
 `;
 

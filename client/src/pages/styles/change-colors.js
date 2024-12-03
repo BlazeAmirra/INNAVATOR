@@ -61,22 +61,6 @@ const styles = css`
     .dark-label, .light-label {
         font-weight: bold;
     }
-
-    /* Go Back Button Style */
-    .back-button {
-        font-size: 18px;
-        padding: 8px 16px;
-        background-color: #d6ade1;
-        color: #000000;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    .back-button:hover {
-        background-color: #b893c7;
-    }
 `;
 
 export default styles;

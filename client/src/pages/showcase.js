@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/showcase.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const threedtools = new URL('../../assets/3dtools.png', import.meta.url).href;
@@ -75,7 +76,7 @@ export class Showcase extends LitElement {
 
         <!-- Go Back Button -->
         <div class="back-button-container">
-            <app-link href="/portfolio" class="back-button">Go Back</app-link>
+            <app-back-button/>
         </div>
     `;
   }

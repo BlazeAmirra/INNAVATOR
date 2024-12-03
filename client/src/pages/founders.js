@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/founders.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
@@ -106,7 +107,7 @@ export class Founders extends LitElement {
 
         <!-- Go Back Button -->
         <div class="button-container">
-            <app-link href="/welcome" class="go-back-button">Go Back</app-link>
+            <app-back-button/>
         </div>
     `;
   }

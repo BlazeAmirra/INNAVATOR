@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/commission.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 export class Commission extends LitElement {
@@ -37,8 +38,7 @@ export class Commission extends LitElement {
             <app-link href="/movies" class="option-button">★ Movies</app-link>
             <app-link href="/art" class="option-button">★ Art</app-link>
 
-            <!-- Go Back Button at the bottom -->
-            <app-link href="/welcome" class="go-back-button">Go Back</app-link> <!-- Link to home page with a "Go Back" button -->
+            <app-back-button/>
         </div>
     `;
   }

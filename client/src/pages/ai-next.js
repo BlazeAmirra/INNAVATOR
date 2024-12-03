@@ -13,10 +13,11 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
-import styles from './styles/with-student.js';
+import styles from './styles/ai.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
-// TO BE REVISITED
+// TODO: COME BACK
 
 export class AINext extends LitElement {
   constructor() {
@@ -40,8 +41,8 @@ export class AINext extends LitElement {
 
         <!-- Navigation Buttons Section -->
         <div class="navigation-buttons">
-            <app-link href="/ai"><span class="back-arrow">&larr; Go Back</span></app-link> <!-- Go back to Learn page -->
-            <app-link href="/partner-option"><span class="next-button">Next</span></app-link> <!-- Link to next page -->
+            <app-back-button></app-back-button> <!-- This has to be done instead of a self-closing tag to avoid eating the next tag, apparently -->
+            <app-link href="/partner-option" class="next-button">Next</app-link> <!-- Link to next page -->
         </div>
     `;
   }

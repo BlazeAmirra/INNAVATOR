@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/learn.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 export class Learn extends LitElement {
@@ -38,7 +39,7 @@ export class Learn extends LitElement {
             <app-link href="/uat-dictionary" class="option-button">★ UAT Dictionary</app-link>
 
             <!-- Go Back Button at the bottom -->
-            <app-link href="/welcome" class="go-back-button">Go Back</app-link> <!-- Link to home page -->
+            <app-back-button/>
         </div>
     `;
   }

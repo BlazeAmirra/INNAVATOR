@@ -16,6 +16,7 @@ import { LitElement, html } from 'lit';
 import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-router.js';
 
 import styles from './styles/register.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
 import * as innavator_utils from '../innavator-utils.js';
@@ -104,10 +105,13 @@ export class Register extends navigator(LitElement) {
                 Major: <input id="major" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                <span @click="${this.attempt_register}" class="signin-button">REGISTER</span>
+                <span @click="${this.attempt_register}" class="signin-button">Register</span>
             </div>
             <div class="signin-container">
                 <span style="color: red;">${this.error}</span>
+            </div>
+            <div class="signin-container">
+                <app-back-button/>
             </div>
         `;
     }

@@ -15,23 +15,6 @@
 import { css } from 'lit';
 
 const styles = css`
-    /* Back Arrow Styling */
-    .back-arrow {
-        display: flex;
-        justify-content: flex-start;
-        margin: 20px;
-    }
-
-    .back-arrow app-link {
-        color: #000;
-        font-size: 18px;
-        text-decoration: none;
-    }
-
-    .back-arrow app-link:hover {
-        text-decoration: underline;
-    }
-
     /* Logo Section Styling */
     .logo-section {
         display: flex;

@@ -14,7 +14,10 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/block-user.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
+
+// TODO: COME BACK
 
 export class BlockUser extends LitElement {
   constructor() {
@@ -28,6 +31,13 @@ export class BlockUser extends LitElement {
 
   render() {
     return html`
+      <app-page-title>Not Implemented</app-page-title>
+      <app-back-button/>
+    `;
+  }
+}
+
+/*
       <!-- Title -->
         <app-page-title>Block User</app-page-title>
 
@@ -42,9 +52,7 @@ export class BlockUser extends LitElement {
 
         <!-- Message Display -->
         <p id="message" class="message"></p>
-    `;
-  }
-}
+*/
 
 customElements.define('app-block-user', BlockUser);
 

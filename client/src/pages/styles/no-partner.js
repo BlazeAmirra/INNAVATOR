@@ -40,28 +40,19 @@ const styles = css`
         padding: 0 20px; /* Horizontal padding for alignment */
     }
 
-    /* Back Arrow Styling */
-    .back-arrow {
-        color: #c468c4; /* Set color for back arrow */
-        font-size: 18px; /* Font size for readability */
-        text-decoration: none; /* Remove underline */
-        transition: color 0.3s; /* Smooth color change on hover */
+    .next-button {
+        font-size: 18px;
+        padding: 8px 16px;
+        background-color: #d6ade1;
+        color: #000000;
+        border: 1px solid #3b3039;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
-    .back-arrow:hover {
-        color: #a655a0; /* Darker color on hover */
-    }
-
-    /* Next Arrow Styling */
-    .next-arrow {
-        color: #c468c4; /* Set color for next arrow */
-        font-size: 18px; /* Font size for readability */
-        text-decoration: none; /* Remove underline */
-        transition: color 0.3s; /* Smooth color change on hover */
-    }
-
-    .next-arrow:hover {
-        color: #a655a0; /* Darker color on hover */
+    .next-button:hover {
+        background-color: #b893c7;
     }
 `;
 

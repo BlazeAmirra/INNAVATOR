@@ -1053,6 +1053,12 @@ class SubjectViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (innavator_permissions.SubjectsPermissions,) # comma is necessary
 
     @action(detail=True, methods=['get'])
+    def portfolio_entries(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.PortfolioEntrySerializer, innavator_models.PortfolioEntry.objects.filter(
+            subject=self.get_object()
+        ))
+
+    @action(detail=True, methods=['get'])
     def tutors(self, request, pk):
         return innavator_utils.paginate(self, innavator_serializers.WillingnessToTutorSerializer, innavator_models.WillingnessToTutor.objects.filter(
             subject=self.get_object()

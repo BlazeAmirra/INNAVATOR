@@ -26,17 +26,40 @@ export class AccountInfo extends LitElement {
 
   static get properties() {
     return {
+      current_pfp: {type: String},
+      loaded: {type: Boolean},
+      not_logged_in: {type: Boolean},
+
       full_name: {type: String},
       preferred_name: {type: String},
       website_url: {type: String},
       profile_picture_url: {type: String},
+
       error: {type: String}
     };
+  }
+
+  async update() {
+    super.update();
+    if (!this.loaded) {
+      let result = await innavator_api.who_am_i();
+      if (result.logged_in) {
+        result = await innavator_api.fetchUser(result.snowflake_id);
+        this.current_pfp = result.profile_picture_url;
+      }
+      else {
+        this.not_logged_in = true;
+      }
+      this.loaded = true;
+    }
   }
 
   constructor() {
     super();
     this.title = 'Account Information';
+    this.current_pfp = '';
+    this.loaded = false;
+    this.not_logged_in = false;
     this.full_name = '';
     this.preferred_name = '';
     this.website_url = '';
@@ -101,10 +124,10 @@ export class AccountInfo extends LitElement {
   }
 
   render() {
-    return html`
+    return this.loaded ? html`
       <!-- Centered Profile Picture with Click Event -->
         <div class="profile-pic-container" @click="${this.triggerFileInput}">
-            <img src=${editpicture} alt="Profile Picture" class="profile-pic" id="profilePic" />
+            <img src=${this.current_pfp} alt="Profile Picture" class="profile-pic" id="profilePic" onerror=${`this.src='${editpicture}';`} />
         </div>
 
         <!-- Hidden File Input -->
@@ -131,10 +154,10 @@ export class AccountInfo extends LitElement {
         <input type="url" id="profile_picture_url" name="profile_picture_url" class="input-field" placeholder="Enter the URL to your profile picture (optional)" @input="${this.handleInput}" />
 
         <br/><br/>
-        <span @click="${this.attempt_user_patch}" class="signin-button">EDIT</span>
+        <span @click="${this.attempt_user_patch}" class="signin-button">Submit</span>
         <br/><br/>
         <span style="color: red;">${this.error}</span>
-    `;
+    ` : `Loading...`;
   }
 }
 

@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/portfolio.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 export class Portfolio extends LitElement {
@@ -39,7 +40,7 @@ export class Portfolio extends LitElement {
             <app-link href="/patents" class="option-button">★ Patents</app-link>
 
             <!-- Go Back Button positioned like the others -->
-            <app-link href="/welcome" class="go-back-button">Go Back</app-link>
+            <app-back-button/>
         </div>
     `;
   }

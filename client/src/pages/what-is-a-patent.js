@@ -14,7 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/what-is-a-patent.js';
-import '../components/page-title.js'
+import '../components/page-title.js';
 
 export class WhatIsAPatent extends LitElement {
   constructor() {
@@ -32,6 +32,8 @@ export class WhatIsAPatent extends LitElement {
         <app-page-title>Patent Nonsense</app-page-title>
 
         <span>Hah, got 'em!</span>
+        <br/><br/>
+        <app-back-button></app-back-button>
     `;
   }
 }

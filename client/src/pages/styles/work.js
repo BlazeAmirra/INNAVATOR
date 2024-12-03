@@ -65,16 +65,19 @@ const styles = css`
         margin-top: 20px;
     }
 
-    .back-arrow,
     .next-button {
-        color: #000000;
-        text-decoration: none;
         font-size: 18px;
+        padding: 8px 16px;
+        background-color: #d6ade1;
+        color: #000000;
+        border: 1px solid #3b3039;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
-    .back-arrow:hover,
     .next-button:hover {
-        text-decoration: underline;
+        background-color: #b893c7;
     }
 `;
 

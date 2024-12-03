@@ -50,26 +50,6 @@ const styles = css`
     .option-button:hover {
         background-color: #c468c4;
     }
-
-    /* Go Back Button Styling */
-    .go-back-button {
-        display: inline-block;
-        background-color: #d6ade1; /* Same color as header and footer */
-        color: #fff; /* White text color */
-        padding: 15px 30px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        margin: 20px 0;
-        font-size: 18px;
-        width: 200px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .go-back-button:hover {
-        background-color: #c468c4; /* Change color on hover */
-    }
 `;
 
 export default styles;

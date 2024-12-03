@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/group-chat.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
@@ -71,6 +72,18 @@ export class GroupChat extends LitElement {
             </div>
         </div>
 
+        <!-- Go Back Button Section -->
+        <div class="go-back-button">
+            <app-back-button/>
+        </div>
+    `;
+  }
+}
+
+customElements.define('app-group-chat', GroupChat);
+
+/*
+
         <!-- Whiteboard Section -->
         <div class="whiteboard-container">
             <h2 class="whiteboard-title">Collaborative Whiteboard</h2>
@@ -87,16 +100,8 @@ export class GroupChat extends LitElement {
                 <button id="saveButton">Save as Image</button> <!-- Button to save the whiteboard as an image -->
             </div>
         </div>
+*/
 
-        <!-- Go Back Button Section -->
-        <div class="go-back-button">
-            <app-link href="/welcome">Go Back</app-link> <!-- Go back to the previous page -->
-        </div>
-    `;
-  }
-}
-
-customElements.define('app-group-chat', GroupChat);
 
 /*
 <!-- Whiteboard Script -->

@@ -63,21 +63,6 @@ const styles = css`
         display: flex;
         justify-content: center;
     }
-
-    .go-back-button {
-        font-size: 16px;
-        color: #3b3039;
-        text-decoration: none;
-        background-color: #d6ade1;
-        padding: 10px 20px;
-        border-radius: 5px;
-        display: inline-block;
-    }
-
-    .go-back-button:hover {
-        background-color: #b39acb;
-        color: #fff;
-    }
 `;
 
 export default styles;

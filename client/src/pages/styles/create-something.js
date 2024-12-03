@@ -40,19 +40,19 @@ const styles = css`
         gap: 20px; /* Space between the buttons */
     }
 
-    .back-button, .next-button {
-        display: inline-block; /* Inline block for padding and margin */
-        background-color: #c468c4; /* Button background color */
-        color: #fff; /* White text color for contrast */
-        padding: 10px 20px; /* Padding for button dimensions */
-        text-decoration: none; /* Remove underline from link */
-        border-radius: 8px; /* Rounded corners for button */
-        font-size: 18px; /* Font size for readability */
-        transition: background-color 0.3s; /* Smooth background color change on hover */
+    .next-button {
+        font-size: 18px;
+        padding: 8px 16px;
+        background-color: #d6ade1;
+        color: #000000;
+        border: 1px solid #3b3039;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
-    .back-button:hover, .next-button:hover {
-        background-color: #a655a0; /* Darker background on hover */
+    .next-button:hover {
+        background-color: #b893c7;
     }
 `;
 

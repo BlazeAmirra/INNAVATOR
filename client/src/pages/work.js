@@ -14,7 +14,8 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/work.js';
-import '../components/page-title.js'
+import '../components/back-button.js';
+import '../components/page-title.js';
 
 export class Work extends LitElement {
   constructor() {
@@ -48,7 +49,7 @@ export class Work extends LitElement {
 
             <!-- Navigation Buttons -->
             <div class="navigation-buttons">
-                <app-link href="/welcome" class="back-arrow">Back</app-link>
+                <app-back-button></app-back-button>
                 <app-link href="/submit" class="next-button">Next</app-link>
             </div>
         </div>

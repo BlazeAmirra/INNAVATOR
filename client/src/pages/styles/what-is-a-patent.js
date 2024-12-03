@@ -39,23 +39,6 @@ const styles = css`
         gap: 20px; /* Space between the back and next buttons */
         margin-top: 20px;
     }
-
-    .back-arrow,
-    .next-button {
-        color: #000000;
-        text-decoration: none;
-        font-size: 18px;
-        padding: 10px 20px; /* Adds padding for better button appearance */
-        border: 1px solid #d6ade1;
-        border-radius: 5px;
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
-    }
-
-    .back-arrow:hover,
-    .next-button:hover {
-        background-color: #d6ade1;
-        color: #fff;
-    }
 `;
 
 export default styles;

@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/no-partner.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 export class NoPartner extends LitElement {
@@ -39,8 +40,8 @@ export class NoPartner extends LitElement {
 
         <!-- Navigation Arrows Section -->
         <div class="arrow-section">
-            <app-link href="/partner-option" class="back-arrow">&larr; Back</app-link> <!-- Go back link to partner-option page -->
-            <app-link href="/commission" class="next-arrow">Next &rarr;</app-link> <!-- Next link to the next page -->
+            <app-back-button></app-back-button>
+            <app-link href="/commission" class="next-button">Next &rarr;</app-link> <!-- Next link to the next page -->
         </div>
     `;
   }

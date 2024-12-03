@@ -18,8 +18,6 @@ import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
 import * as innavator_utils from '../innavator-utils.js';
 
-const logo = new URL('../../assets/InnavatorLogo.png', import.meta.url).href;
-
 export class AddPortfolioEntry extends LitElement {
   static get styles() {
     return styles;
@@ -96,7 +94,7 @@ export class AddPortfolioEntry extends LitElement {
         <input type="url" id="picture_url" name="picture_url" class="input-field" placeholder="Enter a project picture URL (optional)" @input="${this.handleInput}" />
 
         <br/><br/>
-        <span @click="${this.attempt_add_portfolio_entry}" class="signin-button">ADD</span>
+        <span @click="${this.attempt_add_portfolio_entry}" class="signin-button">Add</span>
         <br/><br/>
         <span style="color: red;">${this.error}</span>
     `;

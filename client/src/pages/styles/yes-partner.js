@@ -42,21 +42,6 @@ const styles = css`
         justify-content: center; /* Center the button */
         margin-top: 30px; /* Space above button section */
     }
-
-    .back-button {
-        display: inline-block; /* Inline block for padding and margin */
-        background-color: #c468c4; /* Button background color */
-        color: #fff; /* White text color for contrast */
-        padding: 10px 20px; /* Padding for button dimensions */
-        text-decoration: none; /* Remove underline from link */
-        border-radius: 8px; /* Rounded corners for button */
-        font-size: 18px; /* Font size for readability */
-        transition: background-color 0.3s; /* Smooth background color change on hover */
-    }
-
-    .back-button:hover {
-        background-color: #a655a0; /* Darker background on hover */
-    }
 `;
 
 export default styles;

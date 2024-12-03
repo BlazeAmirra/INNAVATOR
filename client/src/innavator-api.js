@@ -365,6 +365,9 @@ export const fetchSubject = async subject => {
 export const fetchSubjectTutors = async subject => {
     return await getAPI(`subjects/${subject}/tutors/`);
 };
+export const fetchSubjectPortfolioEntries = async subject => {
+    return await getAPI(`subjects/${subject}/portfolio_entries/`);
+};
 
 // DELETE
 

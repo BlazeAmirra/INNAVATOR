@@ -332,6 +332,7 @@ class PortfolioEntry(models.Model):
     description = models.CharField("Description", max_length=300, blank=True)
     url = models.URLField("URL", max_length=300, blank=True, validators=[URLValidator()])
     picture_url = models.URLField("Picture URL", max_length=300, blank=True, validators=[URLValidator()])
+    subject = models.ForeignKey("Subject", null=True, on_delete=models.CASCADE) # TODO: set on_delete to something more sane
 
     class Meta:
         verbose_name_plural = "Portfolio entries"

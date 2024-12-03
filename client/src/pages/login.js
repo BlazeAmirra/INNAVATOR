@@ -16,6 +16,7 @@ import { LitElement, html } from 'lit';
 import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-router.js';
 
 import styles from './styles/login.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
 import * as innavator_utils from '../innavator-utils.js';
@@ -83,10 +84,13 @@ export class Login extends navigator(LitElement) {
                 Password: <input type="password" id="password" @input="${this.handleInput}"/>
             </div>
             <div class="signin-container">
-                <span @click="${this.attempt_login}" class="signin-button">SIGN IN</span>
+                <span @click="${this.attempt_login}" class="signin-button">Log In</span>
             </div>
             <div class="signin-container">
                 <span style="color: red;">${this.error}</span>
+            </div>
+            <div class="signin-container">
+                <app-back-button/>
             </div>
         `;
     }

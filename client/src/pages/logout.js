@@ -16,6 +16,7 @@ import { LitElement, html } from 'lit';
 import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-router.js';
 
 import styles from './styles/logout.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
 import * as innavator_utils from '../innavator-utils.js';
@@ -61,7 +62,7 @@ export class Logout extends navigator(LitElement) {
             <app-page-title>Log Out?</app-page-title>
             <div class="signin-container">
                 <span @click="${this.attempt_logout}" class="signin-button">Yes</span>
-                <app-link href="/welcome" class="signin-button">No</app-link>
+                <app-back-button/>
             </div>
             <div class="signin-container">
                 <span style="color: red;">${this.error}</span>

@@ -14,7 +14,8 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/yes-partner.js';
-import '../components/page-title.js'
+import '../components/back-button.js';
+import '../components/page-title.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
 const art7 = new URL('../../assets/art7.jpg', import.meta.url).href;
@@ -51,7 +52,7 @@ export class YesPartner extends LitElement {
 
         <!-- Go Back Button -->
         <div class="button-section">
-            <app-link href="/partner-option" class="back-button">&larr; Go Back</app-link> <!-- Go back link to partner-option page -->
+            <app-back-button/>
         </div>
     `;
   }

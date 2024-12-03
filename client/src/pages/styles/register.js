@@ -73,20 +73,19 @@ const styles = css`
         margin-top: 30px; /* Space above button */
     }
 
-    /* Sign-in Button Styling */
     .signin-button {
-        display: inline-block; /* Set as inline block for padding */
-        background-color: #ed7a92; /* Background color */
-        color: #3b3039; /* Text color */
-        padding: 10px 20px; /* Padding around text */
-        border-radius: 8px; /* Rounded corners */
-        text-decoration: none; /* Remove underline */
-        font-weight: bold; /* Make text bold */
-        cursor: pointer; /* Set cursor to pointer */
+        font-size: 18px;
+        padding: 8px 16px;
+        background-color: #d6ade1;
+        color: #000000;
+        border: 1px solid #3b3039;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
     }
 
     .signin-button:hover {
-        background-color: #c468c4; /* Change color on hover */
+        background-color: #b893c7;
     }
 `;
 

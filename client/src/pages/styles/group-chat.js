@@ -84,20 +84,6 @@ const styles = css`
         margin-top: 20px;
     }
 
-    .go-back-button app-link {
-        color: #000000;
-        text-decoration: none;
-        font-size: 18px;
-        padding: 10px 20px;
-        background-color: #d6ade1;
-        border-radius: 8px;
-        border: 1px solid #d6ade1;
-    }
-
-    .go-back-button app-link:hover {
-        background-color: #c89bd5;
-    }
-
     canvas {
         border: 1px solid black;
         cursor: crosshair;

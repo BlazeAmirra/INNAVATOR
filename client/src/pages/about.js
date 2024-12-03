@@ -49,6 +49,7 @@ export class About extends LitElement {
               After presenting her concept at the Student Innovation Project (SIP), Blaze refined her approach, incorporating feedback to make the app even more impactful. With the support of her dedicated team, including King, Sanyerlis, Shjon, Sean, Nathaniel, Nick Preston Markus, and Alesis, the app is being brought to life, embodying Blaze’s vision of fostering creativity, teamwork, and professional growth among UAT students.
           </p>
       </div>
+      <app-back-button/>
     `;
   }
 }

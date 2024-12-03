@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
-import styles from './styles/with-student.js';
-import '../components/page-title.js'
+import styles from './styles/ai.js';
+import '../components/back-button.js';
+import '../components/page-title.js';
 
 export class WithStudent extends LitElement {
   constructor() {
@@ -38,7 +39,7 @@ export class WithStudent extends LitElement {
 
         <!-- Navigation Buttons Section -->
         <div class="navigation-buttons">
-            <app-link href="/learn" class="back-arrow">&larr; Go Back</app-link> <!-- Go back to Learn page -->
+            <app-back-button></app-back-button>
             <app-link href="/yes-partner" class="next-button">Next</app-link> <!-- Link to next page -->
         </div>
     `;

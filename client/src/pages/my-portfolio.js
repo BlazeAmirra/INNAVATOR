@@ -15,6 +15,7 @@
 import { LitElement, html } from 'lit';
 import { map } from 'lit/directives/map.js';
 import styles from './styles/my-portfolio.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 import * as innavator_api from '../innavator-api.js';
@@ -63,6 +64,29 @@ export class MyPortfolio extends LitElement {
   }
 
   render() {
+    const listItems = [];
+    for (let i = 0; i < this.portfolio.length / 5; i++) {
+      const listItem = [];
+      for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
+        listItem.push(this.portfolio[j].url != "" ? html`
+          <div class="portfolio-image">
+            <a href="${this.portfolio[j].url}" target="_blank">
+              <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+            </a>
+          </div>
+          ` : html`
+          <div class="portfolio-image">
+            <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+          </div>
+          `);
+      }
+      listItems.push(html`
+        <div class="image-pair">
+          ${listItem}
+        </div>
+      `);
+    }
+
     return html`
       <!-- Page Title -->
         <app-page-title>My Portfolio</app-page-title>
@@ -79,21 +103,7 @@ export class MyPortfolio extends LitElement {
         </div>
         -->
 
-        <!-- Two Images Side by Side -->
-        <div class="image-pair">
-            ${map(this.portfolio, entry => entry.url != "" ? html`
-              <div class="portfolio-image">
-                <a href="" target="_blank">
-                  <img src="${entry.picture_url}" alt="${entry.name}" />
-                </a>
-              </div>
-              ` : html`
-              <div class="portfolio-image">
-                <img src="${entry.picture_url}" alt="${entry.name}" />
-              </div>
-              `
-            )}
-        </div>
+        ${listItems}
 
         <div class="back-button-container">
             <app-link href="/add-portfolio-entry" class="back-button">Add Entry</app-link>
@@ -101,7 +111,7 @@ export class MyPortfolio extends LitElement {
 
         <!-- Go Back Button -->
         <div class="back-button-container">
-            <app-link href="/portfolio" class="back-button">Go Back</app-link>
+            <app-back-button/>
         </div>
     `;
   }

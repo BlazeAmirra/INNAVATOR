@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/inspiration.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 const apps = new URL('../../assets/apps.png', import.meta.url).href;
@@ -66,7 +67,7 @@ export class Inspiration extends LitElement {
 
         <!-- Go Back Button -->
         <div class="back-button-container">
-            <app-link href="/portfolio" class="back-button">Go Back</app-link>
+            <app-back-button/>
         </div>
     `;
   }

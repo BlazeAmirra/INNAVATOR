@@ -249,7 +249,7 @@ class PortfolioEntriesPermissions(permissions.BasePermission):
 
 class SubjectsPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action in ['list', 'retrieve', 'tutors']:
+        if view.action in ['list', 'retrieve', 'tutors', 'portfolio_entries']:
             return True
 
         if not request.user.is_authenticated:
@@ -263,7 +263,7 @@ class SubjectsPermissions(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        if view.action in ['retrieve', 'tutors']:
+        if view.action in ['retrieve', 'tutors', 'portfolio_entries']:
             return True
 
         if not request.user.is_authenticated:

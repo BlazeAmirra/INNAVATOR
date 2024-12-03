@@ -72,22 +72,6 @@ const styles = css`
         justify-content: center;
         margin-top: 20px;
     }
-
-    .back-button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #d6ade1;
-        color: #fff;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 5px;
-        border: 1px solid #3b3039;
-    }
-
-    .back-button:hover {
-        background-color: #c296d9;
-        color: #000;
-    }
 `;
 
 export default styles;

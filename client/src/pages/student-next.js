@@ -14,6 +14,7 @@
 
 import { LitElement, html } from 'lit';
 import styles from './styles/student-next.js';
+import '../components/back-button.js';
 import '../components/page-title.js';
 
 export class StudentNext extends LitElement {
@@ -38,7 +39,7 @@ export class StudentNext extends LitElement {
 
         <!-- Button Section with Back and Next Buttons -->
         <div class="button-section">
-            <app-link href="/learn" class="back-button">&#8592; Back</app-link> <!-- Left arrow pointing back to the Commission page -->
+            <app-back-button></app-back-button> <!-- This has to be done instead of a self-closing tag to avoid eating the next tag, apparently -->
             <app-link href="/partner-option" class="next-button">Next</app-link> <!-- Link to the next page for the process -->
         </div>
     `;
