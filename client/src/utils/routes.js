@@ -22,14 +22,6 @@ const routes = [
     pattern: 'products',
   },
   {
-    name: 'product',
-    pattern: 'products/:id',
-  },
-  {
-    name: 'shipping',
-    pattern: 'shipping',
-  },
-  {
     name: 'about',
     pattern: 'about',
   },
@@ -82,6 +74,10 @@ const routes = [
     pattern: 'create-something',
   },
   {
+    name: 'edit-portfolio-entry',
+    pattern: 'edit-portfolio-entry/:id',
+  },
+  {
     name: 'electronics',
     pattern: 'electronics',
   },
@@ -126,10 +122,6 @@ const routes = [
     pattern: 'movies',
   },
   {
-    name: 'my-portfolio',
-    pattern: 'my-portfolio',
-  },
-  {
     name: 'no-partner',
     pattern: 'no-partner',
   },
@@ -144,6 +136,10 @@ const routes = [
   {
     name: 'portfolio',
     pattern: 'portfolio',
+  },
+  {
+    name: 'portfolio-entry',
+    pattern: 'portfolio-entry/:id',
   },
   {
     name: 'profiles',
@@ -166,8 +162,12 @@ const routes = [
     pattern: 'showcase',
   },
   {
+    name: 'showcase-subject',
+    pattern: 'showcase-subject/:id',
+  },
+  {
     name: 'stars',
-    pattern: 'stars',
+    pattern: 'stars/:id',
   },
   {
     name: 'student-next',
@@ -176,6 +176,14 @@ const routes = [
   {
     name: 'uat-dictionary',
     pattern: 'uat-dictionary',
+  },
+  {
+    name: 'user-page',
+    pattern: 'user/:id',
+  },
+  {
+    name: 'user-portfolio',
+    pattern: 'user-portfolio/:id',
   },
   {
     name: 'video-audio',

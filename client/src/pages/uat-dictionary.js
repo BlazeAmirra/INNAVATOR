@@ -51,6 +51,7 @@ export class UATDictionary extends LitElement {
             <p><strong>JSON:</strong> Stores OOP files.</p>
             <p><strong>CSS:</strong> Styling language used in many programming languages to make the UI and UX look neat and organized.</p>
             <p><strong>PCB:</strong> Printed Circuit Board, or PCB, are boards you can build and modify circuits on. Items like Raspberry Pis are considered PCBs.</p>
+            <p><strong>Agile:</strong> A development methodology involving the breakdown of the overall project into short cycles of a complete development pipeline.</p>
         </div>
 
         <!-- Go Back Button -->

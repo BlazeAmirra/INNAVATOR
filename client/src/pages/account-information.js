@@ -124,7 +124,7 @@ export class AccountInfo extends LitElement {
   }
 
   render() {
-    return this.loaded ? html`
+    return html`${this.loaded ? html`
       <!-- Centered Profile Picture with Click Event -->
         <div class="profile-pic-container" @click="${this.triggerFileInput}">
             <img src=${this.current_pfp} alt="Profile Picture" class="profile-pic" id="profilePic" onerror=${`this.src='${editpicture}';`} />
@@ -157,7 +157,10 @@ export class AccountInfo extends LitElement {
         <span @click="${this.attempt_user_patch}" class="signin-button">Submit</span>
         <br/><br/>
         <span style="color: red;">${this.error}</span>
-    ` : `Loading...`;
+    ` : `<span>Loading...</span>`}
+      <br/><br/>
+      <app-back-button/>
+    `;
   }
 }
 

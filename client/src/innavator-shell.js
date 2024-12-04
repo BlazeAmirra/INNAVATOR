@@ -36,6 +36,7 @@ import './pages/checkout.js';
 import './pages/commission.js';
 import './pages/contact.js';
 import './pages/create-something.js';
+import './pages/edit-portfolio-entry.js';
 import './pages/electronics.js';
 import './pages/feedback.js';
 import './pages/founders.js';
@@ -47,19 +48,22 @@ import './pages/learn.js';
 import './pages/login.js';
 import './pages/logout.js';
 import './pages/movies.js';
-import './pages/my-portfolio.js';
 import './pages/no-partner.js';
 import './pages/partner-option.js';
 import './pages/patents.js';
 import './pages/portfolio.js';
+import './pages/portfolio-entry.js';
 import './pages/profiles.js';
 import './pages/register.js';
 import './pages/report-user.js';
 import './pages/settings.js';
 import './pages/showcase.js';
+import './pages/showcase-subject.js';
 import './pages/stars.js';
 import './pages/student-next.js';
 import './pages/uat-dictionary.js';
+import './pages/user.js';
+import './pages/user-portfolio.js';
 import './pages/video-audio.js';
 import './pages/view.js';
 import './pages/welcome.js';
@@ -72,9 +76,7 @@ import './pages/not-found.js';
 import './pages/error.js';
 
 // old stuff
-import './pages/product.js';
 import './pages/product-list.js';
-import './pages/shipping.js';
 
 // Components
 import './components/checkout-form.js';
@@ -214,17 +216,8 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="home">
               <app-home></app-home>
             </div>
-            <div class="route" route="product">
-              <app-product
-                .productId=${parseInt(this.params.id, 10)}
-                .updateParent=${this.childUpdateRequest}
-              ></app-product>
-            </div>
             <div class="route" route="product-list">
               <app-product-list></app-product-list>
-            </div>
-            <div class="route" route="shipping">
-              <app-shipping></app-shipping>
             </div>
             <div class="route" route="about">
               <app-about></app-about>
@@ -265,6 +258,9 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="create-something">
               <app-create-something></app-create-something>
             </div>
+            <div class="route" route="edit-portfolio-entry">
+              <app-edit-portfolio-entry .portfolioEntryId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'edit-portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-edit-portfolio-entry>
+            </div>
             <div class="route" route="electronics">
               <app-electronics></app-electronics>
             </div>
@@ -298,9 +294,6 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="movies">
               <app-movies></app-movies>
             </div>
-            <div class="route" route="my-portfolio">
-              <app-my-portfolio></app-my-portfolio>
-            </div>
             <div class="route" route="no-partner">
               <app-no-partner></app-no-partner>
             </div>
@@ -312,6 +305,9 @@ export class InnavatorShell extends router(LitElement) {
             </div>
             <div class="route" route="portfolio">
               <app-portfolio></app-portfolio>
+            </div>
+            <div class="route" route="portfolio-entry">
+              <app-portfolio-entry .portfolioEntryId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-portfolio-entry>
             </div>
             <div class="route" route="profiles">
               <app-profiles></app-profiles>
@@ -328,14 +324,23 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="showcase">
               <app-showcase></app-showcase>
             </div>
+            <div class="route" route="showcase-subject">
+              <app-showcase-subject .subject=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'showcase-subject'} .updateParent=${this.childUpdateRequest}></app-showcase-subject>
+            </div>
             <div class="route" route="stars">
-              <app-stars></app-stars>
+              <app-stars .stars=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'stars'} .updateParent=${this.childUpdateRequest}></app-stars>
             </div>
             <div class="route" route="student-next">
               <app-student-next></app-student-next>
             </div>
             <div class="route" route="uat-dictionary">
               <app-uat-dictionary></app-uat-dictionary>
+            </div>
+            <div class="route" route="user-page">
+              <app-user .userId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'user-page'} .updateParent=${this.childUpdateRequest}></app-user>
+            </div>
+            <div class="route" route="user-portfolio">
+              <app-user-portfolio .user_snowflake=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'user-portfolio'} .updateParent=${this.childUpdateRequest}></app-user-portfolio>
             </div>
             <div class="route" route="video-audio">
               <app-video-audio></app-video-audio>

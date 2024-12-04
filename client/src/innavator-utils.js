@@ -27,4 +27,14 @@ export const test_button = async (has_optionals, result_element, api_function, .
         retVal = JSON.stringify(await api_function(...input_elements.map(element => element.value)));
     }
     result_element.innerHTML = retVal;
-}
+};
+
+export const optimal_name = innavator_user_object => {
+    if (innavator_user_object.preferred_name != "") {
+      return innavator_user_object.preferred_name;
+    }
+    if (innavator_user_object.full_name != "") {
+      return innavator_user_object.full_name;
+    }
+    return innavator_user_object.user.username;
+};

@@ -16,29 +16,66 @@ import { LitElement, html } from 'lit';
 import styles from './styles/stars.js';
 import '../components/page-title.js';
 
+// TODO: REVISIT
+
 export class Stars extends LitElement {
+  static get styles() {
+    return styles;
+  }
+
+  static get properties() {
+    return {
+      stars: {type: String},
+      updateParent: {type: Function},
+      requestingRender: {type: Boolean}
+    };
+  }
+
   constructor() {
     super();
     this.title = 'Stars';
   }
 
-  static get styles() {
-    return styles;
-  }
-
   render() {
+    let title;
+    let star_items = [];
+
+    switch (this.stars) {
+      case 1:
+        title = html`Thank you! We will take your feedback and fix the issue right away!`;
+        break;
+      case 2:
+        title = html`Thank you! We will take your feedback into consideration and make improvements!`;
+        break;
+      case 3:
+        title = html`Thank you! We will take your feedback into consideration and make the adjustments!`;
+        break;
+      case 4:
+        title = html`Thank you! We will take your feedback into consideration and add those cool features!`;
+        break;
+      case 5:
+        title = html`Thank you! We will take your feedback into consideration and make this app more awesome!`;
+        break;
+      default:
+        title = html`Thank you! We will take your feedback into consideration and cheer on your exploration!`;
+        break;
+    }
+
+    if (this.stars > 0 && this.stars < 6) {
+      for (let i = 0; i < this.stars; i++) {
+        star_items.push(html`<div class="star">&#9733;</div>`);
+      }
+    }
+    else {
+      star_items.push(html`<span>You've input a nonsense amount of stars. That's fine, we're just not gonna put you through drawing them all in case it was a lot.</span>`);
+    }
+
     return html`
-        <app-page-title>Thank you! We will take your feedback and fix the issue right away!</app-page-title> <!-- 1 star -->
-        <app-page-title>Thank you! We will take your feedback into consideration and make improvements!</app-page-title> <!-- 2 star -->
-        <app-page-title>Thank you! We will take your feedback into consideration and make the adjustments!</app-page-title> <!-- 3 star -->
-        <app-page-title>Thank you! We will take your feedback into consideration and add those cool features!</app-page-title> <!-- 4 star -->
-        <app-page-title>Thank you! We will take your feedback into consideration and make this app more awesome!</app-page-title> <!-- 5 star -->
+        <app-page-title>${title}</app-page-title>
 
         <!-- Pink Star Section -->
         <div class="pink-stars">
-            <div class="star">&#9733;</div> <!-- Star 1 -->
-            <div class="star">&#9733;</div> <!-- Star 2 -->
-            <!-- Arbitrary star count -->
+            ${star_items}
         </div>
 
         <div class="pink-stars">

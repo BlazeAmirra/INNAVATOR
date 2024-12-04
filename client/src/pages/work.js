@@ -17,6 +17,8 @@ import styles from './styles/work.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
 
+// TODO: REVISIT
+
 export class Work extends LitElement {
   constructor() {
     super();
@@ -29,12 +31,13 @@ export class Work extends LitElement {
 
   render() {
     return html`
-      <!-- Form Container -->
+        <span>NEEDS REWORK</span>
+        <br/><br/>
+        <app-back-button></app-back-button>
+        <!-- definitely not a privacy concern.
         <div class="form-container">
-            <!-- Centered Page Title -->
             <app-page-title size="22px">You're seeking employment? We can help you! Fill out the information and we can take the next steps.</app-page-title>
 
-            <!-- Input Fields -->
             <label for="name">Name:</label>
             <input type="text" id="name" placeholder="Enter your name">
 
@@ -47,12 +50,12 @@ export class Work extends LitElement {
             <label for="additional-info">Any additional information? Resume, certificates, etc...</label>
             <textarea id="additional-info" placeholder="Add more information here"></textarea>
 
-            <!-- Navigation Buttons -->
             <div class="navigation-buttons">
                 <app-back-button></app-back-button>
                 <app-link href="/submit" class="next-button">Next</app-link>
             </div>
         </div>
+        -->
     `;
   }
 }

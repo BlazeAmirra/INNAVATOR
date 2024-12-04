@@ -18,6 +18,7 @@ import { navigator } from '../vendor/lit-element-router-2.0.3a/lit-element-route
 import styles from './styles/welcome.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
 export class Welcome extends navigator(LitElement) {
   static get styles() {
@@ -26,7 +27,7 @@ export class Welcome extends navigator(LitElement) {
 
   static get properties() {
     return {
-      username: {type: String},
+      greeting_name: {type: String},
       loaded: {type: Boolean},
       logged_in: {type: Boolean}
     };
@@ -45,16 +46,7 @@ export class Welcome extends navigator(LitElement) {
     if (!this.loaded) {
       let result = await innavator_api.who_am_i();
       if (result.logged_in) {
-        result = await innavator_api.fetchUser(result.snowflake_id);
-        if (result.preferred_name != "") {
-          this.greeting_name = result.preferred_name;
-        }
-        else if (result.preferred_name != "") {
-          this.greeting_name = result.full_name;
-        }
-        else {
-          this.greeting_name = result.user.username;
-        }
+        this.greeting_name = innavator_utils.optimal_name(await innavator_api.fetchUser(result.snowflake_id));
       }
       else {
         this.not_logged_in = true;

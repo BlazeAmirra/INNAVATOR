@@ -13,52 +13,44 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
-import { map } from 'lit/directives/map.js';
-import styles from './styles/my-portfolio.js';
+import styles from './styles/user-portfolio.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
 
 import * as innavator_api from '../innavator-api.js';
-import * as innavator_utils from '../innavator-utils.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
-const art6 = new URL('../../assets/art6.jpg', import.meta.url).href;
-const electronics1 = new URL('../../assets/electronics1.jpg', import.meta.url).href;
 
-export class MyPortfolio extends LitElement {
+export class ShowcaseSubject extends LitElement {
   static get styles() {
     return styles;
   }
 
   static get properties() {
     return {
-      user_snowflake: {type: String},
+      subject: {type: String},
+      updateParent: {type: Function},
+      requestingRender: {type: Boolean},
       portfolio: {type: Array},
       loaded: {type: Boolean},
-      logged_in: {type: Boolean}
+      subjectName: {type: String}
     };
   }
 
   constructor() {
     super();
-    this.title = "My Portfolio";
+    this.title = "Subject Showcase";
     this.portfolio = [];
   }
 
   async update() {
     super.update();
-    if (!this.loaded) {
-      let result = await innavator_api.who_am_i();
-      if (result.logged_in) {
-        this.user_snowflake = result.snowflake_id;
-        result = await innavator_api.fetchPortfolio(this.user_snowflake);
-        if (result.results) {
-          this.portfolio = result.results;
-        }
+    if (this.requestingRender && this.subject && !this.loaded) {
+      let result = await innavator_api.fetchSubjectPortfolioEntries(this.subject);
+      if (result.results) {
+        this.portfolio = result.results;
       }
-      else {
-        this.not_logged_in = true;
-      }
+      this.subjectName = (await innavator_api.fetchSubject(this.subject)).name;
       this.loaded = true;
     }
   }
@@ -68,17 +60,13 @@ export class MyPortfolio extends LitElement {
     for (let i = 0; i < this.portfolio.length / 5; i++) {
       const listItem = [];
       for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
-        listItem.push(this.portfolio[j].url != "" ? html`
+        listItem.push(html`
           <div class="portfolio-image">
-            <a href="${this.portfolio[j].url}" target="_blank">
+            <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
               <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
-            </a>
+            </app-link>
           </div>
-          ` : html`
-          <div class="portfolio-image">
-            <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
-          </div>
-          `);
+        `);
       }
       listItems.push(html`
         <div class="image-pair">
@@ -89,7 +77,7 @@ export class MyPortfolio extends LitElement {
 
     return html`
       <!-- Page Title -->
-        <app-page-title>My Portfolio</app-page-title>
+        <app-page-title>Showcase of ${this.subjectName}</app-page-title>
 
         <!--
         <div class="portfolio-image-container">
@@ -105,10 +93,6 @@ export class MyPortfolio extends LitElement {
 
         ${listItems}
 
-        <div class="back-button-container">
-            <app-link href="/add-portfolio-entry" class="back-button">Add Entry</app-link>
-        </div>
-
         <!-- Go Back Button -->
         <div class="back-button-container">
             <app-back-button/>
@@ -117,4 +101,4 @@ export class MyPortfolio extends LitElement {
   }
 }
 
-customElements.define('app-my-portfolio', MyPortfolio);
+customElements.define('app-showcase-subject', ShowcaseSubject);

@@ -28,31 +28,26 @@ export class Feedback extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
-        <app-page-title>Feedback</app-page-title> <!-- Main title of the feedback page -->
+        <app-page-title>Feedback</app-page-title>
 
-        <!-- Subtitle -->
-        <p class="subtitle">Please give us your honest opinion to make the app a better place.</p> <!-- Subtitle prompting the user -->
+        <p class="subtitle">Please give us your honest opinion to make the app a better place.</p>
 
-        <!-- Text Input Box for Feedback -->
-        <textarea id="feedback-input" class="feedback-box" placeholder="Speak your mind here"></textarea> <!-- Textarea for user input -->
+        <textarea id="feedback-input" class="feedback-box" placeholder="Speak your mind here"></textarea>
 
-        <!-- Rating Section -->
-        <h2 class="rating-title">Please Rate Us</h2> <!-- Heading for the rating section -->
+        <h2 class="rating-title">Please Rate Us</h2>
 
-        <!-- Five Star Rating -->
         <div class="stars-container">
-            <!-- Each star is clickable and redirects to another page -->
-            <app-link href="/1-star"><span class="star">★</span></app-link> <!-- Star 1 -->
-            <app-link href="/2-star"><span class="star">★</span></app-link> <!-- Star 2 -->
-            <app-link href="/3-star"><span class="star">★</span></app-link> <!-- Star 3 -->
-            <app-link href="/4-star"><span class="star">★</span></app-link> <!-- Star 4 -->
-            <app-link href="/5-star"><span class="star">★</span></app-link> <!-- Star 5 -->
+            <app-link href="/stars/1"><span class="star">★</span></app-link>
+            <app-link href="/stars/2"><span class="star">★</span></app-link>
+            <app-link href="/stars/3"><span class="star">★</span></app-link>
+            <app-link href="/stars/4"><span class="star">★</span></app-link>
+            <app-link href="/stars/5"><span class="star">★</span></app-link>
         </div>
 
-        <!-- Big Star for Special Feedback -->
+        <h2 class="rating-title">Special Feedback</h2>
+
         <div class="big-star-container">
-            <app-link href="/special-feedback"><span class="big-star">★</span></app-link> <!-- Big star that redirects to another page -->
+            <app-link href="/special-feedback"><span class="big-star">★</span></app-link>
         </div>
     `;
   }
