@@ -173,10 +173,14 @@ export class InnavatorShell extends router(LitElement) {
     let result = await who_am_i();
     this.state.logged_in = result.logged_in ? true : false;
     if (result.logged_in && (this.route === 'home' || this.route === 'login' || this.route === 'register')) {
-      this.route = 'welcome';
+      // copied from navigator
+      window.history.pushState({}, null, '/welcome');
+      window.dispatchEvent(new CustomEvent('route'));
     }
     else if (!result.logged_in && !(this.route === 'home' || this.route === 'login' || this.route === 'register')) {
-      this.route = 'home';
+      // copied from navigator
+      window.history.pushState({}, null, '/');
+      window.dispatchEvent(new CustomEvent('route'));
     }
     this.state.loading = false;
 

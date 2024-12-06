@@ -53,7 +53,7 @@ export class Logout extends navigator(LitElement) {
         }
         else {
             this.error = "";
-            window.location.replace("/");
+            window.location.href = "/";
         }
     }
 

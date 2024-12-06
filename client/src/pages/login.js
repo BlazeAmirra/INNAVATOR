@@ -51,7 +51,7 @@ export class Login extends navigator(LitElement) {
         let result = await innavator_api.login(this.email, this.password);
         if (result["logged_in"]) {
             this.error = "";
-            window.location.replace("/");
+            window.location.href = "/";
         }
         else {
             if (result.apiError) {

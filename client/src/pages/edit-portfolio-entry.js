@@ -115,7 +115,7 @@ export class EditPortfolioEntry extends LitElement {
     }
     else {
       // TODO: return and refresh entries?
-      //window.location.replace("/");
+      window.location.href = "/";
     }
   }
 

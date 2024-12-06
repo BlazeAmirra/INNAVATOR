@@ -121,7 +121,7 @@ export class AccountInfo extends LitElement {
       }
     }
     else {
-      window.location.replace("/");
+      window.location.href = "/";
     }
   }
 
