@@ -45,11 +45,12 @@ export class ShowcaseSubject extends LitElement {
 
   async update() {
     super.update();
+    if (!this.requestingRender) {
+      this.loaded = false;
+    }
     if (this.requestingRender && this.subject && !this.loaded) {
       let result = await innavator_api.fetchSubjectPortfolioEntries(this.subject);
-      if (result.results) {
-        this.portfolio = result.results;
-      }
+      this.portfolio = result.results ? result.results : [];
       this.subjectName = (await innavator_api.fetchSubject(this.subject)).name;
       this.loaded = true;
     }
@@ -75,21 +76,8 @@ export class ShowcaseSubject extends LitElement {
       `);
     }
 
-    return html`
-      <!-- Page Title -->
+    return this.loaded ? html`
         <app-page-title>Showcase of ${this.subjectName}</app-page-title>
-
-        <!--
-        <div class="portfolio-image-container">
-            <a href="https://example-website.com" target="_blank">
-                <img src=${art5} alt="Portfolio Thumbnail" class="portfolio-image">
-            </a>
-        </div>
-
-        <div class="intro-box">
-            <p>Hi, my name is NeAndrea H. My major is Robotics & Embedded Systems. Check out my website for more.</p>
-        </div>
-        -->
 
         ${listItems}
 
@@ -97,7 +85,7 @@ export class ShowcaseSubject extends LitElement {
         <div class="back-button-container">
             <app-back-button/>
         </div>
-    `;
+    ` : html`Loading...`;
   }
 }
 

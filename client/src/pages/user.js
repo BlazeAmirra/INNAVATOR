@@ -23,7 +23,7 @@ import * as innavator_utils from '../innavator-utils.js';
 export class UserPage extends LitElement {
   static get properties() {
     return {
-        userId: { type: Number },
+        userId: { type: String },
         updateParent: { type: Function },
         requestingRender: { type: Boolean },
     };
@@ -51,7 +51,6 @@ export class UserPage extends LitElement {
     const prevItem = this.state.user;
     let user;
 
-    // Fetch the product
     if (this.requestingRender && this.userId && prevItem?.snowflake_id !== this.userId) {
       user = await innavator_api.fetchUser(this.userId);
 

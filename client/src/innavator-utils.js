@@ -38,3 +38,16 @@ export const optimal_name = innavator_user_object => {
     }
     return innavator_user_object.user.username;
 };
+
+export const get_whole_list = async (api_list_function, ...args) => {
+    let retVal = [];
+
+    let response;
+    do {
+        let offset = response ? response.next.substring(response.next.lastIndexOf('=') + 1) : 0;
+        response = await api_list_function(...args, offset);
+        retVal = retVal.concat(response.results);
+    } while (response.next);
+
+    return retVal;
+}

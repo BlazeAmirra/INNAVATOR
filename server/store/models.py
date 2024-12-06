@@ -280,6 +280,7 @@ class Project(models.Model):
     is_active = models.BooleanField("Is Active", default=True)
     looking_for_roles = models.ManyToManyField(Role, through="ProjectRoleNeed")
     members = models.ManyToManyField(InnavatorUser, through="ProjectRole")
+    subjects = models.ManyToManyField(Subject, through="ProjectSubject")
 
     def __str__(self):
         return f'Project "{self.name}" ({self.snowflake_id}) by {self.group}'
@@ -304,6 +305,14 @@ class ProjectRole(models.Model):
 
     def __str__(self):
         return f'{self.user}\'s {self.role} in {self.project}'
+
+class ProjectSubject(models.Model):
+    snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.project}\'s tagging as involving {self.subject}'
 
 class CommissionRequest(models.Model):
     snowflake_id = models.BigIntegerField("Snowflake ID", primary_key=True, unique=True)

@@ -23,7 +23,7 @@ import * as innavator_utils from '../innavator-utils.js';
 export class PortfolioEntry extends LitElement {
   static get properties() {
     return {
-        portfolioEntryId: { type: Number },
+        portfolioEntryId: { type: String },
         updateParent: { type: Function },
         requestingRender: { type: Boolean },
     };
@@ -51,7 +51,10 @@ export class PortfolioEntry extends LitElement {
     const prevItem = this.state.portfolioEntry;
     let portfolioEntry;
 
-    // Fetch the product
+    if (prevItem?.snowflake_id !== this.portfolioEntryId) {
+      this.state.status = 'loading';
+    }
+
     if (this.requestingRender && this.portfolioEntryId && prevItem?.snowflake_id !== this.portfolioEntryId) {
       portfolioEntry = await innavator_api.fetchPortfolioEntry(this.portfolioEntryId);
 

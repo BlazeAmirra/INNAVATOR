@@ -28,31 +28,22 @@ export class ChatSettings extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Chat Settings</app-page-title> <!-- Title of the page -->
 
-        <!-- Buttons Section -->
         <div class="buttons-container">
-            <!-- Button 1: Chat Color -->
-            <app-link href="/change-colors" class="settings-button">★ Chat Color</app-link> <!-- Button to navigate to the Chat Color page -->
+            <app-link href="/change-colors" class="settings-button">★ Chat Color</app-link>
 
-            <!-- Button 2: Whiteboard Color -->
-            <app-link href="/change-colors" class="settings-button">★ Whiteboard Color</app-link> <!-- Button to navigate to the Whiteboard Color page -->
+            <app-link href="/change-colors" class="settings-button">★ Whiteboard Color</app-link>
 
-            <!-- Button 3: Name Change -->
-            <app-link href="/account-information" class="settings-button">★ Name Change</app-link> <!-- Button to navigate to the Name Change page -->
+            <app-link href="/account-information" class="settings-button">★ Name Change</app-link>
 
-            <!-- Button 4: Report User -->
-            <app-link href="/report-user" class="settings-button">★ Report User</app-link> <!-- Button to navigate to the Report User page -->
+            <app-link href="/report-user" class="settings-button">★ Report User</app-link>
 
-            <!-- Button 5: Block User -->
-            <app-link href="/block-user" class="settings-button">★ Block User</app-link> <!-- Button to navigate to the Block User page -->
+            <app-link href="/block-user" class="settings-button">★ Block User</app-link>
 
-            <!-- Button 6: Issue Tracker -->
-            <app-link href="/issue-tracker" class="settings-button">★ Issue Tracker</app-link> <!-- Button to navigate to the Issue Tracker page -->
+            <app-link href="/issue-tracker" class="settings-button">★ Issue Tracker</app-link>
 
-            <!-- Button 7: Video and Audio -->
-            <app-link href="/video-audio" class="settings-button">★ Video and Audio</app-link> <!-- Button to navigate to the Video and Audio page -->
+            <app-link href="/video-audio" class="settings-button">★ Video and Audio</app-link>
         </div>
     `;
   }

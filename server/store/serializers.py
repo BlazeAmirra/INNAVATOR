@@ -295,7 +295,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Project
         exclude = ['group', 'members']
-        extra_kwargs = {'looking_for_roles': {'read_only': True}}
+        extra_kwargs = {'looking_for_roles': {'read_only': True}, 'subjects': {'read_only': True}}
 
 #    def validate_name(self, value):
 #        return escape(value)
@@ -357,4 +357,9 @@ class SubjectSerializer(serializers.ModelSerializer):
 class WillingnessToTutorSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.WillingnessToTutor
+        fields = '__all__'
+
+class ProjectSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = innavator_models.ProjectSubject
         fields = '__all__'

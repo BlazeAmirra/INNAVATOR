@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { map } from 'lit/directives/map.js';
 import styles from './styles/add-portfolio-entry.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
@@ -25,8 +26,12 @@ export class AddPortfolioEntry extends LitElement {
 
   static get properties() {
     return {
+      fetchedSubjects: {type: Boolean},
+      subjects: {type: Array},
+
       name: {type: String},
       description: {type: String},
+      subject: {type: String},
       url: {type: String},
       picture_url: {type: String},
       error: {type: String}
@@ -35,6 +40,8 @@ export class AddPortfolioEntry extends LitElement {
 
   constructor() {
     super();
+    this.fetchedSubjects = false;
+    this.subjects = [];
     this.title = 'Add Portfolio Entry';
     this.name = '';
     this.description = '';
@@ -47,10 +54,19 @@ export class AddPortfolioEntry extends LitElement {
     this[id] = value;
   }
 
+  async updated() {
+    if (!this.fetchedSubjects) {
+      this.subjects = await innavator_utils.get_whole_list(innavator_api.listSubjects);
+      this.fetchedSubjects = true;
+      this.requestUpdate();
+    }
+  }
+
   async attempt_add_portfolio_entry () {
     let result = await innavator_api.createPortfolioEntry(innavator_utils.collect_optionals(
       ["name", this.name],
       ["description", this.description],
+      ["subject", this.subject],
       ["url", this.url],
       ["picture_url", this.picture_url]
     ));
@@ -82,6 +98,12 @@ export class AddPortfolioEntry extends LitElement {
 
         <label for="description">Description:</label>
         <input type="text" id="description" name="description" class="input-field" placeholder="Enter a project description (optional)" @input="${this.handleInput}" />
+
+        <label for="subject">Subject:</label>
+        <select list="subject_choices" id="subject" name="subject" class="input-field" @input="${this.handleInput}">
+          <option value=""></option>
+          ${map(this.subjects, value => html`<option value="${value.snowflake_id}">${value.name}</option>`)}
+        </select>
 
         <label for="url">URL:</label>
         <input type="url" id="url" name="url" class="input-field" placeholder="Enter a project URL (optional)" @input="${this.handleInput}" />

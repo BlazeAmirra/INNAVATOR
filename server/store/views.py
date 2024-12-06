@@ -1028,6 +1028,30 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
                 return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
+    @action(detail=True, methods=['post'])
+    def add_subject(self, request, pk):
+        project = self.get_object()
+        serializer = innavator_serializers.ProjectSubjectSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if subject := serializer.validated_data.get('subject', None):
+            if not project.subjects.contains(subject):
+                project.subjects.add(subject, through_defaults={'snowflake_id': innavator_slowflake_generator.__next__()})
+                return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['post'])
+    def remove_subject(self, request, pk):
+        project = self.get_object()
+        serializer = innavator_serializers.ProjectSubjectSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if subject := serializer.validated_data.get('subject', None):
+            if project.subjects.contains(subject):
+                project.subjects.remove(subject)
+                return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
 class CommissionRequestViewset(viewsets.ModelViewSet):
     queryset = innavator_models.CommissionRequest.objects.all()
     serializer_class = innavator_serializers.CommissionRequestSerializer
@@ -1062,6 +1086,12 @@ class SubjectViewset(viewsets.ReadOnlyModelViewSet):
     def tutors(self, request, pk):
         return innavator_utils.paginate(self, innavator_serializers.WillingnessToTutorSerializer, innavator_models.WillingnessToTutor.objects.filter(
             subject=self.get_object()
+        ))
+
+    @action(detail=True, methods=['get'])
+    def projects(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(
+            subjects=self.get_object()
         ))
 
     @action(detail=True, methods=['post'])

@@ -286,3 +286,15 @@ class WillingnessToTutorAdmin(admin.ModelAdmin):
     # changing a willingness to tutor this way makes no sense
     def has_change_permission(self, request, obj=None):
         return False
+
+@admin.register(innavator_models.ProjectSubject)
+class ProjectSubjectAdmin(admin.ModelAdmin):
+    list_display = ("snowflake_id", "project", "subject")
+    readonly_fields = ["snowflake_id"]
+
+    # adding a project role this way makes no sense
+    def has_add_permission(self, request):
+        return False
+    # changing a project role this way makes no sense
+    def has_change_permission(self, request, obj=None):
+        return False

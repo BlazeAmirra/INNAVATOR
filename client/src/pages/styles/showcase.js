@@ -39,6 +39,8 @@ const styles = css`
         border-radius: 50%;
         border: 1px solid #d6ade1;
         cursor: pointer;
+        text-align: center;
+        line-height: 100px;
     }
 
     /* Image Grid for Clubs & Classes */

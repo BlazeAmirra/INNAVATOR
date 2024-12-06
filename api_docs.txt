@@ -266,6 +266,11 @@ GET `subjects/<Subject>/tutors/`
 	no auth needed
 	added
 
+GET `subjects/<Subject>/projects/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{Project} where subjects contains pk] }
+	no auth needed
+	added
+
 GET `subjects/<Subject>/portfolio_entries/`
 	{ count: int, previous: null or URL, next: null or URL, results: [{PortfolioEntry} where subject=pk] }
 	no auth needed
@@ -473,6 +478,16 @@ POST `projects/<Project>/add_needed_role/` { role: Role }
 	added
 
 POST `projects/<Project>/remove_needed_role/` { role: Role }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/add_subject/` { subject: Subject }
+	{}
+	auth needed - group is_privileged
+	added
+
+POST `projects/<Project>/remove_subject/` { subject: Subject }
 	{}
 	auth needed - group is_privileged
 	added

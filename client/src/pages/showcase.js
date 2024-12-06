@@ -13,9 +13,12 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { map } from 'lit/directives/map.js';
 import styles from './styles/showcase.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
+import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
 const threedtools = new URL('../../assets/3dtools.png', import.meta.url).href;
 const advertising = new URL('../../assets/advertising.png', import.meta.url).href;
@@ -29,13 +32,30 @@ const robotics = new URL('../../assets/robotics.png', import.meta.url).href;
 const view = new URL('../../assets/view.png', import.meta.url).href;
 
 export class Showcase extends LitElement {
+  static get styles() {
+    return styles;
+  }
+
+  static get properties() {
+    return {
+      fetchedSubjects: {type: Boolean},
+      subjects: {type: Array}
+    };
+  }
+
   constructor() {
     super();
     this.title = "Showcase";
+    this.fetchedSubjects = false;
+    this.subjects = [];
   }
 
-  static get styles() {
-    return styles;
+  async updated() {
+    if (!this.fetchedSubjects) {
+      this.subjects = await innavator_utils.get_whole_list(innavator_api.listSubjects);
+      this.fetchedSubjects = true;
+      this.requestUpdate();
+    }
   }
 
   render() {
@@ -43,20 +63,25 @@ export class Showcase extends LitElement {
       <!-- Page Title -->
         <app-page-title>Showcase</app-page-title>
 
-        <!-- Subtitle: Videos & Profiles -->
+        <h2 class="subtitle">Portfolio Entries</h2>
+
+        <div class="image-grid">
+          ${map(this.subjects, value => html`<app-link href="/showcase-subject/${value.snowflake_id}"><div class="rounded-image">${value.name}</div></app-link>`)}
+        </div>
+
+        <h2 class="subtitle">Projects</h2>
+
+        <!--
         <h2 class="subtitle">Videos & Profiles</h2>
 
-        <!-- Videos & Profiles Image Links -->
         <div class="image-row">
             <app-link href="/profile1" target="_blank"><img src=${live} alt="Profile 1" class="rounded-image"></app-link>
             <app-link href="/profile2" target="_blank"><img src=${meet} alt="Profile 2" class="rounded-image"></app-link>
             <app-link href="/view" target="_blank"><img src=${view} alt="Profile 3" class="rounded-image"></app-link>
         </div>
 
-        <!-- Subtitle: Clubs & Classes -->
         <h2 class="subtitle">Clubs & Classes</h2>
 
-        <!-- Clubs & Classes Image Links (2 Rows) -->
         <div class="image-grid">
             <app-link href="/club1" target="_blank"><img src=${gardening} alt="Club 1" class="rounded-image"></app-link>
             <app-link href="/club2" target="_blank"><img src=${nerf} alt="Club 2" class="rounded-image"></app-link>
@@ -66,15 +91,13 @@ export class Showcase extends LitElement {
             <app-link href="/class3" target="_blank"><img src=${threedtools} alt="Class 3" class="rounded-image"></app-link>
         </div>
 
-        <!-- Subtitle: Interactive Projects -->
         <h2 class="subtitle">Interactive Projects</h2>
 
-        <!-- Interactive Project Center Image -->
         <div class="center-image">
             <app-link href="/project" target="_blank"><img src=${apps} alt="Interactive Project" class="rounded-square"></app-link>
         </div>
+        -->
 
-        <!-- Go Back Button -->
         <div class="back-button-container">
             <app-back-button/>
         </div>

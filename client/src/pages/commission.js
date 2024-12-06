@@ -17,6 +17,8 @@ import styles from './styles/commission.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
 
+// TODO: REVISIT SOON
+
 export class Commission extends LitElement {
   constructor() {
     super();
@@ -31,7 +33,6 @@ export class Commission extends LitElement {
     return html`
       <app-page-title>Commission</app-page-title>
 
-        <!-- Commission Options -->
         <div class="button-container">
             <app-link href="/electronics" class="option-button">★ Electronics</app-link>
             <app-link href="/games" class="option-button">★ Games</app-link>

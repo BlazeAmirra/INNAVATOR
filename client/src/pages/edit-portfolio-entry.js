@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { map } from 'lit/directives/map.js';
 import styles from './styles/edit-portfolio-entry.js';
 import '../components/page-title.js';
 import * as innavator_api from '../innavator-api.js';
@@ -25,12 +26,15 @@ export class EditPortfolioEntry extends LitElement {
 
   static get properties() {
     return {
-      portfolioEntryId: { type: Number },
+      portfolioEntryId: { type: String },
       updateParent: { type: Function },
       requestingRender: { type: Boolean },
 
+      subjects: { type: Array },
+
       name: {type: String},
       description: {type: String},
+      subject: {type: String},
       url: {type: String},
       picture_url: {type: String},
       error: {type: String}
@@ -48,9 +52,12 @@ export class EditPortfolioEntry extends LitElement {
     // Trigger parent components update lifecycle
     this.updateParent = () => {};
 
+    this.subjects = [];
+
     this.title = 'Edit Portfolio Entry';
     this.name = '';
     this.description = '';
+    this.subject = '';
     this.url = '';
     this.picture_url = '';
   }
@@ -64,9 +71,10 @@ export class EditPortfolioEntry extends LitElement {
     const prevItem = this.state.portfolioEntry;
     let portfolioEntry;
 
-    // Fetch the product
     if (this.requestingRender && this.portfolioEntryId && prevItem?.snowflake_id !== this.portfolioEntryId) {
       portfolioEntry = await innavator_api.fetchPortfolioEntry(this.portfolioEntryId);
+
+      this.subjects = await innavator_utils.get_whole_list(innavator_api.listSubjects);
 
       this.state = {
         ...this.state,
@@ -84,9 +92,10 @@ export class EditPortfolioEntry extends LitElement {
 
   async attempt_edit_portfolio_entry () {
     let result = await innavator_api.patchPortfolioEntry(innavator_utils.collect_optionals(
-      ["portfolio_entry", `${this.portfolioEntryId}`],
+      ["portfolio_entry", this.portfolioEntryId],
       ["name", this.name],
       ["description", this.description],
+      ["subject", this.subject],
       ["url", this.url],
       ["picture_url", this.picture_url]
     ));
@@ -106,19 +115,25 @@ export class EditPortfolioEntry extends LitElement {
     }
     else {
       // TODO: return and refresh entries?
-      window.location.replace("/");
+      //window.location.replace("/");
     }
   }
 
   render() {
     return html`${this.state.status === 'loading'
       ? html`<p>loading...</p>` : html`
-      <app-page-title>Edit Portfolio Entry</app-page-title>
+        <app-page-title>Edit Portfolio Entry</app-page-title>
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" class="input-field" placeholder="${this.state.portfolioEntry.name}" @input="${this.handleInput}" />
 
         <label for="description">Description:</label>
         <input type="text" id="description" name="description" class="input-field" placeholder="${this.state.portfolioEntry.description != "" ? this.state.portfolioEntry.description : "Enter a project description (optional)"}" @input="${this.handleInput}" />
+
+        <label for="subject">Subject:</label>
+        <select list="subject_choices" id="subject" name="subject" class="input-field" @input="${this.handleInput}">
+          <option value=""></option>
+          ${map(this.subjects, value => html`<option value="${value.snowflake_id}">${value.name}</option>`)}
+        </select>
 
         <label for="url">URL:</label>
         <input type="url" id="url" name="url" class="input-field" placeholder="${this.state.portfolioEntry.url != "" ? this.state.portfolioEntry.url : "Enter a project URL (optional)"}" @input="${this.handleInput}" />

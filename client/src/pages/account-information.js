@@ -19,6 +19,8 @@ import * as innavator_utils from '../innavator-utils.js';
 
 const editpicture = new URL('../../assets/editpicture.png', import.meta.url).href;
 
+// TODO: cloud storage for uploaded PFPs
+
 export class AccountInfo extends LitElement {
   static get styles() {
     return styles;

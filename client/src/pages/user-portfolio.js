@@ -36,7 +36,7 @@ export class UserPortfolio extends LitElement {
       loaded: {type: Boolean},
       author: {type: Object},
       author_name: {type: String},
-      me: {type: Number}
+      me: {type: String}
     };
   }
 
@@ -48,12 +48,13 @@ export class UserPortfolio extends LitElement {
 
   async update() {
     super.update();
+    if (!this.requestingRender) {
+      this.loaded = false;
+    }
     if (this.requestingRender && this.user_snowflake && !this.loaded) {
       this.me = innavator_api.get_this_user();
       let result = await innavator_api.fetchPortfolio(this.user_snowflake);
-      if (result.results) {
-        this.portfolio = result.results;
-      }
+      this.portfolio = result.results ? result.results : [];
       this.author = await innavator_api.fetchUser(this.user_snowflake);
       this.author_name = innavator_utils.optimal_name(this.author);
       this.loaded = true;
