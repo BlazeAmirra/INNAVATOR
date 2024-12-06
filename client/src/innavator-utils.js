@@ -10,7 +10,7 @@ export const parsed_json_or_null = (str) => {
 export const collect_optionals = (...pairs) => {
     let retVal = {};
     pairs.forEach(pair => {
-        if (pair[1] = pair[1].trim()) {
+        if (pair[1] = `${pair[1]}`.trim()) {
             retVal[pair[0]] = pair[1];
         }
     });

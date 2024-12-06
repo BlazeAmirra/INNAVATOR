@@ -51,10 +51,6 @@ export class PortfolioEntry extends LitElement {
     const prevItem = this.state.portfolioEntry;
     let portfolioEntry;
 
-    if (prevItem?.snowflake_id !== this.portfolioEntryId) {
-      this.state.status = 'loading';
-    }
-
     if (this.requestingRender && this.portfolioEntryId && prevItem?.snowflake_id !== this.portfolioEntryId) {
       portfolioEntry = await innavator_api.fetchPortfolioEntry(this.portfolioEntryId);
 

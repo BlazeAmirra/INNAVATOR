@@ -130,7 +130,7 @@ export class EditPortfolioEntry extends LitElement {
         <input type="text" id="description" name="description" class="input-field" placeholder="${this.state.portfolioEntry.description != "" ? this.state.portfolioEntry.description : "Enter a project description (optional)"}" @input="${this.handleInput}" />
 
         <label for="subject">Subject:</label>
-        <select list="subject_choices" id="subject" name="subject" class="input-field" @input="${this.handleInput}">
+        <select id="subject" name="subject" class="input-field" @input="${this.handleInput}">
           <option value=""></option>
           ${map(this.subjects, value => html`<option value="${value.snowflake_id}">${value.name}</option>`)}
         </select>
