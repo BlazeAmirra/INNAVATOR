@@ -64,12 +64,18 @@ export class Showcase extends LitElement {
         <app-page-title>Showcase</app-page-title>
 
         <h2 class="subtitle">Portfolio Entries</h2>
-
         <div class="image-grid">
-          ${map(this.subjects, value => html`<app-link href="/showcase-subject/${value.snowflake_id}"><div class="rounded-image">${value.name}</div></app-link>`)}
+          ${this.subjects.length > 0 ?
+            map(this.subjects, value => html`<app-link href="/showcase-subject/${value.snowflake_id}"><div class="rounded-image">${value.name}</div></app-link>`) :
+            html`No subjects.`}
         </div>
 
-        <h2 class="subtitle">Projects</h2>
+        <h2 class="subtitle">Interactive Projects</h2>
+        <div class="image-grid">
+          ${this.subjects.length > 0 ?
+            map(this.subjects, value => html`<app-link href="/interactive-projects/${value.snowflake_id}"><div class="rounded-image">${value.name}</div></app-link>`) :
+            html`No subjects.`}
+        </div>
 
         <!--
         <h2 class="subtitle">Videos & Profiles</h2>

@@ -13,9 +13,12 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { map } from 'lit/directives/map.js';
 import styles from './styles/group-chat.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
+import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
 const art7 = new URL('../../assets/art7.jpg', import.meta.url).href;
@@ -23,61 +26,154 @@ const art12 = new URL('../../assets/art12.jpg', import.meta.url).href;
 const art16 = new URL('../../assets/art16.jpg', import.meta.url).href;
 
 export class GroupChat extends LitElement {
-  constructor() {
-    super();
-    this.title = "Group Chat";
-  }
+    static get styles() {
+        return styles;
+    }
 
-  static get styles() {
-    return styles;
-  }
+    static get properties() {
+        return {
+            channel: {type: String},
+            updateParent: {type: Function},
+            requestingRender: {type: Boolean},
+            messages: {type: Array},
+            loaded: {type: Boolean},
+            groupName: {type: String},
+            channelName: {type: String},
+            userDict: {type: Object},
+            inputMessage: {type: String}
+        };
+    }
 
-  render() {
-    return html`
-      <!-- Page Title -->
-        <app-page-title>Group Chat</app-page-title>
+    constructor() {
+        super();
+        this.title = "Group Chat";
+        this.messages = [];
+        this.loaded = false;
+        this.groupName = "";
+        this.channelName = "";
+        this.userDict = {};
+    }
 
-        <!-- Chat Messages Section -->
-        <div class="chat-container">
-            <!-- Message 1 - Left Side -->
-            <div class="chat-message left">
-                <app-link href="/chat-with-blaze">
-                    <img src=${art5} alt="Blaze" class="chat-image">
-                </app-link>
-                <p class="chat-text">Hello, ready to work on the project?</p>
+    originalTimestamp(message) {
+        // use of BigInt is due to 32-bit cutoff when bitshifting Number
+        return Number(BigInt(message.snowflake_id) >> 22n) + innavator_api.get_epoch();
+    }
+
+    timeOrDate(timestamp) {
+        if (timestamp < (Date.now() - 1000 * 60 * 60 * 24)) {
+            return new Date(timestamp).toLocaleDateString();
+        }
+        return new Date(timestamp).toLocaleTimeString();
+    }
+
+    handleInput(e) {
+        let {id, value} = e.target;
+        this[id] = value;
+    }
+
+    async attempt_send_message() {
+        let result = await innavator_api.sendMessage(this.channel, this.inputMessage);
+        if (result.apiError) {
+          if (result.apiError.message) {
+            let messageJSON = innavator_utils.parsed_json_or_null(result.apiError.message);
+            if (messageJSON && messageJSON.detail) {
+              this.error = messageJSON.detail;
+            }
+            else {
+              this.error = result.apiError.message;
+            }
+          }
+          else {
+            this.error = result.apiError;
+          }
+        }
+        else {
+            this.loaded = false;
+            this.requestUpdate();
+        }
+    }
+
+    async update() {
+        super.update();
+        if (!this.requestingRender) {
+            this.loaded = false;
+        }
+        if (this.requestingRender && this.channel && !this.loaded) {
+            let result = await innavator_api.listMessages(this.channel);
+            this.messages = result.results ? result.results : [];
+
+            result = await innavator_api.fetchChannel(this.channel);
+            this.channelName = result.name;
+            this.groupName = (await innavator_api.fetchGroup(result.group)).name;
+
+            let i;
+            for (i = 0; i < this.messages.length; i++) {
+                let message = this.messages[i];
+                if (!this.userDict[message.sender]) {
+                    this.userDict[message.sender] = await innavator_api.fetchUser(message.sender);
+                }
+            }
+            this.loaded = true;
+        }
+    }
+
+    render() {
+        return html`
+            <app-page-title>${this.groupName} - ${this.channelName}</app-page-title>
+
+            <div class="chat-container">
+                ${map(this.messages, value => html`
+                <div class="chat-message left">
+                    <app-link href="/user/${value.sender}">
+                        <img src="${this.userDict[value.sender].profile_picture_url}" alt="${innavator_utils.optimal_name(this.userDict[value.sender])}" class="chat-image"/>
+                    </app-link>
+                    <p>
+                        <span class="chat-text">${value.contents}</span>
+                        <span title="${new Date(this.originalTimestamp(value)).toLocaleString()}">${this.timeOrDate(this.originalTimestamp(value))}</span>
+                        <span>${value.is_edited ? html`<span title="${new Date(Date.parse(value.last_revision)).toLocaleString()}">(edited)</span>` : html``}</span>
+                    </p>
+                </div>
+                `)}
+                <!--
+                <div class="chat-message left">
+                    <app-link href="/chat-with-blaze">
+                        <img src=${art5} alt="Blaze" class="chat-image">
+                    </app-link>
+                    <p class="chat-text">Hello, ready to work on the project?</p>
+                </div>
+
+                <div class="chat-message right">
+                    <app-link href="/chat-with-preston">
+                        <img src=${art7} alt="Preston" class="chat-image">
+                    </app-link>
+                    <p class="chat-text">Yep, I have started on the code.</p>
+                </div>
+
+                <div class="chat-message left">
+                    <app-link href="/chat-with-alexis">
+                        <img src=${art12} alt="Alexis" class="chat-image">
+                    </app-link>
+                    <p class="chat-text">I will see if I can find some security issues we may run into.</p>
+                </div>
+
+                <div class="chat-message right">
+                    <app-link href="/chat-with-marcus">
+                        <img src=${art16} alt="Marcus" class="chat-image">
+                    </app-link>
+                    <p class="chat-text">Sweet! I can document the results and conduct test.</p>
+                </div>
+                -->
+            </div>
+            <div>
+                <input type="text" id="inputMessage" name="inputMessage" class="input-field" placeholder="Type a message" @input="${this.handleInput}" />
+                <button @click="${this.attempt_send_message}">Send</button>
             </div>
 
-            <!-- Message 2 - Right Side -->
-            <div class="chat-message right">
-                <app-link href="/chat-with-preston">
-                    <img src=${art7} alt="Preston" class="chat-image">
-                </app-link>
-                <p class="chat-text">Yep, I have started on the code.</p>
+            <div class="go-back-button">
+                <app-back-button/>
             </div>
-
-            <!-- Message 3 - Left Side -->
-            <div class="chat-message left">
-                <app-link href="/chat-with-alexis">
-                    <img src=${art12} alt="Alexis" class="chat-image">
-                </app-link>
-                <p class="chat-text">I will see if I can find some security issues we may run into.</p>
-            </div>
-
-            <!-- Message 4 - Right Side -->
-            <div class="chat-message right">
-                <app-link href="/chat-with-marcus">
-                    <img src=${art16} alt="Marcus" class="chat-image">
-                </app-link>
-                <p class="chat-text">Sweet! I can document the results and conduct test.</p>
-            </div>
-        </div>
-
-        <!-- Go Back Button Section -->
-        <div class="go-back-button">
-            <app-back-button/>
-        </div>
-    `;
-  }
+        `;
+    }
 }
 
 customElements.define('app-group-chat', GroupChat);

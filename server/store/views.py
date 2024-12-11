@@ -751,7 +751,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
         return Response({'name': ['Name required.']}, status=status.HTTP_400_BAD_REQUEST)
 
-class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.Channel.objects.all()
     serializer_class = innavator_serializers.ChannelSerializer
     permission_classes = (innavator_permissions.ChannelsPermissions,) # comma is necessary
@@ -1092,6 +1092,13 @@ class SubjectViewset(viewsets.ReadOnlyModelViewSet):
     def projects(self, request, pk):
         return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(
             subjects=self.get_object()
+        ))
+
+    @action(detail=True, methods=['get'])
+    def interactive_projects(self, request, pk):
+        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(
+            subjects=self.get_object(),
+            is_interactive=True
         ))
 
     @action(detail=True, methods=['post'])

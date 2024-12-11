@@ -15,11 +15,15 @@ let this_user = 0;
 
 export const get_logged_in = () => {
     return logged_in;
-}
+};
 
 export const get_this_user = () => {
     return this_user;
-}
+};
+
+export const get_epoch = () => {
+    return 1729694252000;
+};
 
 // https://stackoverflow.com/a/69058154
 const _isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000;
@@ -298,6 +302,9 @@ export const listEvents = async (group, start = 0) => {
     return await getAPI(`groups/${group}/events/?offset=${start}`);
 };
 
+export const fetchChannel = async channel => {
+    return await getAPI(`channels/${channel}/`);
+};
 export const unreadMessageCount = async channel => {
     return await getAPI(`channels/${channel}/unread_message_count/`);
 };
@@ -370,6 +377,9 @@ export const fetchSubjectPortfolioEntries = async (subject, start = 0) => {
 };
 export const fetchSubjectProjects = async (subject, start = 0) => {
     return await getAPI(`subjects/${subject}/projects/?offset=${start}`);
+};
+export const fetchSubjectInteractiveProjects = async (subject, start = 0) => {
+    return await getAPI(`subjects/${subject}/interactive_projects/?offset=${start}`);
 };
 
 // DELETE

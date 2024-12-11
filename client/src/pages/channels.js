@@ -18,29 +18,27 @@ import '../components/back-button.js';
 import '../components/page-title.js';
 
 import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
-const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
-
-export class ShowcaseSubject extends LitElement {
+export class Channels extends LitElement {
   static get styles() {
     return styles;
   }
 
   static get properties() {
     return {
-      subject: {type: String},
-      updateParent: {type: Function},
-      requestingRender: {type: Boolean},
-      portfolio: {type: Array},
+      group: {type: String},
+      channels: {type: Array},
       loaded: {type: Boolean},
-      subjectName: {type: String}
+      requestingRender: {type: Boolean},
+      groupName: {type: String}
     };
   }
 
   constructor() {
     super();
-    this.title = "Subject Showcase";
-    this.portfolio = [];
+    this.title = "Channels in Group";
+    this.channels = [];
   }
 
   async update() {
@@ -48,24 +46,23 @@ export class ShowcaseSubject extends LitElement {
     if (!this.requestingRender) {
       this.loaded = false;
     }
-    if (this.requestingRender && this.subject && !this.loaded) {
-      let result = await innavator_api.fetchSubjectPortfolioEntries(this.subject);
-      this.portfolio = result.results ? result.results : [];
-      this.subjectName = (await innavator_api.fetchSubject(this.subject)).name;
+    if (this.requestingRender && this.group && !this.loaded) {
+      this.channels = await innavator_utils.get_whole_list(innavator_api.listChannels, this.group);
+      this.groupName = (await innavator_api.fetchGroup(this.group)).name;
       this.loaded = true;
     }
   }
 
   render() {
     const listItems = [];
-    if (this.portfolio.length > 0) {
-      for (let i = 0; i < this.portfolio.length / 5; i++) {
+    if (this.channels.length > 0) {
+      for (let i = 0; i < this.channels.length / 5; i++) {
         const listItem = [];
-        for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
+        for (let j = i * 5; j < (i + 1) * 5 && j < this.channels.length; j++) {
           listItem.push(html`
             <div class="portfolio-image">
-              <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+              <app-link href="group-chat/${this.channels[j].snowflake_id}">
+                <img alt="${this.channels[j].name}" />
               </app-link>
             </div>
           `);
@@ -82,14 +79,15 @@ export class ShowcaseSubject extends LitElement {
     }
 
     return html`${this.loaded ? html`
-        <app-page-title>Showcase of ${this.subjectName}</app-page-title>
+        <app-page-title>Channels in ${this.groupName}</app-page-title>
 
         ${listItems}
     ` : html`Loading...`}
     <div class="back-button-container">
         <app-back-button/>
-    </div>`
+    </div>
+    `;
   }
 }
 
-customElements.define('app-showcase-subject', ShowcaseSubject);
+customElements.define('app-channels', Channels);

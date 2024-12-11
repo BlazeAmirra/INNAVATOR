@@ -152,6 +152,11 @@ GET `groups/<InnavatorGroup>/events/`
 
 ---------------
 
+GET `channels/<Channel>/`
+	{ {Channel} where pk=pk }
+	auth needed - group member
+	added
+
 GET `channels/<Channel>/unread_message_count/`
 	{ count: int }
 	auth needed - group member
@@ -268,6 +273,11 @@ GET `subjects/<Subject>/tutors/`
 
 GET `subjects/<Subject>/projects/`
 	{ count: int, previous: null or URL, next: null or URL, results: [{Project} where subjects contains pk] }
+	no auth needed
+	added
+
+GET `subjects/<Subject>/interactive_projects/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{Project} where subjects contains pk and is_interactive=true] }
 	no auth needed
 	added
 

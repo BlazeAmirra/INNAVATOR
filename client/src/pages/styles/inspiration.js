@@ -26,7 +26,8 @@ const styles = css`
 
     /* Row Layout for Rounded Images */
     .image-row {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         justify-content: center;
         gap: 20px;
         margin: 20px 0;
@@ -39,6 +40,8 @@ const styles = css`
         border-radius: 50%;
         border: 1px solid #d6ade1;
         cursor: pointer;
+        text-align: center;
+        line-height: 80px;
     }
 
     /* Centered Rectangular Image Styling */

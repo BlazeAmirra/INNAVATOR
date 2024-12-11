@@ -63,22 +63,27 @@ export class UserPortfolio extends LitElement {
 
   render() {
     const listItems = [];
-    for (let i = 0; i < this.portfolio.length / 5; i++) {
-      const listItem = [];
-      for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
-        listItem.push(html`
-          <div class="portfolio-image">
-            <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-              <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
-            </app-link>
+    if (this.portfolio.length > 0) {
+      for (let i = 0; i < this.portfolio.length / 5; i++) {
+        const listItem = [];
+        for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
+          listItem.push(html`
+            <div class="portfolio-image">
+              <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
+                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+              </app-link>
+            </div>
+          `);
+        }
+        listItems.push(html`
+          <div class="image-pair">
+            ${listItem}
           </div>
         `);
       }
-      listItems.push(html`
-        <div class="image-pair">
-          ${listItem}
-        </div>
-      `);
+    }
+    else {
+      listItems.push(html`<div>No results</div>`);
     }
 
     return html`

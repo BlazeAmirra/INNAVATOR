@@ -21,7 +21,7 @@ import * as innavator_api from '../innavator-api.js';
 
 const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
 
-export class ShowcaseSubject extends LitElement {
+export class InteractiveProjects extends LitElement {
   static get styles() {
     return styles;
   }
@@ -31,7 +31,7 @@ export class ShowcaseSubject extends LitElement {
       subject: {type: String},
       updateParent: {type: Function},
       requestingRender: {type: Boolean},
-      portfolio: {type: Array},
+      projects: {type: Array},
       loaded: {type: Boolean},
       subjectName: {type: String}
     };
@@ -39,8 +39,8 @@ export class ShowcaseSubject extends LitElement {
 
   constructor() {
     super();
-    this.title = "Subject Showcase";
-    this.portfolio = [];
+    this.title = "Interactive Project Showcase";
+    this.projects = [];
   }
 
   async update() {
@@ -49,8 +49,8 @@ export class ShowcaseSubject extends LitElement {
       this.loaded = false;
     }
     if (this.requestingRender && this.subject && !this.loaded) {
-      let result = await innavator_api.fetchSubjectPortfolioEntries(this.subject);
-      this.portfolio = result.results ? result.results : [];
+      let result = await innavator_api.fetchSubjectInteractiveProjects(this.subject);
+      this.projects = result.results ? result.results : [];
       this.subjectName = (await innavator_api.fetchSubject(this.subject)).name;
       this.loaded = true;
     }
@@ -58,14 +58,14 @@ export class ShowcaseSubject extends LitElement {
 
   render() {
     const listItems = [];
-    if (this.portfolio.length > 0) {
-      for (let i = 0; i < this.portfolio.length / 5; i++) {
+    if (this.projects.length > 0) {
+      for (let i = 0; i < this.projects.length / 5; i++) {
         const listItem = [];
-        for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
+        for (let j = i * 5; j < (i + 1) * 5 && j < this.projects.length; j++) {
           listItem.push(html`
             <div class="portfolio-image">
-              <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+              <app-link href="portfolio-entry/${this.projects[j].snowflake_id}">
+                <img src="${this.projects[j].picture_url}" alt="${this.projects[j].name}" />
               </app-link>
             </div>
           `);
@@ -82,14 +82,15 @@ export class ShowcaseSubject extends LitElement {
     }
 
     return html`${this.loaded ? html`
-        <app-page-title>Showcase of ${this.subjectName}</app-page-title>
+        <app-page-title>Interactive project showcase of ${this.subjectName}</app-page-title>
 
         ${listItems}
     ` : html`Loading...`}
     <div class="back-button-container">
         <app-back-button/>
-    </div>`
+    </div>
+    `;
   }
 }
 
-customElements.define('app-showcase-subject', ShowcaseSubject);
+customElements.define('app-interactive-projects', InteractiveProjects);

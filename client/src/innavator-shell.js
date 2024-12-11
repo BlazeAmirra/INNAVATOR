@@ -30,6 +30,7 @@ import './pages/ai.js';
 import './pages/art.js';
 import './pages/block-user.js';
 import './pages/change-colors.js';
+import './pages/channels.js';
 import './pages/chat-settings.js';
 import './pages/chat-with.js';
 import './pages/checkout.js';
@@ -41,8 +42,10 @@ import './pages/electronics.js';
 import './pages/feedback.js';
 import './pages/founders.js';
 import './pages/games.js';
+import './pages/groups.js';
 import './pages/group-chat.js';
 import './pages/inspiration.js';
+import './pages/interactive-projects.js';
 import './pages/issue-tracker.js';
 import './pages/learn.js';
 import './pages/login.js';
@@ -247,6 +250,9 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="change-colors">
               <app-change-colors></app-change-colors>
             </div>
+            <div class="route" route="channels">
+              <app-channels .group=${parseInt(this.params.id)} .requestingRender=${this.route === 'channels'}></app-channels>
+            </div>
             <div class="route" route="chat-settings">
               <app-chat-settings></app-chat-settings>
             </div>
@@ -263,7 +269,7 @@ export class InnavatorShell extends router(LitElement) {
               <app-create-something></app-create-something>
             </div>
             <div class="route" route="edit-portfolio-entry">
-              <app-edit-portfolio-entry .portfolioEntryId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'edit-portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-edit-portfolio-entry>
+              <app-edit-portfolio-entry .portfolioEntryId=${parseInt(this.params.id)} .requestingRender=${this.route === 'edit-portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-edit-portfolio-entry>
             </div>
             <div class="route" route="electronics">
               <app-electronics></app-electronics>
@@ -277,11 +283,17 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="games">
               <app-games></app-games>
             </div>
+            <div class="route" route="groups">
+              <app-groups .requestingRender=${this.route === 'groups'}></app-groups>
+            </div>
             <div class="route" route="group-chat">
-              <app-group-chat></app-group-chat>
+              <app-group-chat .channel=${parseInt(this.params.id)} .requestingRender=${this.route === 'group-chat'} .updateParent=${this.childUpdateRequest}></app-group-chat>
             </div>
             <div class="route" route="inspiration">
               <app-inspiration></app-inspiration>
+            </div>
+            <div class="route" route="interactive-projects">
+              <app-interactive-projects .subject=${parseInt(this.params.id)} .requestingRender=${this.route === 'interactive-projects'} .updateParent=${this.childUpdateRequest}></app-interactive-projects>
             </div>
             <div class="route" route="issue-tracker">
               <app-issue-tracker></app-issue-tracker>
@@ -311,7 +323,7 @@ export class InnavatorShell extends router(LitElement) {
               <app-portfolio></app-portfolio>
             </div>
             <div class="route" route="portfolio-entry">
-              <app-portfolio-entry .portfolioEntryId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-portfolio-entry>
+              <app-portfolio-entry .portfolioEntryId=${parseInt(this.params.id)} .requestingRender=${this.route === 'portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-portfolio-entry>
             </div>
             <div class="route" route="profiles">
               <app-profiles></app-profiles>
@@ -329,10 +341,10 @@ export class InnavatorShell extends router(LitElement) {
               <app-showcase></app-showcase>
             </div>
             <div class="route" route="showcase-subject">
-              <app-showcase-subject .subject=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'showcase-subject'} .updateParent=${this.childUpdateRequest}></app-showcase-subject>
+              <app-showcase-subject .subject=${parseInt(this.params.id)} .requestingRender=${this.route === 'showcase-subject'} .updateParent=${this.childUpdateRequest}></app-showcase-subject>
             </div>
             <div class="route" route="stars">
-              <app-stars .stars=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'stars'} .updateParent=${this.childUpdateRequest}></app-stars>
+              <app-stars .stars=${parseInt(this.params.id)} .requestingRender=${this.route === 'stars'} .updateParent=${this.childUpdateRequest}></app-stars>
             </div>
             <div class="route" route="student-next">
               <app-student-next></app-student-next>
@@ -341,10 +353,10 @@ export class InnavatorShell extends router(LitElement) {
               <app-uat-dictionary></app-uat-dictionary>
             </div>
             <div class="route" route="user-page">
-              <app-user .userId=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'user-page'} .updateParent=${this.childUpdateRequest}></app-user>
+              <app-user .userId=${parseInt(this.params.id)} .requestingRender=${this.route === 'user-page'} .updateParent=${this.childUpdateRequest}></app-user>
             </div>
             <div class="route" route="user-portfolio">
-              <app-user-portfolio .user_snowflake=${parseInt(this.params.id, 10)} .requestingRender=${this.route === 'user-portfolio'} .updateParent=${this.childUpdateRequest}></app-user-portfolio>
+              <app-user-portfolio .user_snowflake=${parseInt(this.params.id)} .requestingRender=${this.route === 'user-portfolio'} .updateParent=${this.childUpdateRequest}></app-user-portfolio>
             </div>
             <div class="route" route="video-audio">
               <app-video-audio></app-video-audio>

@@ -102,7 +102,9 @@ export class AddPortfolioEntry extends LitElement {
         <label for="subject">Subject:</label>
         <select list="subject_choices" id="subject" name="subject" class="input-field" @input="${this.handleInput}">
           <option value=""></option>
-          ${map(this.subjects, value => html`<option value="${value.snowflake_id}">${value.name}</option>`)}
+          ${this.subjects.length > 0 ?
+            map(this.subjects, value => html`<option value="${value.snowflake_id}">${value.name}</option>`) :
+            html`No subjects.`}
         </select>
 
         <label for="url">URL:</label>

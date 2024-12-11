@@ -35,7 +35,7 @@ export class Learn extends LitElement {
         <div class="button-container">
             <app-link href="/with-student" class="option-button">★ With Student</app-link>
             <app-link href="/ai" class="option-button">★ AI</app-link>
-            <app-link href="/founders" class="option-button">★ Graduate</app-link>
+            <app-link href="/founders" class="option-button">★ Graduates</app-link>
             <app-link href="/uat-dictionary" class="option-button">★ UAT Dictionary</app-link>
 
             <!-- Go Back Button at the bottom -->

@@ -54,6 +54,10 @@ const routes = [
     pattern: 'change-colors',
   },
   {
+    name: 'channels',
+    pattern: 'channels/:id',
+  },
+  {
     name: 'chat-settings',
     pattern: 'chat-settings',
   },
@@ -94,12 +98,20 @@ const routes = [
     pattern: 'games',
   },
   {
+    name: 'groups',
+    pattern: 'groups',
+  },
+  {
     name: 'group-chat',
-    pattern: 'group-chat',
+    pattern: 'group-chat/:id',
   },
   {
     name: 'inspiration',
     pattern: 'inspiration',
+  },
+  {
+    name: 'interactive-projects',
+    pattern: 'interactive-projects/:id',
   },
   {
     name: 'issue-tracker',

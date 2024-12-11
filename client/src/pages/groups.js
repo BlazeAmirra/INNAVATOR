@@ -18,54 +18,46 @@ import '../components/back-button.js';
 import '../components/page-title.js';
 
 import * as innavator_api from '../innavator-api.js';
+import * as innavator_utils from '../innavator-utils.js';
 
-const art5 = new URL('../../assets/art5.jpg', import.meta.url).href;
-
-export class ShowcaseSubject extends LitElement {
+export class Groups extends LitElement {
   static get styles() {
     return styles;
   }
 
   static get properties() {
     return {
-      subject: {type: String},
-      updateParent: {type: Function},
-      requestingRender: {type: Boolean},
-      portfolio: {type: Array},
+      groups: {type: Array},
       loaded: {type: Boolean},
-      subjectName: {type: String}
+      requestingRender: {type: Boolean}
     };
   }
 
   constructor() {
     super();
-    this.title = "Subject Showcase";
-    this.portfolio = [];
+    this.title = "Group List";
+    this.groups = [];
+    this.loaded = false;
   }
 
   async update() {
     super.update();
-    if (!this.requestingRender) {
-      this.loaded = false;
-    }
-    if (this.requestingRender && this.subject && !this.loaded) {
-      let result = await innavator_api.fetchSubjectPortfolioEntries(this.subject);
-      this.portfolio = result.results ? result.results : [];
-      this.subjectName = (await innavator_api.fetchSubject(this.subject)).name;
+    if (!this.loaded && this.requestingRender) {
+      this.groups = await innavator_utils.get_whole_list(innavator_api.listGroups);
       this.loaded = true;
     }
   }
 
   render() {
     const listItems = [];
-    if (this.portfolio.length > 0) {
-      for (let i = 0; i < this.portfolio.length / 5; i++) {
+    if (this.groups.length > 0) {
+      for (let i = 0; i < this.groups.length / 5; i++) {
         const listItem = [];
-        for (let j = i * 5; j < (i + 1) * 5 && j < this.portfolio.length; j++) {
+        for (let j = i * 5; j < (i + 1) * 5 && j < this.groups.length; j++) {
           listItem.push(html`
             <div class="portfolio-image">
-              <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+              <app-link href="channels/${this.groups[j].snowflake_id}">
+                <img src="" alt="${this.groups[j].name}" />
               </app-link>
             </div>
           `);
@@ -82,14 +74,15 @@ export class ShowcaseSubject extends LitElement {
     }
 
     return html`${this.loaded ? html`
-        <app-page-title>Showcase of ${this.subjectName}</app-page-title>
+        <app-page-title>Groups you are in</app-page-title>
 
         ${listItems}
     ` : html`Loading...`}
     <div class="back-button-container">
         <app-back-button/>
-    </div>`
+    </div>
+    `;
   }
 }
 
-customElements.define('app-showcase-subject', ShowcaseSubject);
+customElements.define('app-groups', Groups);

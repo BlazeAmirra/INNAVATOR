@@ -281,6 +281,7 @@ class Project(models.Model):
     looking_for_roles = models.ManyToManyField(Role, through="ProjectRoleNeed")
     members = models.ManyToManyField(InnavatorUser, through="ProjectRole")
     subjects = models.ManyToManyField(Subject, through="ProjectSubject")
+    is_interactive = models.BooleanField("Is Interactive", default=False)
 
     def __str__(self):
         return f'Project "{self.name}" ({self.snowflake_id}) by {self.group}'

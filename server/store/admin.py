@@ -201,7 +201,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(innavator_models.Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("snowflake_id", "group", "name", "is_active")
+    list_display = ("snowflake_id", "group", "name", "is_active", "is_interactive")
     readonly_fields = ["snowflake_id"]
 
     # adding a project this way makes no sense
