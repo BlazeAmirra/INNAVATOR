@@ -57,22 +57,16 @@ export class Welcome extends navigator(LitElement) {
 
   render() {
     return this.loaded ? html`
-      <!-- Welcome Message -->
-        <app-page-title>Welcome to Innavator, ${this.greeting_name}!</app-page-title> <!-- Displays the welcome title centered -->
+        <app-page-title>Welcome to Innavator, ${this.greeting_name}!</app-page-title>
 
-        <!-- Button Section for Various Options -->
         <div class="button-container">
-            <!-- Button for Commission -->
             <app-link href="/commission" class="option-button">★ Commission</app-link>
 
-            <!-- Button for Learn -->
             <app-link href="/learn" class="option-button">★ Learn</app-link>
 
-            <!-- Button for Portfolio -->
             <app-link href="/portfolio" class="option-button">★ Portfolio</app-link>
 
-            <!-- Button for Founder's Chat -->
-            <app-link href="/founders" class="option-button">★ Founder's Chat</app-link>
+            <app-link href="/groups" class="option-button">★ Groups</app-link>
         </div>
     ` : html`<span>Loading...</span>`;
   }

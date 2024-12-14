@@ -46,7 +46,9 @@ export const get_whole_list = async (api_list_function, ...args) => {
     do {
         let offset = response ? response.next.substring(response.next.lastIndexOf('=') + 1) : 0;
         response = await api_list_function(...args, offset);
-        retVal = retVal.concat(response.results);
+        if (response.results) {
+            retVal = retVal.concat(response.results);
+        }
     } while (response.next);
 
     return retVal;

@@ -216,6 +216,15 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
     serializer_class = innavator_serializers.InnavatorUserSerializer
     permission_classes = (innavator_permissions.UsersPermissions,) # comma is necessary
 
+    @action(detail=False, methods=['get'])
+    def filtered_list(self, request):
+        query = request.query_params.get('query')
+        if query:
+            return innavator_utils.paginate(self, innavator_serializers.InnavatorUserSerializer, self.get_queryset().filter(preferred_name__icontains=query)
+                                            .union(self.get_queryset().filter(full_name__icontains=query))
+                                            .union(self.get_queryset().filter(user__username__icontains=query)))
+        return innavator_utils.paginate(self, innavator_serializers.InnavatorUserSerializer, self.get_queryset())
+
     @action(detail=True, methods=['get'])
     def get_palette(self, request, pk):
         palette = innavator_models.Palette.objects.get(user=self.get_object())
@@ -531,6 +540,14 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
         return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(is_club=True))
 
     @action(detail=True, methods=['get'])
+    def my_membership(self, request, pk):
+        return Response(
+            innavator_serializers.GroupMembershipDetailSerializer(
+                innavator_models.GroupMembership.objects.get(group=self.get_object(), user=innavator_utils.get_innavator_user_from_user(request.user))
+            ).data
+        )
+
+    @action(detail=True, methods=['get'])
     def members(self, request, pk):
         return innavator_utils.paginate(self, innavator_serializers.GroupMembershipSerializer, innavator_models.GroupMembership.objects.filter(
             group=self.get_object(),
@@ -608,7 +625,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                     'project_accepted': True,
                     'request_message': ""
                 })
-                return Response(status=status.HTTP_201_CREATED)
+                return Response(self.get_serializer(project).data, status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -748,7 +765,7 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
                 'user_accepted': True,
                 'group_accepted': True
             })
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(self.get_serializer(group).data, status=status.HTTP_201_CREATED)
         return Response({'name': ['Name required.']}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

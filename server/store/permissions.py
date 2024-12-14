@@ -7,7 +7,7 @@ from store import utils as innavator_utils
 
 class UsersPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
-        if view.action in ['list', 'create', 'retrieve', 'get_palette']:
+        if view.action in ['list', 'filtered_list', 'create', 'retrieve', 'get_palette']:
             return True
         return request.user.is_authenticated
 
@@ -50,6 +50,9 @@ class GroupsPermissions(permissions.BasePermission):
             if view.action in ['projects', 'events']:
                 return True
 
+        if view.action in ['retrieve']:
+            return True
+
         if not request.user.is_authenticated:
             return False
         if request.user.is_staff:
@@ -62,12 +65,14 @@ class GroupsPermissions(permissions.BasePermission):
 
         innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
         if obj.members.contains(innavator_user):
+            if view.action in ['leave']:
+                return True
             membership = innavator_models.GroupMembership.objects.get(group=obj, user=innavator_user)
             if view.action in ['accept_invite']:
                 return membership.group_accepted and not membership.user_accepted
             if not membership.user_accepted or not membership.group_accepted:
                 return False
-            if view.action in ['retrieve', 'members', 'leave', 'channels', 'groups', 'projects', 'events']:
+            if view.action in ['my_membership', 'members', 'channels', 'groups', 'projects', 'events']:
                 return True
             if membership.is_privileged:
                 return True
@@ -176,11 +181,11 @@ class ProjectsPermissions(permissions.BasePermission):
 
         innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
         if obj.group.members.contains(innavator_user):
+            if view.action in ['leave']:
+                return True
             membership = innavator_models.GroupMembership.objects.get(group=obj.group, user=innavator_user)
             if not membership.user_accepted or not membership.group_accepted:
                 return False
-            if view.action in ['leave']:
-                return True
             if membership.is_privileged:
                 return True
 

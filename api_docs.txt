@@ -38,6 +38,11 @@ GET `users/`
 	no auth needed
 	added
 
+GET `users/filtered_list/?query=<query>`
+	{ count: int, previous: null or URL, next: null or URL, results: [{InnavatorUser} where preferred_name or full_name icontains query] }
+	no auth needed
+	added
+
 GET `users/<InnavatorUser>/`
 	{ {InnavatorUser where pk=pk} }
 	no auth needed
@@ -117,6 +122,11 @@ GET `groups/clubs/`
 
 GET `groups/<InnavatorGroup>/`
 	{ {InnavatorGroup} where pk=pk }
+	auth needed - member
+	added
+
+GET `groups/<InnavatorGroup>/my_membership/`
+	{ {GroupMembership} }
 	auth needed - member
 	added
 
@@ -410,7 +420,7 @@ POST `users/<InnavatorUser>/create_portfolio_entry/` { name: string, description
 ---------------
 
 POST `groups/` { name: string }
-	{}
+	{ {InnavatorGroup} }
 	auth needed - anyone
 	added
 	creates a new group
@@ -421,7 +431,7 @@ POST `groups/<InnavatorGroup>/create_channel/` { name: string }
 	added
 
 POST `groups/<InnavatorGroup>/create_project/` { name: string, description: string optional }
-	{}
+	{ {Project} }
 	auth needed - is_privileged
 	added
 

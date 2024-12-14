@@ -74,8 +74,20 @@ const routes = [
     pattern: 'contact',
   },
   {
+    name: 'create-channel',
+    pattern: 'create-channel/:id',
+  },
+  {
+    name: 'create-group',
+    pattern: 'create-group',
+  },
+  {
     name: 'create-something',
     pattern: 'create-something',
+  },
+  {
+    name: 'edit-group',
+    pattern: 'edit-group/:id',
   },
   {
     name: 'edit-portfolio-entry',
@@ -104,6 +116,10 @@ const routes = [
   {
     name: 'group-chat',
     pattern: 'group-chat/:id',
+  },
+  {
+    name: 'group-invites',
+    pattern: 'group-invites',
   },
   {
     name: 'inspiration',

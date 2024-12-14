@@ -16,6 +16,7 @@ import { LitElement, html } from 'lit';
 import { router } from './vendor/lit-element-router-2.0.3a/lit-element-router.js';
 import { getSiteConfig } from './utils/fetch.js';
 import { getConfig } from './utils/config.js';
+import { who_am_i } from './innavator-api.js';
 import cache from './utils/cache.js';
 import routes from './utils/routes.js';
 import styles from './styles/shell.js';
@@ -36,7 +37,10 @@ import './pages/chat-with.js';
 import './pages/checkout.js';
 import './pages/commission.js';
 import './pages/contact.js';
+import './pages/create-channel.js';
+import './pages/create-group.js';
 import './pages/create-something.js';
+import './pages/edit-group.js';
 import './pages/edit-portfolio-entry.js';
 import './pages/electronics.js';
 import './pages/feedback.js';
@@ -44,6 +48,7 @@ import './pages/founders.js';
 import './pages/games.js';
 import './pages/groups.js';
 import './pages/group-chat.js';
+import './pages/group-invites.js';
 import './pages/inspiration.js';
 import './pages/interactive-projects.js';
 import './pages/issue-tracker.js';
@@ -96,7 +101,6 @@ import '@material/mwc-textfield';
 import '@material/mwc-select';
 import '@material/mwc-list';
 import '@material/mwc-dialog';
-import { who_am_i } from './innavator-api.js';
 
 export class InnavatorShell extends router(LitElement) {
   static get properties() {
@@ -265,8 +269,17 @@ export class InnavatorShell extends router(LitElement) {
             <div class="route" route="contact">
               <app-contact></app-contact>
             </div>
+            <div class="route" route="create-channel">
+              <app-create-channel .groupId=${parseInt(this.params.id)}></app-create-channel>
+            </div>
+            <div class="route" route="create-group">
+              <app-create-group .requestingRender=${this.route === 'create-group'}></app-create-group>
+            </div>
             <div class="route" route="create-something">
               <app-create-something></app-create-something>
+            </div>
+            <div class="route" route="edit-group">
+              <app-edit-group .groupId=${parseInt(this.params.id)} .requestingRender=${this.route === 'edit-group'} .updateParent=${this.childUpdateRequest}></app-edit-group>
             </div>
             <div class="route" route="edit-portfolio-entry">
               <app-edit-portfolio-entry .portfolioEntryId=${parseInt(this.params.id)} .requestingRender=${this.route === 'edit-portfolio-entry'} .updateParent=${this.childUpdateRequest}></app-edit-portfolio-entry>
@@ -288,6 +301,9 @@ export class InnavatorShell extends router(LitElement) {
             </div>
             <div class="route" route="group-chat">
               <app-group-chat .channel=${parseInt(this.params.id)} .requestingRender=${this.route === 'group-chat'} .updateParent=${this.childUpdateRequest}></app-group-chat>
+            </div>
+            <div class="route" route="group-invites">
+              <app-group-invites .requestingRender=${this.route === 'group-invites'}></app-group-invites>
             </div>
             <div class="route" route="inspiration">
               <app-inspiration></app-inspiration>

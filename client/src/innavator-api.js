@@ -234,6 +234,9 @@ export const logout = async () => {
 export const listUsers = async (start = 0) => {
     return await getAPI(`users/?offset=${start}`);
 };
+export const listFilteredUsers = async (query, start = 0) => {
+    return await getAPI(`users/filtered_list/?offset=${start}&query=${query}`);
+};
 export const fetchUser = async user => {
     return await getAPI(`users/${user}/`);
 };
@@ -282,6 +285,9 @@ export const listClubs = async (start = 0) => {
 };
 export const fetchGroup = async group => {
     return await getAPI(`groups/${group}/`);
+};
+export const fetchMembership = async (group) => {
+    return await getAPI(`groups/${group}/my_membership/`);
 };
 export const listMembers = async (group, start = 0) => {
     return await getAPI(`groups/${group}/members/?offset=${start}`);

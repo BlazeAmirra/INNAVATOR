@@ -56,7 +56,7 @@ export class Groups extends LitElement {
         for (let j = i * 5; j < (i + 1) * 5 && j < this.groups.length; j++) {
           listItem.push(html`
             <div class="portfolio-image">
-              <app-link href="channels/${this.groups[j].snowflake_id}">
+              <app-link href="/channels/${this.groups[j].snowflake_id}">
                 <img src="" alt="${this.groups[j].name}" />
               </app-link>
             </div>
@@ -79,7 +79,9 @@ export class Groups extends LitElement {
         ${listItems}
     ` : html`Loading...`}
     <div class="back-button-container">
-        <app-back-button/>
+        <app-back-button></app-back-button>
+        <app-link href="/create-group" class="back-button">Create Group</app-link>
+        <app-link href="/group-invites" class="back-button">Group Invites</app-link>
     </div>
     `;
   }
