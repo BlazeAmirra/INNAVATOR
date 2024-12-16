@@ -105,11 +105,6 @@ GET `users/<InnavatorUser>/willingnesses_to_tutor/`
 
 ---------------
 
-GET `groups/`
-	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where members includes user] }
-	auth needed - anyone
-	added
-
 GET `groups/all/`
 	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string}] }
 	auth needed - admin
@@ -118,6 +113,11 @@ GET `groups/all/`
 GET `groups/clubs/`
 	{ count: int, previous: null or URL, next: null or URL, results: [{snowflake_id: InnavatorGroup, name: string} for InnavatorGroup where is_club=true] }
 	no auth needed
+	added
+
+GET `groups/list_group_memberships/`
+	{ count: int, previous: null or URL, next: null or URL, results: [{GroupMembership} where user=sender and user_accepted=true and group_accepted=true] }
+	auth needed - anyone
 	added
 
 GET `groups/<InnavatorGroup>/`

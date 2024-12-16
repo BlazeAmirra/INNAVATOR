@@ -274,14 +274,14 @@ export const fetchMyWillingnessesToTutor = async (start = 0) => {
     return await getAPI(`users/${this_user}/willingnesses_to_tutor/?offset=${start}`);
 };
 
-export const listGroups = async (start = 0) => {
-    return await getAPI(`groups/?offset=${start}`);
-};
 export const listAllGroups = async (start = 0) => {
     return await getAPI(`groups/all/?offset=${start}`);
 };
 export const listClubs = async (start = 0) => {
     return await getAPI(`groups/clubs/?offset=${start}`);
+};
+export const listGroupMemberships = async (start = 0) => {
+    return await getAPI(`groups/list_group_memberships/?offset=${start}`);
 };
 export const fetchGroup = async group => {
     return await getAPI(`groups/${group}/`);

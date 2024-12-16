@@ -521,15 +521,10 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
 
             return Response(status=status.HTTP_202_ACCEPTED)
 
-class InnavatorGroupViewset(viewsets.ModelViewSet):
+class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.InnavatorGroup.objects.all()
     serializer_class = innavator_serializers.InnavatorGroupSerializer
     permission_classes = (innavator_permissions.GroupsPermissions,) # comma is necessary
-
-    def list(self, request):
-        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(
-            members=innavator_utils.get_innavator_user_from_user(request.user)
-        ))
 
     @action(detail=False, methods=['get'])
     def all(self, request):
@@ -538,6 +533,14 @@ class InnavatorGroupViewset(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def clubs(self, request):
         return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(is_club=True))
+
+    @action(detail=False, methods=['get'])
+    def list_group_memberships(self, request):
+        return innavator_utils.paginate(self, innavator_serializers.GroupMembershipDetailSerializer, innavator_models.GroupMembership.objects.filter(
+            user=innavator_utils.get_innavator_user_from_user(request.user),
+            user_accepted=True,
+            group_accepted=True
+        ))
 
     @action(detail=True, methods=['get'])
     def my_membership(self, request, pk):

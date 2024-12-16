@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { LitElement, html } from 'lit';
+import { map } from 'lit/directives/map.js';
 import styles from './styles/user-portfolio.js';
 import '../components/back-button.js';
 import '../components/page-title.js';
@@ -27,7 +28,8 @@ export class Groups extends LitElement {
 
   static get properties() {
     return {
-      groups: {type: Array},
+      groupMemberships: {type: Array},
+      groupDict: {type: Object},
       loaded: {type: Boolean},
       requestingRender: {type: Boolean}
     };
@@ -36,53 +38,45 @@ export class Groups extends LitElement {
   constructor() {
     super();
     this.title = "Group List";
-    this.groups = [];
+    this.groupMemberships = [];
+    this.groupDict = {};
     this.loaded = false;
   }
 
   async update() {
     super.update();
     if (!this.loaded && this.requestingRender) {
-      this.groups = await innavator_utils.get_whole_list(innavator_api.listGroups);
+      this.groupMemberships = await innavator_utils.get_whole_list(innavator_api.listGroupMemberships);
+      let i;
+      for (i = 0; i < this.groupMemberships.length; i++) {
+        let groupMembership = this.groupMemberships[i];
+        if (!this.groupDict[groupMembership.group]) {
+          this.groupDict[groupMembership.group] = await innavator_api.fetchGroup(groupMembership.group);
+        }
+      }
       this.loaded = true;
     }
   }
 
   render() {
-    const listItems = [];
-    if (this.groups.length > 0) {
-      for (let i = 0; i < this.groups.length / 5; i++) {
-        const listItem = [];
-        for (let j = i * 5; j < (i + 1) * 5 && j < this.groups.length; j++) {
-          listItem.push(html`
-            <div class="portfolio-image">
-              <app-link href="/channels/${this.groups[j].snowflake_id}">
-                <img src="" alt="${this.groups[j].name}" />
-              </app-link>
-            </div>
-          `);
-        }
-        listItems.push(html`
-          <div class="image-pair">
-            ${listItem}
-          </div>
-        `);
-      }
-    }
-    else {
-      listItems.push(html`<div>No results</div>`);
-    }
-
     return html`${this.loaded ? html`
-        <app-page-title>Groups you are in</app-page-title>
+      <app-page-title>Groups you are in</app-page-title>
 
-        ${listItems}
-    ` : html`Loading...`}
-    <div class="back-button-container">
+      <div class="image-pair">
+      ${this.groupMemberships.length > 0 ? map(this.groupMemberships, value => html`
+        <div class="portfolio-image">
+          <app-link href="/channels/${this.groupDict[value.group].snowflake_id}">
+            <img src="" alt="${this.groupDict[value.group].name}" />
+          </app-link>
+        </div>
+      `) : html`No results.`}
+      </div>
+      ` : html`Loading...`}
+      <div class="back-button-container">
         <app-back-button></app-back-button>
         <app-link href="/create-group" class="back-button">Create Group</app-link>
         <app-link href="/group-invites" class="back-button">Group Invites</app-link>
-    </div>
+      </div>
     `;
   }
 }
