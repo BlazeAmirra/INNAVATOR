@@ -30,6 +30,7 @@ export class Error extends LitElement {
 
   render() {
     return html`
+      <!--
       <div class="errorContainer">
         <div class="errorLeft">
           <div class="errorImage"><img src=${sadimage} /></div>
@@ -46,6 +47,8 @@ export class Error extends LitElement {
           <div class="errorError">${this.apiError.extra_error}</div>
         </div>
       </div>
+      -->
+      Something went wrong.
     `;
   }
 }

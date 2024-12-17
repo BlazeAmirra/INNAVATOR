@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- model: store.siteconfig
-  pk: 1
-  fields:
-    active: true
-    site_name: Avocano
-    site_name_color: '#767E46'
-    site_name_font: Indie Flower
-    color_primary: '#B2B43F'
-    color_secondary: '#865B53'
-    color_action: '#FFD64F'
-    color_action_text: '#000000'
-    base_font: Merriweather
+#- model: store.siteconfig
+#  pk: 1
+#  fields:
+#    active: true
+#    site_name: Avocano
+#    site_name_color: '#767E46'
+#    site_name_font: Indie Flower
+#    color_primary: '#B2B43F'
+#    color_secondary: '#865B53'
+#    color_action: '#FFD64F'
+#    color_action_text: '#000000'
+#    base_font: Merriweather

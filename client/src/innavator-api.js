@@ -1,6 +1,7 @@
-//const INNAVATOR_API_URL = 'http://localhost:8000/api';
-const INNAVATOR_API_URL = 'https://server-f0e9-892865245121.us-central1.run.app/api';
+import { getConfig } from './utils/config.js';
+import { getDjangoError } from './helpers/fetch.js';
 
+const INNAVATOR_API_URL = getConfig().API_URL;
 const baseRequest = {
     credentials: 'include'
 };

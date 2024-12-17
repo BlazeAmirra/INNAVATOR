@@ -1,4 +1,4 @@
-# end Google code
+#!/usr/bin/python
 
 from rest_framework import permissions
 

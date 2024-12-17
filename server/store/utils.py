@@ -1,4 +1,4 @@
-# end Google code
+#!/usr/bin/python
 
 from django.http import Http404
 from rest_framework.response import Response

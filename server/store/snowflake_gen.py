@@ -1,4 +1,4 @@
-# end Google code
+#!/usr/bin/python
 
 from snowflake import SnowflakeGenerator
 
