@@ -3,11 +3,14 @@
 from django.contrib import admin
 
 from store import models as innavator_models
-from store.snowflake_gen import innavator_slowflake_generator
+from store import snowflake_id as innavator_snowflake
 
+# create list and detail pages for the given model, with the class describing page attributes
 @admin.register(innavator_models.InnavatorUser)
 class InnavatorUserAdmin(admin.ModelAdmin):
+    # model fields or display fields ("my_email") to show in the list interface (as opposed to the details interface)
     list_display = ("snowflake_id", "my_email", "full_name", "preferred_name")
+    # fields that may not be edited through the details interface for this model's page. snowflakes should never be edited, and there's already a user model editor
     readonly_fields = ["snowflake_id", "user"]
 
     # disallow InnavatorUser without Palette
@@ -24,6 +27,7 @@ class InnavatorUserAdmin(admin.ModelAdmin):
 
 @admin.register(innavator_models.Palette)
 class PaletteAdmin(admin.ModelAdmin):
+    # "__" is used to access compound fields
     list_display = ("user__snowflake_id", "my_user_email", "user__full_name", "user__preferred_name")
     readonly_fields = ["user"]
 
@@ -113,9 +117,11 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ("snowflake_id", "name")
     readonly_fields = ["snowflake_id"]
 
+    # called when saving or creating an object through this interface.
+    # change is False when creating a new instance
     def save_model(self, request, obj, form, change):
         if not change:
-            obj.snowflake_id = innavator_slowflake_generator.__next__()
+            obj.snowflake_id = innavator_snowflake.get_snowflake_id()
         return super().save_model(request, obj, form, change)
 
 @admin.register(innavator_models.Project)
@@ -191,7 +197,7 @@ class SubjectAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if not change:
-            obj.snowflake_id = innavator_slowflake_generator.__next__()
+            obj.snowflake_id = innavator_snowflake.get_snowflake_id()
         return super().save_model(request, obj, form, change)
 
 @admin.register(innavator_models.WillingnessToTutor)

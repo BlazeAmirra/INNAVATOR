@@ -10,12 +10,12 @@ export class Header extends LitElement {
   render() {
     return html`
       <nav>
-        <ul> <!-- Unordered list for navigation items -->
-          <li><app-link href="/welcome">Home</app-link></li> <!-- Link to Home page -->
-          <li><app-link href="/settings">Settings</app-link></li> <!-- Link to Settings page -->
-          <li><app-link href="/work">Work</app-link></li> <!-- Link to Work page -->
-          <li><app-link href="/about">About</app-link></li> <!-- Link to About page -->
-          <li><app-link href="/contact">Contact</app-link></li> <!-- Link to Contact page -->
+        <ul>
+          <li><app-link href="/welcome">Home</app-link></li>
+          <li><app-link href="/settings">Settings</app-link></li>
+          <li><app-link href="/work">Work</app-link></li>
+          <li><app-link href="/about">About</app-link></li>
+          <li><app-link href="/contact">Contact</app-link></li>
         </ul>
       </nav>
     `;

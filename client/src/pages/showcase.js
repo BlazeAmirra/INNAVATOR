@@ -46,7 +46,6 @@ export class Showcase extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Showcase</app-page-title>
 
         <h2 class="subtitle">Portfolio Entries</h2>
@@ -63,32 +62,32 @@ export class Showcase extends LitElement {
             html`No subjects.`}
         </div>
 
-        <!--
+        ${""/*
         <h2 class="subtitle">Videos & Profiles</h2>
 
         <div class="image-row">
-            <app-link href="/profile1" target="_blank"><img src=${live} alt="Profile 1" class="rounded-image"></app-link>
-            <app-link href="/profile2" target="_blank"><img src=${meet} alt="Profile 2" class="rounded-image"></app-link>
-            <app-link href="/view" target="_blank"><img src=${view} alt="Profile 3" class="rounded-image"></app-link>
+            <app-link href="/profile1" target="_blank"><img src=${live} alt="Profile 1" class="rounded-image"/></app-link>
+            <app-link href="/profile2" target="_blank"><img src=${meet} alt="Profile 2" class="rounded-image"/></app-link>
+            <app-link href="/view" target="_blank"><img src=${view} alt="Profile 3" class="rounded-image"/></app-link>
         </div>
 
         <h2 class="subtitle">Clubs & Classes</h2>
 
         <div class="image-grid">
-            <app-link href="/club1" target="_blank"><img src=${gardening} alt="Club 1" class="rounded-image"></app-link>
-            <app-link href="/club2" target="_blank"><img src=${nerf} alt="Club 2" class="rounded-image"></app-link>
-            <app-link href="/club3" target="_blank"><img src=${advertising} alt="Club 3" class="rounded-image"></app-link>
-            <app-link href="/class1" target="_blank"><img src=${coding} alt="Class 1" class="rounded-image"></app-link>
-            <app-link href="/class2" target="_blank"><img src=${robotics} alt="Class 2" class="rounded-image"></app-link>
-            <app-link href="/class3" target="_blank"><img src=${threedtools} alt="Class 3" class="rounded-image"></app-link>
+            <app-link href="/club1" target="_blank"><img src=${gardening} alt="Club 1" class="rounded-image"/></app-link>
+            <app-link href="/club2" target="_blank"><img src=${nerf} alt="Club 2" class="rounded-image"/></app-link>
+            <app-link href="/club3" target="_blank"><img src=${advertising} alt="Club 3" class="rounded-image"/></app-link>
+            <app-link href="/class1" target="_blank"><img src=${coding} alt="Class 1" class="rounded-image"/></app-link>
+            <app-link href="/class2" target="_blank"><img src=${robotics} alt="Class 2" class="rounded-image"/></app-link>
+            <app-link href="/class3" target="_blank"><img src=${threedtools} alt="Class 3" class="rounded-image"/></app-link>
         </div>
 
         <h2 class="subtitle">Interactive Projects</h2>
 
         <div class="center-image">
-            <app-link href="/project" target="_blank"><img src=${apps} alt="Interactive Project" class="rounded-square"></app-link>
+            <app-link href="/project" target="_blank"><img src=${apps} alt="Interactive Project" class="rounded-square"/></app-link>
         </div>
-        -->
+        */}
 
         <div class="back-button-container">
             <app-back-button/>

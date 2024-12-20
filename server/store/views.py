@@ -10,9 +10,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from store import models as innavator_models
 from store import permissions as innavator_permissions
 from store import serializers as innavator_serializers
-from store.snowflake_gen import innavator_slowflake_generator
+from store import snowflake_id as innavator_snowflake
 from store import utils as innavator_utils
 
+# decorator argument: tuple of HTTP methods to allow
 @api_view(('GET',))
 def csrf_token(request):
     return Response({"csrf_token": get_token(request)})
@@ -27,14 +28,19 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = innavator_serializers.EmailTokenObtainPairSerializer
 
 class InnavatorUserViewset(viewsets.ModelViewSet):
+    # "__" allows accessing nested fields
     queryset = innavator_models.InnavatorUser.objects.all().exclude(user__username="admin")
     serializer_class = innavator_serializers.InnavatorUserSerializer
     permission_classes = (innavator_permissions.UsersPermissions,) # comma is necessary
 
+    # detail: whether this requires a PK to be provided
+    # methods: list of HTTP methods to allow
     @action(detail=False, methods=['get'])
     def filtered_list(self, request):
+        # query_params: the stuff that comes after the question mark (ex: "example.com/page?query=help&time=now")
         query = request.query_params.get('query')
         if query:
+            # icontains is case-insensitive string contains
             return innavator_utils.paginate(self, innavator_serializers.InnavatorUserSerializer, self.get_queryset().filter(preferred_name__icontains=query)
                                             .union(self.get_queryset().filter(full_name__icontains=query))
                                             .union(self.get_queryset().filter(user__username__icontains=query)))
@@ -53,6 +59,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        # copied from some place or another in the Django source
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
@@ -121,7 +128,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         request_message = serializer.validated_data.get('request_message', "")
-        new_mentorship_snowflake = innavator_slowflake_generator.__next__()
+        new_mentorship_snowflake = innavator_snowflake.get_snowflake_id()
         receiver.mentees.add(sender, through_defaults={'snowflake_id': new_mentorship_snowflake, 'request_message': request_message, 'mentee_accepted': True})
         return Response(status=status.HTTP_201_CREATED)
 
@@ -138,7 +145,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         request_message = serializer.validated_data.get('request_message', "")
-        new_mentorship_snowflake = innavator_slowflake_generator.__next__()
+        new_mentorship_snowflake = innavator_snowflake.get_snowflake_id()
         sender.mentees.add(receiver, through_defaults={'snowflake_id': new_mentorship_snowflake, 'request_message': request_message, 'mentor_accepted': True})
         return Response(status=status.HTTP_201_CREATED)
 
@@ -232,7 +239,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
             if not innavator_models.PortfolioEntry.objects.filter(name=name, user=user).first():
                 description = serializer.validated_data.get('description', "")
                 entry = innavator_models.PortfolioEntry(
-                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    snowflake_id=innavator_snowflake.get_snowflake_id(),
                     user=user,
                     name=name,
                     description=description
@@ -296,6 +303,7 @@ class InnavatorUserViewset(viewsets.ModelViewSet):
         if errors:
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         else:
+            # the method called by the default create handler which wraps the serializer save method
             self.perform_create(serializer)
             return Response(status=status.HTTP_201_CREATED)
 
@@ -347,7 +355,9 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
 
     @action(detail=False, methods=['get'])
     def clubs(self, request):
-        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(is_club=True))
+        return innavator_utils.paginate(self, innavator_serializers.InnavatorGroupPreviewSerializer, innavator_models.InnavatorGroup.objects.filter(
+            is_club=True
+        ))
 
     @action(detail=False, methods=['get'])
     def list_group_memberships(self, request):
@@ -391,15 +401,21 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
 
     @action(detail=True, methods=['get'])
     def channels(self, request, pk):
-        return innavator_utils.paginate(self, innavator_serializers.ChannelSerializer, innavator_models.Channel.objects.filter(group=self.get_object()))
+        return innavator_utils.paginate(self, innavator_serializers.ChannelSerializer, innavator_models.Channel.objects.filter(
+            group=self.get_object()
+        ))
 
     @action(detail=True, methods=['get'])
     def projects(self, request, pk):
-        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(group=self.get_object()))
+        return innavator_utils.paginate(self, innavator_serializers.ProjectSerializer, innavator_models.Project.objects.filter(
+            group=self.get_object()
+        ))
 
     @action(detail=True, methods=['get'])
     def events(self, request, pk):
-        return innavator_utils.paginate(self, innavator_serializers.EventSerializer, innavator_models.Event.objects.filter(group=self.get_object()))
+        return innavator_utils.paginate(self, innavator_serializers.EventSerializer, innavator_models.Event.objects.filter(
+            group=self.get_object()
+        ))
 
     @action(detail=True, methods=['post'])
     def create_channel(self, request, pk):
@@ -410,7 +426,7 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
         if name := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('name', None)):
             if not innavator_models.Channel.objects.filter(name=name, group=group).first():
                 channel = innavator_models.Channel(
-                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    snowflake_id=innavator_snowflake.get_snowflake_id(),
                     group=group,
                     name=name
                 )
@@ -429,14 +445,14 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
             if not innavator_models.Project.objects.filter(name=name, group=group).first():
                 description = serializer.validated_data.get('description', "")
                 project = innavator_models.Project(
-                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    snowflake_id=innavator_snowflake.get_snowflake_id(),
                     group=group,
                     name=name,
                     description=description
                 )
                 project.save()
                 project.members.add(innavator_utils.get_innavator_user_from_user(request.user), through_defaults={
-                    'snowflake_id': innavator_slowflake_generator.__next__(),
+                    'snowflake_id': innavator_snowflake.get_snowflake_id(),
                     'role': innavator_models.Role.objects.get(name="Team Lead"),
                     'is_active': True,
                     'user_accepted': True,
@@ -457,7 +473,7 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
             if start_time := serializer.validated_data.get('start_time', None):
                 description = serializer.validated_data.get('description', "")
                 event = innavator_models.Event(
-                    snowflake_id=innavator_slowflake_generator.__next__(),
+                    snowflake_id=innavator_snowflake.get_snowflake_id(),
                     group=group,
                     name=name,
                     description=description,
@@ -477,7 +493,7 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
             if not innavator_models.GroupMembership.objects.filter(user=receiver, group=group).first():
                 request_message = serializer.validated_data.get('request_message', "")
                 is_privileged = serializer.validated_data.get('is_privileged', False)
-                new_membership_snowflake = innavator_slowflake_generator.__next__()
+                new_membership_snowflake = innavator_snowflake.get_snowflake_id()
                 group.members.add(receiver, through_defaults={
                     'snowflake_id': new_membership_snowflake,
                     'request_message': request_message,
@@ -497,7 +513,7 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
 
         if not innavator_models.GroupMembership.objects.filter(user=sender, group=group).first():
             request_message = serializer.validated_data.get('request_message', "")
-            new_membership_snowflake = innavator_slowflake_generator.__next__()
+            new_membership_snowflake = innavator_snowflake.get_snowflake_id()
             group.members.add(sender, through_defaults={
                 'snowflake_id': new_membership_snowflake,
                 'request_message': request_message,
@@ -575,10 +591,10 @@ class InnavatorGroupViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, 
 
         if name := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('name', None)):
             serializer.validated_data['name'] = name
-            group = serializer.save(snowflake_id=innavator_slowflake_generator.__next__(), owner=innavator_utils.get_innavator_user_from_user(request.user))
+            group = serializer.save(snowflake_id=innavator_snowflake.get_snowflake_id(), owner=innavator_utils.get_innavator_user_from_user(request.user))
             innavator_user = innavator_utils.get_innavator_user_from_user(request.user)
             group.members.add(innavator_user, through_defaults={
-                'snowflake_id': innavator_slowflake_generator.__next__(),
+                'snowflake_id': innavator_snowflake.get_snowflake_id(),
                 'is_privileged': True,
                 'user_accepted': True,
                 'group_accepted': True
@@ -598,6 +614,7 @@ class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.R
         sender = innavator_utils.get_innavator_user_from_user(request.user)
         innavator_utils.update_last_read_message(channel, sender)
 
+        # minus sign in ordering means largest first (which since snowflakes are most significantly time-derived also means most recent)
         return innavator_utils.paginate(self, innavator_serializers.MessageSerializer, innavator_models.Message.objects.filter(channel=channel).order_by('-snowflake_id'))
 
     @action(detail=True, methods=['get'])
@@ -620,7 +637,7 @@ class ChannelViewset(mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.R
 
         if contents := innavator_utils.stripped_if_not_blank(serializer.validated_data.get('contents', None)):
             message = innavator_models.Message(
-                snowflake_id=innavator_slowflake_generator.__next__(),
+                snowflake_id=innavator_snowflake.get_snowflake_id(),
                 channel=channel,
                 sender=sender,
                 contents=contents
@@ -682,7 +699,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
             if role := serializer.validated_data.get('role', None):
                 if not innavator_models.ProjectRole.objects.filter(user=receiver, project=project).first():
                     request_message = serializer.validated_data.get('request_message', "")
-                    new_project_role_snowflake = innavator_slowflake_generator.__next__()
+                    new_project_role_snowflake = innavator_snowflake.get_snowflake_id()
                     project.members.add(receiver, through_defaults={
                         'snowflake_id': new_project_role_snowflake,
                         'role': role,
@@ -703,7 +720,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
         if role := serializer.validated_data.get('role', None):
             if not innavator_models.ProjectRole.objects.filter(user=sender, project=project).first():
                 request_message = serializer.validated_data.get('request_message', "")
-                new_project_role_snowflake = innavator_slowflake_generator.__next__()
+                new_project_role_snowflake = innavator_snowflake.get_snowflake_id()
                 project.members.add(sender, through_defaults={
                     'snowflake_id': new_project_role_snowflake,
                     'role': role,
@@ -743,7 +760,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
                 if not project.group.members.contains(user):
                     project.group.members.add(user, through_defaults={
-                        'snowflake_id': innavator_slowflake_generator.__next__(),
+                        'snowflake_id': innavator_snowflake.get_snowflake_id(),
                         'user_accepted': True,
                         'group_accepted': True
                     })
@@ -767,7 +784,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
                     if not project.group.members.contains(receiver):
                         project.group.members.add(receiver, through_defaults={
-                            'snowflake_id': innavator_slowflake_generator.__next__(),
+                            'snowflake_id': innavator_snowflake.get_snowflake_id(),
                             'user_accepted': True,
                             'group_accepted': True
                         })
@@ -847,7 +864,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
         if role := serializer.validated_data.get('role', None):
             if not project.looking_for_roles.contains(role):
-                project.looking_for_roles.add(role, through_defaults={'snowflake_id': innavator_slowflake_generator.__next__()})
+                project.looking_for_roles.add(role, through_defaults={'snowflake_id': innavator_snowflake.get_snowflake_id()})
                 return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -871,7 +888,7 @@ class ProjectViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
         if subject := serializer.validated_data.get('subject', None):
             if not project.subjects.contains(subject):
-                project.subjects.add(subject, through_defaults={'snowflake_id': innavator_slowflake_generator.__next__()})
+                project.subjects.add(subject, through_defaults={'snowflake_id': innavator_snowflake.get_snowflake_id()})
                 return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -892,9 +909,10 @@ class CommissionRequestViewset(viewsets.ModelViewSet):
     serializer_class = innavator_serializers.CommissionRequestSerializer
     permission_classes = (innavator_permissions.CommissionRequestsPermissions,) # comma is necessary
 
+    # the method called by the default create handler which wraps the serializer save method
     def perform_create(self, serializer):
         serializer.validated_data["name"] = innavator_utils.stripped_if_not_blank(serializer.validated_data["name"])
-        serializer.save(snowflake_id=innavator_slowflake_generator.__next__(), sender=innavator_utils.get_innavator_user_from_user(self.request.user))
+        serializer.save(snowflake_id=innavator_snowflake.get_snowflake_id(), sender=innavator_utils.get_innavator_user_from_user(self.request.user))
 
 class EventViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = innavator_models.Event.objects.all()
@@ -943,7 +961,7 @@ class SubjectViewset(viewsets.ReadOnlyModelViewSet):
 
         if not sender.willing_to_tutor.contains(subject):
             sender.willing_to_tutor.add(subject, through_defaults={
-                'snowflake_id': innavator_slowflake_generator.__next__()
+                'snowflake_id': innavator_snowflake.get_snowflake_id()
             })
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)

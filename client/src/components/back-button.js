@@ -12,7 +12,7 @@ export class BackButton extends LitElement {
 
   render() {
     return html`
-        <span onclick="history.back()">&#x2190; Back</span> <!-- Left arrow icon -->
+        <span onclick="history.back()">&#x2190; Back</span>${""/*Left arrow icon*/}
     `;
   }
 }

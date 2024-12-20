@@ -138,7 +138,11 @@ export class InnavatorShell extends router(LitElement) {
     const { loading, apiError } = this.state;
 
     if (apiError) {
-      return html`<app-error .apiError=${apiError}></app-error>`;
+      return html`
+        <app-error .apiError=${apiError}>
+          ${""/*Now's as good a time as any to note that this is how you can make a comment within a render block without the comments getting rendered.*/}
+        </app-error>
+      `;
     }
 
     document.title = "Innavator";
@@ -351,14 +355,13 @@ customElements.define('innavator-shell', InnavatorShell);
           };
       };
     </script>
-    <!-- User Agreement Modal -->
     <div id="userAgreementModal">
-      <div class="modal-content"> <!-- Content area of the modal -->
-          <h2><strong>Innavator App User Agreement</strong></h2> <!-- Title of the modal -->
-          <p> <!-- Paragraph containing the introduction -->
+      <div class="modal-content">
+          <h2><strong>Innavator App User Agreement</strong></h2>
+          <p>
               Welcome to the Innavator app, a project developed by Students at the University of Advancing Technology Production class designed to help students like you build projects, teamwork skills, and individual profiles to achieve success in your career.
           </p>
-          <p> <!-- Paragraph explaining to read the terms -->
+          <p>
               Before you proceed, please take a moment to read and agree to the following terms.
           </p>
           <p><strong>User Consent</strong></p>
@@ -374,8 +377,8 @@ customElements.define('innavator-shell', InnavatorShell);
           <p>Thank you for helping us make UAT’s learning experience more interactive and inspiring!</p>
           <p>We’re excited to have you on board as part of the UAT community!</p>
 
-          <button class="modal-button" id="agreeButton">I Agree</button> <!-- Button for agreeing to the terms -->
-          <button class="modal-button cancel" id="cancelButton">Cancel</button> <!-- Button for canceling the agreement -->
+          <button class="modal-button" id="agreeButton">I Agree</button>
+          <button class="modal-button cancel" id="cancelButton">Cancel</button>
       </div>
     </div>
 */

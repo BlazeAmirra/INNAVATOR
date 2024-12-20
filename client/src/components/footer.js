@@ -10,7 +10,6 @@ export class Footer extends LitElement {
   render() {
     return html`
       <p>Copyright © 2024 Innavator - All Rights Reserved.</p>
-      <!-- Container for social media links -->
       <div class="social-icons">
         <a href="https://www.uat.edu/" target="_blank">UAT</a>
         <a href="https://x.com/UATedu" target="_blank">Twitter</a>

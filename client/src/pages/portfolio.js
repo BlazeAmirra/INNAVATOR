@@ -17,17 +17,14 @@ export class Portfolio extends LitElement {
 
   render() {
     return html`
-      <!-- Portfolio Page Title -->
         <app-page-title>Portfolio</app-page-title>
 
-        <!-- Button Section for Portfolio Options -->
         <div class="button-container">
             <app-link href="/user-portfolio/${innavator_api.get_this_user()}" class="option-button">★ My Portfolio</app-link>
             <app-link href="/showcase" class="option-button">★ Showcases</app-link>
             <app-link href="/inspiration" class="option-button">★ Inspiration</app-link>
             <app-link href="/patents" class="option-button">★ Patents</app-link>
 
-            <!-- Go Back Button positioned like the others -->
             <app-back-button/>
         </div>
     `;

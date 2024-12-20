@@ -16,24 +16,20 @@ export class Games extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Games</app-page-title>
 
-        <!-- Centered Image with Clickable Link -->
         <div class="image-container">
-            <a href="https://greendog3.itch.io/maxwells-bullet-sumo"> <!-- Link to the game details page -->
-                <img src=${maxwell} alt="Game Image" class="game-image"> <!-- Game image -->
+            <a href="https://greendog3.itch.io/maxwells-bullet-sumo">
+                <img src=${maxwell} alt="Game Image" class="game-image"/>
             </a>
         </div>
 
-        <!-- Add Your Game Button -->
         <div class="add-game-container">
-            <app-link href="/add-game" class="add-game-button">Click here to add your game</app-link> <!-- Link to add game page -->
+            <app-link href="/add-game" class="add-game-button">Click here to add your game</app-link>
         </div>
 
-        <!-- Go Back Button -->
         <div class="go-back">
-            <app-link href="/commission">&larr; Go Back</app-link> <!-- Link back to the commission page -->
+            <app-link href="/commission">&larr; Go Back</app-link>
         </div>
     `;
   }

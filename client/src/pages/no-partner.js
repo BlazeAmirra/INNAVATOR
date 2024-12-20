@@ -15,19 +15,15 @@ export class NoPartner extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Okay, give me just a moment to help find what you need... do you know what you need?</app-page-title>
-        <!-- Title with a prompt asking the user if they know what they need -->
 
-        <!-- Input Box Section -->
         <div class="input-box-section">
-            <input type="text" class="input-box" placeholder="Text here"> <!-- Placeholder for user input -->
+            <input type="text" class="input-box" placeholder="Text here"/>
         </div>
 
-        <!-- Navigation Arrows Section -->
         <div class="arrow-section">
             <app-back-button></app-back-button>
-            <app-link href="/commission" class="next-button">Next &rarr;</app-link> <!-- Next link to the next page -->
+            <app-link href="/commission" class="next-button">Next &rarr;</app-link>
         </div>
     `;
   }

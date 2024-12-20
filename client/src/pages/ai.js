@@ -17,18 +17,15 @@ export class AI extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Hi I'm Digital Murphy, want to talk with me?<p>Or do you want to take a tour around the school?</p></app-page-title>
 
-        <!-- Centered Text Input Box -->
         <div class="input-container">
-            <textarea placeholder="Enter your text here"></textarea> <!-- Text area for user input -->
+            <textarea placeholder="Enter your text here"></textarea>
         </div>
 
-        <!-- Centered Navigation Buttons Section -->
         <div class="navigation-buttons">
-            <app-back-button></app-back-button> <!-- This has to be done instead of a self-closing tag to avoid eating the next tag, apparently -->
-            <app-link href="/ai-next" class="next-button">Next</app-link> <!-- Link to next page -->
+            <app-back-button></app-back-button>
+            <app-link href="/ai-next" class="next-button">Next</app-link>
         </div>
     `;
   }

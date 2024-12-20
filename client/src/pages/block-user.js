@@ -24,19 +24,15 @@ export class BlockUser extends LitElement {
 }
 
 /*
-      <!-- Title -->
         <app-page-title>Block User</app-page-title>
 
-        <!-- Confirmation Message -->
         <p class="confirmation-text">Are you sure you want to block this user?</p>
 
-        <!-- Buttons for Confirmation -->
         <div class="button-container">
             <button class="block-button" onclick="blockUser()">Yes, Block</button>
             <button class="cancel-button" onclick="tryAgain()">No, Cancel</button>
         </div>
 
-        <!-- Message Display -->
         <p id="message" class="message"></p>
 */
 

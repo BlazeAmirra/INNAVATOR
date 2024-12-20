@@ -15,10 +15,8 @@ export class UATDictionary extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Dictionary Industry Terms</app-page-title>
 
-        <!-- Dictionary Terms Section -->
         <div class="dictionary-container">
             <p><strong>UX:</strong> The user's experience on a device or platform.</p>
             <p><strong>UI:</strong> The feel and interaction.</p>
@@ -40,7 +38,6 @@ export class UATDictionary extends LitElement {
             <p><strong>Agile:</strong> A development methodology involving the breakdown of the overall project into short cycles of a complete development pipeline.</p>
         </div>
 
-        <!-- Go Back Button -->
         <div class="back-button-container">
             <app-back-button/>
         </div>

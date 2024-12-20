@@ -51,7 +51,7 @@ export class ShowcaseSubject extends LitElement {
           listItem.push(html`
             <div class="portfolio-image">
               <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}"/>
               </app-link>
             </div>
           `);

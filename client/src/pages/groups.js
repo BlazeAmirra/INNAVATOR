@@ -52,7 +52,7 @@ export class Groups extends LitElement {
       ${this.groupMemberships.length > 0 ? map(this.groupMemberships, value => html`
         <div class="portfolio-image">
           <app-link href="/channels/${this.groupDict[value.group].snowflake_id}">
-            <img src="" alt="${this.groupDict[value.group].name}" />
+            <img src="" alt="${this.groupDict[value.group].name}"/>
           </app-link>
         </div>
       `) : html`No results.`}

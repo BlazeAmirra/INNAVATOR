@@ -63,7 +63,7 @@ export class PortfolioEntry extends LitElement {
         <app-page-title>Portfolio Entry</app-page-title>
 
         <div class="portfolio-image-container">
-            <img ${this.state.portfolioEntry.picture_url != "" ? html`src="${this.state.portfolioEntry.picture_url}"` : ""} alt="${this.state.portfolioEntry.picture_url != "" ? "Portfolio Entry Picture" : "No image"}" class="portfolio-image"></img>
+            <img ${this.state.portfolioEntry.picture_url != "" ? html`src="${this.state.portfolioEntry.picture_url}"` : ""} alt="${this.state.portfolioEntry.picture_url != "" ? "Portfolio Entry Picture" : "No image"}" class="portfolio-image"/>
         </div>
 
         <div class="intro-box">

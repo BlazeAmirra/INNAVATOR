@@ -56,7 +56,7 @@ export class UserPortfolio extends LitElement {
           listItem.push(html`
             <div class="portfolio-image">
               <app-link href="portfolio-entry/${this.portfolio[j].snowflake_id}">
-                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}" />
+                <img src="${this.portfolio[j].picture_url}" alt="${this.portfolio[j].name}"/>
               </app-link>
             </div>
           `);
@@ -73,20 +73,19 @@ export class UserPortfolio extends LitElement {
     }
 
     return html`
-      <!-- Page Title -->
         <app-page-title>Portfolio of <app-link href="/user/${this.user_snowflake}">${this.author_name}</app-link></app-page-title>
 
-        <!--
+        ${""/*
         <div class="portfolio-image-container">
             <a href="https://example-website.com" target="_blank">
-                <img src=${art5} alt="Portfolio Thumbnail" class="portfolio-image">
+                <img src=${art5} alt="Portfolio Thumbnail" class="portfolio-image"/>
             </a>
         </div>
 
         <div class="intro-box">
             <p>Hi, my name is NeAndrea H. My major is Robotics & Embedded Systems. Check out my website for more.</p>
         </div>
-        -->
+        */}
 
         ${listItems}
 
@@ -94,7 +93,6 @@ export class UserPortfolio extends LitElement {
             <app-link href="/add-portfolio-entry" class="back-button">Add Entry</app-link>
         </div>` : html``}
 
-        <!-- Go Back Button -->
         <div class="back-button-container">
             <app-back-button/>
         </div>

@@ -14,22 +14,18 @@ export class VideoAudio extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Video and Audio Settings</app-page-title>
 
-        <!-- Description -->
         <p class="description">Configure your video and audio preferences for the chat experience.</p>
 
-        <!-- Video and Audio Toggles -->
         <div class="settings-section">
             <label for="video-toggle" class="toggle-label">Enable Video</label>
-            <input type="checkbox" id="video-toggle" class="toggle-input">
+            <input type="checkbox" id="video-toggle" class="toggle-input"/>
 
             <label for="audio-toggle" class="toggle-label">Enable Audio</label>
-            <input type="checkbox" id="audio-toggle" class="toggle-input">
+            <input type="checkbox" id="audio-toggle" class="toggle-input"/>
         </div>
 
-        <!-- Audio Input/Output Device Selector -->
         <div class="settings-section">
             <label for="audio-input" class="dropdown-label">Select Audio Input Device:</label>
             <select id="audio-input" class="dropdown">
@@ -46,16 +42,13 @@ export class VideoAudio extends LitElement {
             </select>
         </div>
 
-        <!-- Video Preview Section -->
         <div class="settings-section">
             <label for="video-preview" class="preview-label">Video Preview:</label>
             <div id="video-preview" class="video-preview-box">
-                <!-- Placeholder for video preview -->
                 <p>Video feed will appear here.</p>
             </div>
         </div>
 
-        <!-- Save Button -->
         <div class="save-button-container">
             <button class="save-button">Save Settings</button>
         </div>

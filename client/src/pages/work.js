@@ -20,18 +20,18 @@ export class Work extends LitElement {
         <span>NEEDS REWORK</span>
         <br/><br/>
         <app-back-button></app-back-button>
-        <!-- definitely not a privacy concern.
+        ${""/* Definitely not a privacy concern.
         <div class="form-container">
             <app-page-title size="22px">You're seeking employment? We can help you! Fill out the information and we can take the next steps.</app-page-title>
 
             <label for="name">Name:</label>
-            <input type="text" id="name" placeholder="Enter your name">
+            <input type="text" id="name" placeholder="Enter your name"/>
 
             <label for="major">Major:</label>
-            <input type="text" id="major" placeholder="Enter your major">
+            <input type="text" id="major" placeholder="Enter your major"/>
 
             <label for="skill-level">Skill Level:</label>
-            <input type="text" id="skill-level" placeholder="Enter your skill level">
+            <input type="text" id="skill-level" placeholder="Enter your skill level"/>
 
             <label for="additional-info">Any additional information? Resume, certificates, etc...</label>
             <textarea id="additional-info" placeholder="Add more information here"></textarea>
@@ -41,7 +41,7 @@ export class Work extends LitElement {
                 <app-link href="/submit" class="next-button">Next</app-link>
             </div>
         </div>
-        -->
+        */}
     `;
   }
 }

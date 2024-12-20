@@ -106,7 +106,7 @@ export class EditGroup extends LitElement {
       ? html`<p>loading...</p>` : html`
         <app-page-title>Edit Group</app-page-title>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" class="input-field" placeholder="${this.group.name}" @input="${this.handleInput}" />
+        <input type="text" id="name" name="name" class="input-field" placeholder="${this.group.name}" @input="${this.handleInput}"/>
 
         <label for="owner">Owner:</label>
         <select id="owner" name="owner" class="input-field" @input="${this.handleInput}">

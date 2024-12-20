@@ -80,10 +80,10 @@ export class AddPortfolioEntry extends LitElement {
     return html`
       <app-page-title>Add Portfolio Entry</app-page-title>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" class="input-field" placeholder="Enter the project name" @input="${this.handleInput}" />
+        <input type="text" id="name" name="name" class="input-field" placeholder="Enter the project name" @input="${this.handleInput}"/>
 
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description" class="input-field" placeholder="Enter a project description (optional)" @input="${this.handleInput}" />
+        <input type="text" id="description" name="description" class="input-field" placeholder="Enter a project description (optional)" @input="${this.handleInput}"/>
 
         <label for="subject">Subject:</label>
         <select list="subject_choices" id="subject" name="subject" class="input-field" @input="${this.handleInput}">
@@ -94,10 +94,10 @@ export class AddPortfolioEntry extends LitElement {
         </select>
 
         <label for="url">URL:</label>
-        <input type="url" id="url" name="url" class="input-field" placeholder="Enter a project URL (optional)" @input="${this.handleInput}" />
+        <input type="url" id="url" name="url" class="input-field" placeholder="Enter a project URL (optional)" @input="${this.handleInput}"/>
 
         <label for="picture_url">Picture URL:</label>
-        <input type="url" id="picture_url" name="picture_url" class="input-field" placeholder="Enter a project picture URL (optional)" @input="${this.handleInput}" />
+        <input type="url" id="picture_url" name="picture_url" class="input-field" placeholder="Enter a project picture URL (optional)" @input="${this.handleInput}"/>
 
         <br/><br/>
         <span @click="${this.attempt_add_portfolio_entry}" class="signin-button">Add</span>

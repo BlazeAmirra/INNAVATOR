@@ -41,8 +41,7 @@ export class GroupChat extends LitElement {
     }
 
     originalTimestamp(message) {
-        // use of BigInt is due to 32-bit cutoff when bitshifting Number
-        return Number(BigInt(message.snowflake_id) >> 22n) + innavator_api.get_epoch();
+        return innavator_utils.snowflake_to_timestamp_int(message.snowflake_id);
     }
 
     timeOrDate(timestamp) {
@@ -120,38 +119,38 @@ export class GroupChat extends LitElement {
                     </p>
                 </div>
                 `)}
-                <!--
+                ${""/*
                 <div class="chat-message left">
                     <app-link href="/chat-with-blaze">
-                        <img src=${art5} alt="Blaze" class="chat-image">
+                        <img src=${art5} alt="Blaze" class="chat-image"/>
                     </app-link>
                     <p class="chat-text">Hello, ready to work on the project?</p>
                 </div>
 
                 <div class="chat-message right">
                     <app-link href="/chat-with-preston">
-                        <img src=${art7} alt="Preston" class="chat-image">
+                        <img src=${art7} alt="Preston" class="chat-image"/>
                     </app-link>
                     <p class="chat-text">Yep, I have started on the code.</p>
                 </div>
 
                 <div class="chat-message left">
                     <app-link href="/chat-with-alexis">
-                        <img src=${art12} alt="Alexis" class="chat-image">
+                        <img src=${art12} alt="Alexis" class="chat-image"/>
                     </app-link>
                     <p class="chat-text">I will see if I can find some security issues we may run into.</p>
                 </div>
 
                 <div class="chat-message right">
                     <app-link href="/chat-with-marcus">
-                        <img src=${art16} alt="Marcus" class="chat-image">
+                        <img src=${art16} alt="Marcus" class="chat-image"/>
                     </app-link>
                     <p class="chat-text">Sweet! I can document the results and conduct test.</p>
                 </div>
-                -->
+                */}
             </div>
             <div>
-                <input type="text" id="inputMessage" name="inputMessage" class="input-field" placeholder="Type a message" @input="${this.handleInput}" />
+                <input type="text" id="inputMessage" name="inputMessage" class="input-field" placeholder="Type a message" @input="${this.handleInput}"/>
                 <button @click="${this.attempt_send_message}">Send</button>
             </div>
 
@@ -165,28 +164,24 @@ export class GroupChat extends LitElement {
 customElements.define('app-group-chat', GroupChat);
 
 /*
-
-        <!-- Whiteboard Section -->
         <div class="whiteboard-container">
             <h2 class="whiteboard-title">Collaborative Whiteboard</h2>
-            <canvas id="whiteboard" width="800" height="600"></canvas> <!-- The whiteboard canvas where the drawing occurs -->
+            <canvas id="whiteboard" width="800" height="600"></canvas>
             <div class="whiteboard-buttons">
-                <button id="clearButton">Clear Whiteboard</button> <!-- Button to clear the whiteboard -->
-                <button id="undoButton">Undo</button> <!-- Button to undo last action -->
-                <button id="redoButton">Redo</button> <!-- Button to redo undone actions -->
-                <!-- Color Picker Button and Hidden Color Input -->
+                <button id="clearButton">Clear Whiteboard</button>
+                <button id="undoButton">Undo</button>
+                <button id="redoButton">Redo</button>
                 <div class="color-picker-container">
-                    <button id="colorPickerButton">Color Picker</button> <!-- Button to toggle color picker visibility -->
-                    <input type="color" id="colorPicker" value="#000000" title="Choose Drawing Color"> <!-- Hidden color picker input -->
+                    <button id="colorPickerButton">Color Picker</button>
+                    <input type="color" id="colorPicker" value="#000000" title="Choose Drawing Color"/>
                 </div>
-                <button id="saveButton">Save as Image</button> <!-- Button to save the whiteboard as an image -->
+                <button id="saveButton">Save as Image</button>
             </div>
         </div>
 */
 
-
+// whiteboard script
 /*
-<!-- Whiteboard Script -->
     <script>
         // Get references to elements on the page
         const canvas = document.getElementById('whiteboard'); // Reference to the canvas element where drawing occurs

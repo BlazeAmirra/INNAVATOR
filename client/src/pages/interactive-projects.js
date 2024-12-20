@@ -51,7 +51,7 @@ export class InteractiveProjects extends LitElement {
           listItem.push(html`
             <div class="portfolio-image">
               <app-link href="portfolio-entry/${this.projects[j].snowflake_id}">
-                <img src="${this.projects[j].picture_url}" alt="${this.projects[j].name}" />
+                <img src="${this.projects[j].picture_url}" alt="${this.projects[j].name}"/>
               </app-link>
             </div>
           `);

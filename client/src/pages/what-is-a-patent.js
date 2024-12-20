@@ -14,7 +14,6 @@ export class WhatIsAPatent extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Patent Nonsense</app-page-title>
 
         <span>Hah, got 'em!</span>

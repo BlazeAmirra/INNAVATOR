@@ -1,3 +1,11 @@
+import * as innavator_api from './innavator-api';
+
+// returns timestamp in the format common to JS of millisecond Unix time * 1000
+export const snowflake_to_timestamp_int = snowflake_id => {
+    // use of BigInt is due to 32-bit cutoff when bitshifting Number
+    return Number(BigInt(snowflake_id) >> 22n) + innavator_api.get_epoch();
+};
+
 export const parsed_json_or_null = (str) => {
     try {
         return JSON.parse(str);

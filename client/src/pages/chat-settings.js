@@ -14,7 +14,7 @@ export class ChatSettings extends LitElement {
 
   render() {
     return html`
-        <app-page-title>Chat Settings</app-page-title> <!-- Title of the page -->
+        <app-page-title>Chat Settings</app-page-title>
 
         <div class="buttons-container">
             <app-link href="/change-colors" class="settings-button">★ Chat Color</app-link>

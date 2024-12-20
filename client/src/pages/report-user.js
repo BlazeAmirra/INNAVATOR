@@ -14,19 +14,13 @@ export class ReportUser extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
-        <app-page-title>Report User</app-page-title> <!-- Title of the page -->
+        <app-page-title>Report User</app-page-title>
 
-        <!-- Subtitle or Instructions -->
-        <p class="instructions">Please describe the issue you experienced with the user below:</p> <!-- Subtitle or explanation for the user -->
+        <p class="instructions">Please describe the issue you experienced with the user below:</p>
 
-        <!-- Textbox for User Input -->
-        <form action="submit.html" method="POST"> <!-- Form to submit the report -->
+        <form action="submit.html" method="POST">
             <textarea name="user-issue" id="user-issue" class="input-box" placeholder="Type your issue here..." required></textarea>
-            <!-- A text area where users can type their issue; it's required to submit -->
-
-            <!-- Submit Button -->
-            <button type="submit" class="submit-button">Submit Report</button> <!-- Button to submit the form -->
+            <button type="submit" class="submit-button">Submit Report</button>
         </form>
     `;
   }

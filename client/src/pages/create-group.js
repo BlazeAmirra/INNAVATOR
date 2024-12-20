@@ -105,7 +105,7 @@ export class CreateGroup extends LitElement {
 
             <div class="button-container">
                 <label for="name">Group Name:</label>
-                <input type="text" id="name" name="name" class="input-field" @input="${this.handleInput}" />
+                <input type="text" id="name" name="name" class="input-field" @input="${this.handleInput}"/>
             </div>
 
             ${this.groupUsers.length > 0 ? html`
@@ -133,7 +133,7 @@ export class CreateGroup extends LitElement {
 
             <div class="button-container">
                 <label for="filterText">Filter Users:</label>
-                <input type="filterText" id="filterText" name="filterText" class="input-field" @input="${this.handleInput}" />
+                <input type="filterText" id="filterText" name="filterText" class="input-field" @input="${this.handleInput}"/>
             </div>
 
             <div class="images-container">

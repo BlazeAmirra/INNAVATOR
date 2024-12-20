@@ -19,24 +19,20 @@ export class YesPartner extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
-        <app-page-title>Wonderful, Here are some great people you can work with.<p>Click on who you want and you can start a new chat.</p></app-page-title> <!-- Title for the yes-partner page -->
+        <app-page-title>Wonderful, Here are some great people you can work with.<p>Click on who you want and you can start a new chat.</p></app-page-title>
 
-        <!-- Partner Image Section -->
         <div class="partner-section">
-            <!-- Clickable images for partners -->
             <app-link href="/chat-with-preston" class="partner-link">
-                <img src=${art7} alt="Partner 1" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art7} alt="Partner 1" class="partner-image"/>
             </app-link>
             <app-link href="/chat-with-blaze" class="partner-link">
-                <img src=${art5} alt="Partner 2" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art5} alt="Partner 2" class="partner-image"/>
             </app-link>
             <app-link href="/chat-with-nick" class="partner-link">
-                <img src=${art8} alt="Partner 3" class="partner-image"> <!-- Replace with actual image path -->
+                <img src=${art8} alt="Partner 3" class="partner-image"/>
             </app-link>
         </div>
 
-        <!-- Go Back Button -->
         <div class="button-section">
             <app-back-button/>
         </div>

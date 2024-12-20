@@ -63,7 +63,7 @@ export class UserPage extends LitElement {
         <app-page-title>User Profile</app-page-title>
 
         <div class="portfolio-image-container">
-            <img ${this.state.user.profile_picture_url != "" ? html`src="${this.state.user.profile_picture_url}"` : ""} alt="${this.state.user.profile_picture_url != "" ? "Profile Picture" : "No image"}" class="portfolio-image"></img>
+            <img ${this.state.user.profile_picture_url != "" ? html`src="${this.state.user.profile_picture_url}"` : ""} alt="${this.state.user.profile_picture_url != "" ? "Profile Picture" : "No image"}" class="portfolio-image"/>
         </div>
 
         <div class="intro-box">

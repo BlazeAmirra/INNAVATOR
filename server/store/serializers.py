@@ -7,9 +7,8 @@ from rest_framework import exceptions, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from store import models as innavator_models
-from store.snowflake_gen import innavator_slowflake_generator
 
-# https://stackoverflow.com/a/75452395
+# https://stackoverflow.com/a/75452395 - Allowing for use of email address as the "username" in authentication
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         users = get_user_model().objects.filter(email=attrs["username"])
@@ -37,7 +36,9 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = innavator_models.InnavatorUser
+        # when `exclude` is specified instead of `fields`, every field is included besides those listed
         exclude = ['mentees', 'willing_to_tutor']
+        # this stuff about user object not being required and being nullable is just for temporary state during creation
         extra_kwargs = {'user': {'required': False, 'allow_null': True}}
 
 # apparently this sanitization isn't needed
@@ -87,6 +88,7 @@ class InnavatorUserSerializer(serializers.ModelSerializer):
 class PaletteSerializer(serializers.ModelSerializer):
     class Meta:
         model = innavator_models.Palette
+        # this value being a special one for including every field
         fields = '__all__'
 
 class MentorshipSerializer(serializers.ModelSerializer):
@@ -114,7 +116,7 @@ class InnavatorGroupSerializer(serializers.ModelSerializer):
 #        return escape(value)
 
     def update(self, instance, validated_data):
-        validated_data.pop("is_club", False)
+        validated_data.pop("is_club", False) # remove what we don't need to be allowing the user to set
         return super().update(instance, validated_data)
 
 class GroupMembershipSerializer(serializers.ModelSerializer):

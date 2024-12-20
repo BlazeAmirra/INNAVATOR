@@ -23,6 +23,7 @@ export const get_this_user = () => {
 };
 
 export const get_epoch = () => {
+    // shall not change.
     return 1729694252000;
 };
 
@@ -439,6 +440,7 @@ export const removeTutorWillingness = async subject => {
 // POST: `jwt_token/`, `jwt_token/refresh/`, and `users/` are handled specially above
 
 export const requestMentor = async user => {
+    // when there's no body to add, an empty object is still required for POST, PUT, and PATCH
     return await postAPI(`users/${user}/request_as_mentor/`, {});
 };
 export const requestMentee = async user => {

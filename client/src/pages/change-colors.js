@@ -90,20 +90,20 @@ export class ChangeColors extends LitElement {
 
         <div>Not implemented: good color picker needed.</div>
 
-        <!--        
+        ${""/*
         <div class="color-wheel-container">
-            <img src=${colortime} alt="Color Wheel" class="color-wheel">
+            <img src=${colortime} alt="Color Wheel" class="color-wheel"/>
         </div>
 
         <div class="scale-container">
-            <input type="range" min="0" max="6" value="3" class="color-scale">
+            <input type="range" min="0" max="6" value="3" class="color-scale"/>
         </div>
 
         <div class="scale-labels">
             <span class="dark-label">Dark</span>
             <span class="light-label">Light</span>
         </div>
-        -->
+        */}
 
         <br/>
         <app-back-button/>

@@ -17,33 +17,29 @@ export class Electronics extends LitElement {
 
   render() {
     return html`
-      <!-- Electronics Page Title -->
-        <app-page-title>Electronics</app-page-title> <!-- Displays the electronics page title centered -->
+        <app-page-title>Electronics</app-page-title>
 
-        <!-- First Image and Description Section -->
         <div class="content-section">
-            <img src=${electronics} alt="Electronics Image 1" class="content-image"> <!-- Replace with actual image path -->
+            <img src=${electronics} alt="Electronics Image 1" class="content-image"/>
             <div class="description-box">
                 <p>This is Project Motor display by NeAndrea Harris. It shows the word motor on the top of the M5 stick
                     when the button is pressed. When the side button is pressed, it says congratulations, here is a cookie.
-                </p> <!-- Placeholder text for description -->
+                </p>
             </div>
         </div>
 
-        <!-- Second Image and Description Section -->
         <div class="content-section">
-            <img src=${electronics1} alt="Electronics Image 2" class="content-image"> <!-- Replace with actual image path -->
+            <img src=${electronics1} alt="Electronics Image 2" class="content-image"/>
             <div class="description-box">
                 <p>This is project Sumo Rojo by NeAndrea Harris. Her first ever Robot from first robotics. This is one of
                     the inspirations that got her into robotics and her first attempt of coding.
-                </p> <!-- Placeholder text for description -->
+                </p>
             </div>
         </div>
 
-        <!-- Mock Chat Box Section with Clickable Link -->
-        <app-link href="/create-something" class="chat-box-link"> <!-- Link to a new page to "make something" -->
+        <app-link href="/create-something" class="chat-box-link">
             <div class="chat-box">
-                <p>Click here to make something with you.</p> <!-- Placeholder text for chat input -->
+                <p>Click here to make something with you.</p>
             </div>
         </app-link>
     `;

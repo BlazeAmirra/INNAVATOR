@@ -113,33 +113,28 @@ export class AccountInfo extends LitElement {
 
   render() {
     return html`${this.loaded ? html`
-      <!-- Centered Profile Picture with Click Event -->
         <div class="profile-pic-container" @click="${this.triggerFileInput}">
-            <img src=${this.current_pfp} alt="Profile Picture" class="profile-pic" id="profilePic" onerror=${`this.src='${editpicture}';`} />
+            <img src=${this.current_pfp} alt="Profile Picture" class="profile-pic" id="profilePic" onerror=${`this.src='${editpicture}';`}/>
         </div>
 
-        <!-- Hidden File Input -->
-        <input type="file" id="uploadPic" accept="image/*" @change="${this.changeProfilePic}" style="display: none;" />
+        <input type="file" id="uploadPic" accept="image/*" @change="${this.changeProfilePic}" style="display: none;"/>
 
-        <!-- Edit Picture Title -->
-        <!-- gotta get back to this after over, say, a month -->
-        <!-- <h2 class="edit-picture-title">Edit Picture</h2> -->
+        ${""/*
+        gotta get back to this after over, say, a month
+        <h2 class="edit-picture-title">Edit Picture</h2>
+        */}
 
-        <!-- Full Name Field -->
         <label for="full_name">Full Name:</label>
-        <input type="text" id="full_name" name="full_name" class="input-field" placeholder="Enter your full name" @input="${this.handleInput}" />
+        <input type="text" id="full_name" name="full_name" class="input-field" placeholder="Enter your full name" @input="${this.handleInput}"/>
 
-        <!-- Preferred Name Field -->
         <label for="preferred_name">Preferred Name:</label>
-        <input type="text" id="preferred_name" name="preferred_name" class="input-field" placeholder="Enter your preferred name" @input="${this.handleInput}" />
+        <input type="text" id="preferred_name" name="preferred_name" class="input-field" placeholder="Enter your preferred name" @input="${this.handleInput}"/>
 
-        <!-- Website URL Field -->
         <label for="website_url">Website URL:</label>
-        <input type="url" id="website_url" name="website_url" class="input-field" placeholder="Enter your website URL (optional)" @input="${this.handleInput}" />
+        <input type="url" id="website_url" name="website_url" class="input-field" placeholder="Enter your website URL (optional)" @input="${this.handleInput}"/>
 
-        <!-- PFP Url -->
         <label for="profile_picture_url">Profile Picture URL:</label>
-        <input type="url" id="profile_picture_url" name="profile_picture_url" class="input-field" placeholder="Enter the URL to your profile picture (optional)" @input="${this.handleInput}" />
+        <input type="url" id="profile_picture_url" name="profile_picture_url" class="input-field" placeholder="Enter the URL to your profile picture (optional)" @input="${this.handleInput}"/>
 
         <br/><br/>
         <span @click="${this.attempt_user_patch}" class="signin-button">Submit</span>

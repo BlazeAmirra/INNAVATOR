@@ -48,23 +48,23 @@ export class Inspiration extends LitElement {
         <h2 class="subtitle">Videos</h2>
 
         <div class="image-row">
-            <app-link href="/video1"><img src=${live1} alt="Video 1" class="rounded-image"></app-link>
-            <app-link href="/video2"><img src=${rec} alt="Video 2" class="rounded-image"></app-link>
-            <app-link href="/video3"><img src=${autodoc} alt="Video 3" class="rounded-image"></app-link>
+            <app-link href="/video1"><img src=${live1} alt="Video 1" class="rounded-image"/></app-link>
+            <app-link href="/video2"><img src=${rec} alt="Video 2" class="rounded-image"/></app-link>
+            <app-link href="/video3"><img src=${autodoc} alt="Video 3" class="rounded-image"/></app-link>
         </div>
 
         <div class="centered-image-container">
-            <app-link href="/main-video"><img src=${joblinks} alt="Main Video" class="centered-rectangular-image"></app-link>
+            <app-link href="/main-video"><img src=${joblinks} alt="Main Video" class="centered-rectangular-image"/></app-link>
         </div>
 
         <h2 class="subtitle">Interactive Projects</h2>
 
         <div class="image-row">
-            <!--
-            <app-link href="/games"><img src=${games} alt="Project 1" class="rounded-image"></app-link>
-            <app-link href="/project2"><img src=${apps} alt="Project 2" class="rounded-image"></app-link>
-            <app-link href="/project3"><img src=${robotics1} alt="Project 3" class="rounded-image"></app-link>
-            -->
+            ${""/*
+            <app-link href="/games"><img src=${games} alt="Project 1" class="rounded-image"/></app-link>
+            <app-link href="/project2"><img src=${apps} alt="Project 2" class="rounded-image"/></app-link>
+            <app-link href="/project3"><img src=${robotics1} alt="Project 3" class="rounded-image"/></app-link>
+            */}
             ${this.subjects.length > 0 ?
               map(this.subjects, value => html`<app-link href="/interactive-projects/${value.snowflake_id}"><div class="rounded-image">${value.name}</div></app-link>`) : 
               html`No subjects.`}

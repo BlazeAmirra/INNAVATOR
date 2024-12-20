@@ -20,45 +20,38 @@ export class Profiles extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Select a Profile</app-page-title>
 
-        <!-- Profile List Section -->
         <div class="profile-list">
-            <!-- Profile Item 1 -->
-            <app-link href="/chat-with-alexis"> <!-- Link to Profile 1 page -->
+            <app-link href="/chat-with-alexis">
                 <div class="profile-item">
-                    <img src=${art12} alt="Profile 1" class="profile-image" /> <!-- Profile image -->
-                    <p class="profile-name">Alexis</p> <!-- Profile name -->
+                    <img src=${art12} alt="Profile 1" class="profile-image"/>
+                    <p class="profile-name">Alexis</p>
                 </div>
             </app-link>
 
-            <!-- Profile Item 2 -->
-            <app-link href="/chat-with-blaze"> <!-- Link to Profile 2 page -->
+            <app-link href="/chat-with-blaze">
                 <div class="profile-item">
-                    <img src=${art5} alt="Profile 2" class="profile-image" />
+                    <img src=${art5} alt="Profile 2" class="profile-image"/>
                     <p class="profile-name">Blaze</p>
                 </div>
             </app-link>
 
-            <!-- Profile Item 3 -->
-            <app-link href="/chat-with-nick"> <!-- Link to Profile 3 page -->
+            <app-link href="/chat-with-nick">
                 <div class="profile-item">
-                    <img src=${art8} alt="Profile 3" class="profile-image" />
+                    <img src=${art8} alt="Profile 3" class="profile-image"/>
                     <p class="profile-name">Nick</p>
                 </div>
             </app-link>
 
-            <!-- Profile Item 4 -->
-            <app-link href="/chat-with-preston"> <!-- Link to Profile 4 page -->
+            <app-link href="/chat-with-preston">
                 <div class="profile-item">
-                    <img src=${art7} alt="Profile 4" class="profile-image" />
+                    <img src=${art7} alt="Profile 4" class="profile-image"/>
                     <p class="profile-name">Preston</p>
                 </div>
             </app-link>
         </div>
 
-        <!-- Go Back Button -->
         <div>
             <app-back-button/>
         </div>

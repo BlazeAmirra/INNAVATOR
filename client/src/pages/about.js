@@ -17,8 +17,8 @@ export class About extends LitElement {
   render() {
     return html`
       <app-page-title>About the Innavator App</app-page-title>
-      <div class="secondary-logo-container"> <!-- Placeholder for secondary logo -->
-        <img src=${logo} alt="Innavator App Logo" class="secondary-logo"/> <!-- Static logo -->
+      <div class="secondary-logo-container">
+        <img src=${logo} alt="Innavator App Logo" class="secondary-logo"/>
       </div>
 
       <div class="content">

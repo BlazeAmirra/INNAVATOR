@@ -97,7 +97,7 @@ export class GroupInvites extends LitElement {
         <div class="image-pair">
           ${this.invites.length > 0 ? map(this.invites, value => html`
             <div class="portfolio-image">
-              <img src="" alt="${this.groupDict[value.group].name}" />
+              <img src="" alt="${this.groupDict[value.group].name}"/>
               <div class="back-button-container">
                 <button @click="${() => this.acceptInvite(this.groupDict[value.group].snowflake_id)}">Accept</button>
                 <button @click="${() => this.rejectInvite(this.groupDict[value.group].snowflake_id)}">Decline</button>

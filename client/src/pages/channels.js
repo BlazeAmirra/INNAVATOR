@@ -55,7 +55,7 @@ export class Channels extends LitElement {
           listItem.push(html`
             <div class="portfolio-image">
               <app-link href="group-chat/${this.channels[j].snowflake_id}">
-                <img alt="${this.channels[j].name}" />
+                <img alt="${this.channels[j].name}"/>
               </app-link>
             </div>
           `);

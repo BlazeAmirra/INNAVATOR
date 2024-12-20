@@ -14,13 +14,10 @@ export class IssueTracker extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>Issue Tracker</app-page-title>
 
-        <!-- Description -->
         <p class="description">Track reported issues and submit new concerns for resolution.</p>
 
-        <!-- Table for Displaying Issues -->
         <table class="issue-table">
             <thead>
                 <tr>
@@ -30,7 +27,6 @@ export class IssueTracker extends LitElement {
                 </tr>
             </thead>
             <tbody>
-                <!-- Placeholder rows for issues -->
                 <tr>
                     <td>1</td>
                     <td>Chat disconnects frequently.</td>
@@ -44,7 +40,6 @@ export class IssueTracker extends LitElement {
             </tbody>
         </table>
 
-        <!-- Form for Submitting a New Issue -->
         <form class="issue-form">
             <label for="issue-description">Describe your issue:</label>
             <textarea id="issue-description" name="issue-description" placeholder="Enter the issue details here..."></textarea>

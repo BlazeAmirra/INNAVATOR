@@ -59,14 +59,12 @@ export class Stars extends LitElement {
     return html`
         <app-page-title>${title}</app-page-title>
 
-        <!-- Pink Star Section -->
         <div class="pink-stars">
             ${star_items}
         </div>
 
         <div class="pink-stars">
-          <!-- Large Purple Submit Star -->
-          <app-link href="/welcome" class="submit-star"> <!-- Link to home page -->
+          <app-link href="/welcome" class="submit-star">
               <div class="large-star">
                   Submit
               </div>

@@ -56,7 +56,7 @@ export class CreateChannel extends LitElement {
       <app-page-title>Create Channel</app-page-title>
 
       <label for="name">Name:</label>
-      <input type="text" id="name" name="name" class="input-field" @input="${this.handleInput}" />
+      <input type="text" id="name" name="name" class="input-field" @input="${this.handleInput}"/>
 
       <br/><br/>
       <span @click="${this.attemptCreateChannel}" class="signin-button">Edit</span>

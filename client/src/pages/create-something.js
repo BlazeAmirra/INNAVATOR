@@ -15,18 +15,15 @@ export class CreateSomething extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
-        <app-page-title>What do you want to make or help make?</app-page-title> <!-- Title for the create-something page -->
+        <app-page-title>What do you want to make or help make?</app-page-title>
 
-        <!-- Input Box for User Text -->
         <div class="input-section">
-            <input type="text" placeholder="Text here" class="text-input"> <!-- Placeholder input box for user text -->
+            <input type="text" placeholder="Text here" class="text-input"/>
         </div>
 
-        <!-- Button Section with Back and Next Buttons -->
         <div class="button-section">
-            <app-back-button></app-back-button> <!-- This has to be done instead of a self-closing tag to avoid eating the next tag, apparently -->
-            <app-link href="/partner-option" class="next-button">Next</app-link> <!-- Link to the next page for the process -->
+            <app-back-button></app-back-button>
+            <app-link href="/partner-option" class="next-button">Next</app-link>
         </div>
     `;
   }

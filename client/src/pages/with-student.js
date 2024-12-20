@@ -15,18 +15,15 @@ export class WithStudent extends LitElement {
 
   render() {
     return html`
-      <!-- Page Title -->
         <app-page-title>What do you need help with?</app-page-title>
 
-        <!-- Centered Text Input Box -->
         <div class="input-container">
-            <textarea placeholder="Enter your text here"></textarea> <!-- Text area for user input -->
+            <textarea placeholder="Enter your text here"></textarea>
         </div>
 
-        <!-- Navigation Buttons Section -->
         <div class="navigation-buttons">
             <app-back-button></app-back-button>
-            <app-link href="/yes-partner" class="next-button">Next</app-link> <!-- Link to next page -->
+            <app-link href="/yes-partner" class="next-button">Next</app-link>
         </div>
     `;
   }
